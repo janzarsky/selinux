@@ -56,6 +56,8 @@ type=SYSCALL msg=audit(1162852201.019:1225): arch=40000003 syscall=11 success=ye
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute_no_trans } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file"""
 
+xperms1 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x42 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0"""
+
 class TestAVCMessage(unittest.TestCase):
     def test_defs(self):
         avc = sepolgen.audit.AVCMessage(audit1)
@@ -84,6 +86,30 @@ class TestAVCMessage(unittest.TestCase):
 
         self.assertEqual(avc.denial, False)
 
+    def test_xperms(self):
+        avc = sepolgen.audit.AVCMessage(xperms1)
+        recs = xperms1.split()
+        avc.from_split_string(recs)
+
+        self.assertEqual(avc.header, "audit(1516626657.910:4461):")
+        self.assertEqual(avc.scontext.user, "unconfined_u")
+        self.assertEqual(avc.scontext.role, "unconfined_r")
+        self.assertEqual(avc.scontext.type, "unconfined_t")
+        self.assertEqual(avc.scontext.level, "s0-s0:c0.c1023")
+
+        self.assertEqual(avc.tcontext.user, "unconfined_u")
+        self.assertEqual(avc.tcontext.role, "object_r")
+        self.assertEqual(avc.tcontext.type, "test_file_t")
+        self.assertEqual(avc.tcontext.level, "s0")
+
+        self.assertEqual(avc.tclass, "file")
+        self.assertEqual(avc.accesses, ["ioctl"])
+
+        self.assertEqual(avc.comm, "test")
+
+        self.assertEqual(avc.denial, True)
+
+        self.assertEqual(avc.ioctlcmd, 0x42)
 
     def test_from_split_string(self):
         # syslog message
