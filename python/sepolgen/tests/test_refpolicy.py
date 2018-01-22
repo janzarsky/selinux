@@ -33,6 +33,49 @@ class TestIdSet(unittest.TestCase):
         s.add("read")
         self.assertEqual(s.to_space_str(), "read")
 
+class TestXpermSet(unittest.TestCase):
+    def test_init(self):
+        s1 = refpolicy.XpermSet()
+        self.assertEqual(s1.complement, False)
+        self.assertEqual(s1.ranges, [])
+
+        s2 = refpolicy.XpermSet(True)
+        self.assertEqual(s2.complement, True)
+        self.assertEqual(s2.ranges, [])
+
+    def test_normalize_ranges(self):
+        s = refpolicy.XpermSet()
+        s.ranges = [(1, 7), (5, 10), (100, 110), (102, 107), (200, 205),
+            (205, 210), (300, 305), (306, 310), (400, 405), (407, 410),
+            (500, 502), (504, 508), (500, 510)]
+        s._XpermSet__normalize_ranges()
+
+        i = 0
+        r = list(sorted(s.ranges))
+        while i < len(r) - 1:
+            # check that range low bound is less than equal than the upper bound
+            self.assertLessEqual(r[i][0], r[i][1])
+            # check that two ranges are not overlapping or neighboring
+            self.assertGreater(r[i + 1][0] - r[i][1], 1)
+            i += 1
+
+    def test_add(self):
+        s = refpolicy.XpermSet()
+        s.add(1, 7)
+        s.add(5, 10)
+        self.assertEqual(s.to_string(), "{ 1-10 }")
+
+    def test_extend(self):
+        a = refpolicy.XpermSet()
+        a.add(1, 7)
+
+        b = refpolicy.XpermSet()
+        b.add(5, 10)
+
+        a.extend(b)
+
+        self.assertEqual(a.to_string(), "{ 1-10 }")
+
 class TestSecurityContext(unittest.TestCase):
     def test_init(self):
         sc = refpolicy.SecurityContext()
