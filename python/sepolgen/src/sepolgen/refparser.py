@@ -112,6 +112,10 @@ tokens = (
     'DONTAUDIT',
     'AUDITALLOW',
     'NEVERALLOW',
+    'ALLOWXPERM',
+    'DONTAUDITXPERM',
+    'AUDITALLOWXPERM',
+    'NEVERALLOWXPERM',
     'PERMISSIVE',
     'TYPEBOUNDS',
     'TYPE_TRANSITION',
@@ -178,6 +182,10 @@ reserved = {
     'dontaudit' : 'DONTAUDIT',
     'auditallow' : 'AUDITALLOW',
     'neverallow' : 'NEVERALLOW',
+    'allowxperm' : 'ALLOWXPERM',
+    'dontauditxperm' : 'DONTAUDITXPERM',
+    'auditallowxperm' : 'AUDITALLOWXPERM',
+    'neverallowxperm' : 'NEVERALLOWXPERM',
     'permissive' : 'PERMISSIVE',
     'typebounds' : 'TYPEBOUNDS',
     'type_transition' : 'TYPE_TRANSITION',
@@ -503,6 +511,7 @@ def p_policy(p):
 def p_policy_stmt(p):
     '''policy_stmt : gen_require
                    | avrule_def
+                   | avrule_xperm_def
                    | typerule_def
                    | typebound_def
                    | typeattribute_def
@@ -806,6 +815,33 @@ def p_avrule_def(p):
     a.obj_classes = p[5]
     a.perms = p[6]
     p[0] = a
+
+def p_avrule_xperm_def(p):
+    '''avrule_xperm_def : ALLOWXPERM names names COLON names identifier xperms SEMI
+                        | DONTAUDITXPERM names names COLON names identifier xperms SEMI
+                        | AUDITALLOWXPERM names names COLON names identifier xperms SEMI
+                        | NEVERALLOWXPERM names names COLON names identifier xperms SEMI
+    '''
+    a = refpolicy.AVRule()
+    if p[1] == 'allowxperm':
+        a.rule_type = refpolicy.AVRule.ALLOWXPERM
+    elif p[1] == 'dontauditxperm':
+        a.rule_type = refpolicy.AVRule.DONTAUDITXPERM
+    elif p[1] == 'auditallowxperm':
+        a.rule_type = refpolicy.AVRule.AUDITALLOWXPERM
+    elif p[1] == 'neverallowxperm':
+        a.rule_type = refpolicy.AVRule.NEVERALLOWXPERM
+    a.src_types = p[2]
+    a.tgt_types = p[3]
+    a.obj_classes = p[5]
+    a.perms = [ p[6] ]
+    a.xperms = p[7]
+    p[0] = a
+
+# TODO
+def p_xperms_def(p):
+    '''xperms : NUMBER'''
+    p[0] = p=[1]
 
 def p_typerule_def(p):
     '''typerule_def : TYPE_TRANSITION names names COLON names IDENTIFIER SEMI

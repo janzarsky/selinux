@@ -102,6 +102,25 @@ interface(`files_exec_usr_files',`
 ')
 """
 
+xperm_example = """
+module test_module 1.0;
+
+require {
+    type unconfined_t;
+    type fs_t;
+    class file { ioctl getattr read open relabelto };
+    class filesystem { associate };
+}
+
+type my_test_file_t;
+
+allow my_test_file_t fs_t:filesystem associate;
+
+allow unconfined_t my_test_file_t : file { ioctl getattr read open relabelto };
+
+allowxperm unconfined_t my_test_file_t : file ioctl 0x8927;
+"""
+
 class TestParser(unittest.TestCase):
     def test_interface_parsing(self):
         h = refparser.parse(interface_example)
@@ -115,6 +134,7 @@ class TestParser(unittest.TestCase):
         #self.assertEqual(len(i.rules), 1)
         #rule = i.rules[0]
         #self.assertTrue(isinstance(rule, refpolicy.AVRule))
-        
-                        
-        
+
+    def test_xperm_parsing(self):
+        h = refparser.parse(xperm_example)
+        print(h)
