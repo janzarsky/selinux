@@ -228,7 +228,7 @@ t_AMP       = r'\&'
 t_BAR       = r'\|'
 t_EXPL      = r'\!'
 t_EQUAL     = r'\='
-t_NUMBER    = r'[0-9\.]+'
+t_NUMBER    = r'(0[xX][0-9a-fA-F]+)|([0-9\.]+)'
 t_PATH      = r'/[a-zA-Z0-9)_\.\*/\$]*'
 #t_IPV6_ADDR = r'[a-fA-F0-9]{0,4}:[a-fA-F0-9]{0,4}:([a-fA-F0-9]{0,4}:)*'
 
@@ -839,9 +839,33 @@ def p_avrule_xperm_def(p):
     #a.xperms = p[7]
     p[0] = a
 
-# TODO
-def p_xperms_def(p):
-    '''xperms : NUMBER'''
+def p_xperms(p):
+    '''xperms : xperm
+              | nested_xperm_set
+              | TILDE xperm
+              | TILDE nested_xperm_set
+    '''
+    p[0] = p=[1]
+
+def p_nested_xperm_set(p):
+    '''nested_xperm_set : OBRACE nested_xperm_list CBRACE'''
+    p[0] = p=[1]
+
+def p_nested_xperm_list(p):
+    '''nested_xperm_list : nested_xperm_element
+                         | nested_xperm_list nested_xperm_element
+    '''
+    p[0] = p=[1]
+
+def p_nested_xperm_element(p):
+    '''nested_xperm_element : xperm MINUS xperm
+                            | xperm
+                            | nested_xperm_set
+    '''
+    p[0] = p=[1]
+
+def p_xperm(p):
+    '''xperm : NUMBER'''
     p[0] = p=[1]
 
 def p_typerule_def(p):

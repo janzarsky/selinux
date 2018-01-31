@@ -118,7 +118,20 @@ allow my_test_file_t fs_t:filesystem associate;
 
 allow unconfined_t my_test_file_t : file { ioctl getattr read open relabelto };
 
-allowxperm unconfined_t my_test_file_t : file ioctl 8927;
+allowxperm unconfined_t my_test_file_t : file ioctl 1234;
+dontauditxperm unconfined_t my_test_file_t : file ioctl 1234;
+auditallowxperm unconfined_t my_test_file_t : file ioctl 1234;
+neverallowxperm unconfined_t my_test_file_t : file ioctl 1234;
+
+allowxperm unconfined_t my_test_file_t : file ioctl 1234;
+allowxperm unconfined_t my_test_file_t : file ioctl 0x1234;
+allowxperm unconfined_t my_test_file_t : file ioctl ~ 1234;
+allowxperm unconfined_t my_test_file_t : file ioctl { 1234 };
+allowxperm unconfined_t my_test_file_t : file ioctl { 1234 2345 };
+allowxperm unconfined_t my_test_file_t : file ioctl { 1234-2345 };
+allowxperm unconfined_t my_test_file_t : file ioctl ~ { 1234 };
+allowxperm unconfined_t my_test_file_t : file ioctl ~ { 1234 2345 };
+allowxperm unconfined_t my_test_file_t : file ioctl ~ { 1234-2345 };
 """
 
 class TestParser(unittest.TestCase):
@@ -145,4 +158,6 @@ class TestParser(unittest.TestCase):
         self.assertIsInstance(nodes[1][0], refpolicy.Type)
         self.assertIsInstance(nodes[2][0], refpolicy.AVRule)
         self.assertIsInstance(nodes[3][0], refpolicy.AVRule)
-        self.assertIsInstance(nodes[4][0], refpolicy.AVExtRule)
+
+        for n in nodes[4:]:
+            self.assertIsInstance(n[0], refpolicy.AVExtRule)
