@@ -109,6 +109,9 @@ class Node(PolicyBase):
     def avrules(self):
         return filter(lambda x: isinstance(x, AVRule), walktree(self))
 
+    def avextrules(self):
+        return filter(lambda x: isinstance(x, AVExtRule), walktree(self))
+
     def typerules(self):
         return filter(lambda x: isinstance(x, TypeRule), walktree(self))
 
@@ -492,6 +495,53 @@ class AVRule(Leaf):
                                      self.tgt_types.to_space_str(),
                                      self.obj_classes.to_space_str(),
                                      self.perms.to_space_str())
+
+class AVExtRule(Leaf):
+    ALLOWXPERM = 0
+    DONTAUDITXPERM = 1
+    AUDITALLOWXPERM = 2
+    NEVERALLOWXPERM = 3
+
+    def __init__(self, av=None, parent=None):
+        Leaf.__init__(self, parent)
+        # TODO
+        #self.src_types = IdSet()
+        #self.tgt_types = IdSet()
+        #self.obj_classes = IdSet()
+        #self.perms = IdSet()
+        #self.rule_type = self.ALLOW
+        #if av:
+        #    self.from_av(av)
+
+    def __rule_type_str(self):
+        if self.rule_type == self.ALLOWXPERM:
+            return "allowxperm"
+        elif self.rule_type == self.DONTAUDITXPERM:
+            return "dontauditxperm"
+        else:
+            return "auditallowxperm"
+
+    # TODO
+    def from_av(self, av):
+        """Add the access from an access vector to this allow
+        rule.
+        """
+        #self.src_types.add(av.src_type)
+        #if av.src_type == av.tgt_type:
+        #    self.tgt_types.add("self")
+        #else:
+        #    self.tgt_types.add(av.tgt_type)
+        #self.obj_classes.add(av.obj_class)
+        #self.perms.update(av.perms)
+
+    def to_string(self):
+        #return "%s %s %s:%s %s;" % (self.__rule_type_str(),
+        #                             self.src_types.to_space_str(),
+        #                             self.tgt_types.to_space_str(),
+        #                             self.obj_classes.to_space_str(),
+        #                             self.perms.to_space_str())
+        return "some xperm rule"
+
 class TypeRule(Leaf):
     """SELinux type rules.
 

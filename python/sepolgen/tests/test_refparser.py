@@ -118,7 +118,7 @@ allow my_test_file_t fs_t:filesystem associate;
 
 allow unconfined_t my_test_file_t : file { ioctl getattr read open relabelto };
 
-allowxperm unconfined_t my_test_file_t : file ioctl 0x8927;
+allowxperm unconfined_t my_test_file_t : file ioctl 8927;
 """
 
 class TestParser(unittest.TestCase):
@@ -137,4 +137,12 @@ class TestParser(unittest.TestCase):
 
     def test_xperm_parsing(self):
         h = refparser.parse(xperm_example)
-        print(h)
+
+        nodes = list(refpolicy.walknode(h))
+
+        self.assertIsInstance(nodes[0], refpolicy.ModuleDeclaration)
+
+        self.assertIsInstance(nodes[1][0], refpolicy.Type)
+        self.assertIsInstance(nodes[2][0], refpolicy.AVRule)
+        self.assertIsInstance(nodes[3][0], refpolicy.AVRule)
+        self.assertIsInstance(nodes[4][0], refpolicy.AVExtRule)

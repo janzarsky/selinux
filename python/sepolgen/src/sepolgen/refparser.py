@@ -822,20 +822,21 @@ def p_avrule_xperm_def(p):
                         | AUDITALLOWXPERM names names COLON names identifier xperms SEMI
                         | NEVERALLOWXPERM names names COLON names identifier xperms SEMI
     '''
-    a = refpolicy.AVRule()
+    a = refpolicy.AVExtRule()
     if p[1] == 'allowxperm':
-        a.rule_type = refpolicy.AVRule.ALLOWXPERM
+        a.rule_type = refpolicy.AVExtRule.ALLOWXPERM
     elif p[1] == 'dontauditxperm':
-        a.rule_type = refpolicy.AVRule.DONTAUDITXPERM
+        a.rule_type = refpolicy.AVExtRule.DONTAUDITXPERM
     elif p[1] == 'auditallowxperm':
-        a.rule_type = refpolicy.AVRule.AUDITALLOWXPERM
+        a.rule_type = refpolicy.AVExtRule.AUDITALLOWXPERM
     elif p[1] == 'neverallowxperm':
-        a.rule_type = refpolicy.AVRule.NEVERALLOWXPERM
-    a.src_types = p[2]
-    a.tgt_types = p[3]
-    a.obj_classes = p[5]
-    a.perms = [ p[6] ]
-    a.xperms = p[7]
+        a.rule_type = refpolicy.AVExtRule.NEVERALLOWXPERM
+    # TODO
+    #a.src_types = p[2]
+    #a.tgt_types = p[3]
+    #a.obj_classes = p[5]
+    #a.perms = [ p[6] ]
+    #a.xperms = p[7]
     p[0] = a
 
 # TODO
