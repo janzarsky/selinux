@@ -161,3 +161,6 @@ class TestParser(unittest.TestCase):
 
         for n in nodes[4:]:
             self.assertIsInstance(n[0], refpolicy.AVExtRule)
+
+        self.assertEqual(nodes[4][0].to_string(),
+            "allowxperm unconfined_t my_test_file_t:file ioctl 1234;");

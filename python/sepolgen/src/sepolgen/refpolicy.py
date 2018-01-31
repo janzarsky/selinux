@@ -470,8 +470,10 @@ class AVRule(Leaf):
             return "allow"
         elif self.rule_type == self.DONTAUDIT:
             return "dontaudit"
-        else:
+        elif self.rule_type == self.AUDITALLOW:
             return "auditallow"
+        else:
+            return "neverallow"
 
     def from_av(self, av):
         """Add the access from an access vector to this allow
@@ -504,12 +506,10 @@ class AVExtRule(Leaf):
 
     def __init__(self, av=None, parent=None):
         Leaf.__init__(self, parent)
-        # TODO
-        #self.src_types = IdSet()
-        #self.tgt_types = IdSet()
-        #self.obj_classes = IdSet()
-        #self.perms = IdSet()
-        #self.rule_type = self.ALLOW
+        self.src_types = IdSet()
+        self.tgt_types = IdSet()
+        self.obj_classes = IdSet()
+        self.rule_type = self.ALLOWXPERM
         #if av:
         #    self.from_av(av)
 
@@ -518,14 +518,14 @@ class AVExtRule(Leaf):
             return "allowxperm"
         elif self.rule_type == self.DONTAUDITXPERM:
             return "dontauditxperm"
-        else:
+        elif self.rule_type == self.AUDITALLOWXPERM:
             return "auditallowxperm"
+        else:
+            return "neverallowxperm"
 
     # TODO
     def from_av(self, av):
-        """Add the access from an access vector to this allow
-        rule.
-        """
+        return
         #self.src_types.add(av.src_type)
         #if av.src_type == av.tgt_type:
         #    self.tgt_types.add("self")
@@ -535,12 +535,12 @@ class AVExtRule(Leaf):
         #self.perms.update(av.perms)
 
     def to_string(self):
-        #return "%s %s %s:%s %s;" % (self.__rule_type_str(),
-        #                             self.src_types.to_space_str(),
-        #                             self.tgt_types.to_space_str(),
-        #                             self.obj_classes.to_space_str(),
-        #                             self.perms.to_space_str())
-        return "some xperm rule"
+        return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),
+                                     self.src_types.to_space_str(),
+                                     self.tgt_types.to_space_str(),
+                                     self.obj_classes.to_space_str(),
+                                     self.operation,
+                                     self.xperms)
 
 class TypeRule(Leaf):
     """SELinux type rules.

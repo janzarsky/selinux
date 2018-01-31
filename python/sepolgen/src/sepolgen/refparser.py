@@ -831,12 +831,11 @@ def p_avrule_xperm_def(p):
         a.rule_type = refpolicy.AVExtRule.AUDITALLOWXPERM
     elif p[1] == 'neverallowxperm':
         a.rule_type = refpolicy.AVExtRule.NEVERALLOWXPERM
-    # TODO
-    #a.src_types = p[2]
-    #a.tgt_types = p[3]
-    #a.obj_classes = p[5]
-    #a.perms = [ p[6] ]
-    #a.xperms = p[7]
+    a.src_types = p[2]
+    a.tgt_types = p[3]
+    a.obj_classes = p[5]
+    a.operation = p[6][0]
+    a.xperms = p[7]
     p[0] = a
 
 def p_xperms(p):
@@ -845,28 +844,28 @@ def p_xperms(p):
               | TILDE xperm
               | TILDE nested_xperm_set
     '''
-    p[0] = p=[1]
+    p[0] = p[1]
 
 def p_nested_xperm_set(p):
     '''nested_xperm_set : OBRACE nested_xperm_list CBRACE'''
-    p[0] = p=[1]
+    p[0] = p[1]
 
 def p_nested_xperm_list(p):
     '''nested_xperm_list : nested_xperm_element
                          | nested_xperm_list nested_xperm_element
     '''
-    p[0] = p=[1]
+    p[0] = p[1]
 
 def p_nested_xperm_element(p):
     '''nested_xperm_element : xperm MINUS xperm
                             | xperm
                             | nested_xperm_set
     '''
-    p[0] = p=[1]
+    p[0] = p[1]
 
 def p_xperm(p):
     '''xperm : NUMBER'''
-    p[0] = p=[1]
+    p[0] = p[1]
 
 def p_typerule_def(p):
     '''typerule_def : TYPE_TRANSITION names names COLON names IDENTIFIER SEMI
