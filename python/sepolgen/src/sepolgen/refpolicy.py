@@ -350,6 +350,41 @@ class ObjectClass(Leaf):
         self.name = name
         self.perms = IdSet()
 
+class XpermSet(set):
+    def __init__(self):
+        set.__init__(self)
+        self.complement = False
+
+    def extend(self, s):
+        for i in s:
+            self.add(i)
+
+    def add_range(self, minimum, maximum):
+        i = minimum
+
+        while i <= maximum:
+            self.add(i)
+            i += 1
+
+    def to_string(self):
+        if self.complement:
+            s = "~ "
+        else:
+            s = ""
+
+        if len(self) > 1:
+            s += "{ "
+
+        for i in sorted(self):
+            s += str(i) + " "
+
+        if len(self) > 1:
+            s += "}"
+        else:
+            s = s[:-1]
+
+        return s
+
 # Basic statements
 
 class TypeAttribute(Leaf):
@@ -540,7 +575,7 @@ class AVExtRule(Leaf):
                                      self.tgt_types.to_space_str(),
                                      self.obj_classes.to_space_str(),
                                      self.operation,
-                                     self.xperms)
+                                     self.xperms.to_string())
 
 class TypeRule(Leaf):
     """SELinux type rules.

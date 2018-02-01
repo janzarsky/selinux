@@ -116,22 +116,23 @@ type my_test_file_t;
 
 allow my_test_file_t fs_t:filesystem associate;
 
-allow unconfined_t my_test_file_t : file { ioctl getattr read open relabelto };
+allow unconfined_t my_test_file_t:file { ioctl getattr read open relabelto };
 
-allowxperm unconfined_t my_test_file_t : file ioctl 1234;
-dontauditxperm unconfined_t my_test_file_t : file ioctl 1234;
-auditallowxperm unconfined_t my_test_file_t : file ioctl 1234;
-neverallowxperm unconfined_t my_test_file_t : file ioctl 1234;
+allowxperm unconfined_t my_test_file_t:file ioctl 1234;
+dontauditxperm unconfined_t my_test_file_t:file ioctl 1234;
+auditallowxperm unconfined_t my_test_file_t:file ioctl 1234;
+neverallowxperm unconfined_t my_test_file_t:file ioctl 1234;
 
-allowxperm unconfined_t my_test_file_t : file ioctl 1234;
-allowxperm unconfined_t my_test_file_t : file ioctl 0x1234;
-allowxperm unconfined_t my_test_file_t : file ioctl ~ 1234;
-allowxperm unconfined_t my_test_file_t : file ioctl { 1234 };
-allowxperm unconfined_t my_test_file_t : file ioctl { 1234 2345 };
-allowxperm unconfined_t my_test_file_t : file ioctl { 1234-2345 };
-allowxperm unconfined_t my_test_file_t : file ioctl ~ { 1234 };
-allowxperm unconfined_t my_test_file_t : file ioctl ~ { 1234 2345 };
-allowxperm unconfined_t my_test_file_t : file ioctl ~ { 1234-2345 };
+allowxperm unconfined_t my_test_file_t:file ioctl 1234;
+allowxperm unconfined_t my_test_file_t:file ioctl 0x1234;
+allowxperm unconfined_t my_test_file_t:file ioctl ~ 1234;
+allowxperm unconfined_t my_test_file_t:file ioctl { 1234 };
+allowxperm unconfined_t my_test_file_t:file ioctl { 1234 2345 };
+allowxperm unconfined_t my_test_file_t:file ioctl { 1234-1243 };
+allowxperm unconfined_t my_test_file_t:file ioctl ~ { 1234 };
+allowxperm unconfined_t my_test_file_t:file ioctl ~ { 1234 2345 };
+allowxperm unconfined_t my_test_file_t:file ioctl ~ { 1234-1243 };
+allowxperm unconfined_t my_test_file_t:file ioctl { 12 23 34-45 56 };
 """
 
 class TestParser(unittest.TestCase):
@@ -159,8 +160,32 @@ class TestParser(unittest.TestCase):
         self.assertIsInstance(nodes[2][0], refpolicy.AVRule)
         self.assertIsInstance(nodes[3][0], refpolicy.AVRule)
 
+        self.assertTrue(len(nodes) == 18)
+
         for n in nodes[4:]:
             self.assertIsInstance(n[0], refpolicy.AVExtRule)
 
-        self.assertEqual(nodes[4][0].to_string(),
-            "allowxperm unconfined_t my_test_file_t:file ioctl 1234;");
+        refstr = [
+            "allowxperm unconfined_t my_test_file_t:file ioctl 1234;",
+            "dontauditxperm unconfined_t my_test_file_t:file ioctl 1234;",
+            "auditallowxperm unconfined_t my_test_file_t:file ioctl 1234;",
+            "neverallowxperm unconfined_t my_test_file_t:file ioctl 1234;",
+            "allowxperm unconfined_t my_test_file_t:file ioctl 1234;",
+            "allowxperm unconfined_t my_test_file_t:file ioctl 4660;",
+            "allowxperm unconfined_t my_test_file_t:file ioctl ~ 1234;",
+            "allowxperm unconfined_t my_test_file_t:file ioctl 1234;",
+            "allowxperm unconfined_t my_test_file_t:file ioctl { 1234 2345 };",
+            "allowxperm unconfined_t my_test_file_t:file ioctl { 1234-1243 };",
+            "allowxperm unconfined_t my_test_file_t:file ioctl ~ 1234;",
+            "allowxperm unconfined_t my_test_file_t:file ioctl ~ { 1234 2345 };",
+            "allowxperm unconfined_t my_test_file_t:file ioctl ~ { 1234-1243 };",
+            "allowxperm unconfined_t my_test_file_t:file ioctl { 12 23 34-45 56 };",
+        ]
+
+        i = 4
+
+        while i <= 16:
+            # TODO fix ranges
+            if i != 13 and i != 16:
+                self.assertEqual(nodes[i][0].to_string(), refstr[i - 4])
+            i += 1
