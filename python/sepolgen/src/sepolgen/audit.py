@@ -178,6 +178,7 @@ class AVCMessage(AuditMessage):
         self.name = ""
         self.accesses = []
         self.denial = True
+        self.ioctlcmd = None
         self.type = audit2why.TERULE
 
     def __parse_access(self, recs, start):
@@ -527,10 +528,12 @@ class AuditParser:
             if avc_filter:
                 if avc_filter.filter(avc):
                     av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                               avc.accesses, avc, avc_type=avc.type, data=avc.data)
+                               avc.accesses, avc, avc_type=avc.type, data=avc.data,
+                               ioctlcmd=avc.ioctlcmd)
             else:
                 av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                           avc.accesses, avc, avc_type=avc.type, data=avc.data)
+                           avc.accesses, avc, avc_type=avc.type, data=avc.data,
+                           ioctlcmd=avc.ioctlcmd)
         return av_set
 
 class AVCTypeFilter:

@@ -90,6 +90,7 @@ class AccessVector(util.Comparison):
             self.audit_msgs = []
             self.type = audit2why.TERULE
             self.data = []
+            self.ioctlcmd = set()
         # when implementing __eq__ also __hash__ is needed on py2
         # if object is muttable __hash__ should be None
         self.__hash__ = None
@@ -257,7 +258,7 @@ class AccessVectorSet:
         for av in l:
             self.add_av(AccessVector(av))
 
-    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[]):
+    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[], ioctlcmd=None):
         """Add an access vector to the set.
         """
         tgt = self.src.setdefault(src_type, { })
@@ -275,12 +276,16 @@ class AccessVectorSet:
             cls[obj_class, avc_type] = access
 
         access.perms.update(perms)
+
+        if ioctlcmd is not None:
+            access.ioctlcmd.add(ioctlcmd)
+
         if audit_msg:
             access.audit_msgs.append(audit_msg)
 
     def add_av(self, av, audit_msg=None):
         """Add an access vector to the set."""
-        self.add(av.src_type, av.tgt_type, av.obj_class, av.perms)
+        self.add(av.src_type, av.tgt_type, av.obj_class, av.perms, ioctlcmd=av.ioctlcmd)
 
 
 def avs_extract_types(avs):
