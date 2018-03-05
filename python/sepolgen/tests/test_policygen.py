@@ -46,11 +46,14 @@ class TestPolicyGenerator(unittest.TestCase):
 
     def test_ext_av_rules(self):
         av1 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
-        av1.xperms['ioctl'] = refpolicy.XpermSet([42])
+        av1.xperms['ioctl'] = refpolicy.XpermSet()
+        av1.xperms['ioctl'].add(42)
         av2 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
-        av2.xperms['ioctl'] = refpolicy.XpermSet([1234])
+        av2.xperms['ioctl'] = refpolicy.XpermSet()
+        av2.xperms['ioctl'].add(1234)
         av3 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
-        av3.xperms['ioctl'] = refpolicy.XpermSet([2345])
+        av3.xperms['ioctl'] = refpolicy.XpermSet()
+        av3.xperms['ioctl'].add(2345)
 
         avs = access.AccessVectorSet() 
         avs.add_av(av1)

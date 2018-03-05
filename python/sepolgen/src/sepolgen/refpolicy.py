@@ -350,35 +350,43 @@ class ObjectClass(Leaf):
         self.name = name
         self.perms = IdSet()
 
-class XpermSet(set):
-    def __init__(self, *args, **kwargs):
-        super(XpermSet, self).__init__(*args, **kwargs)
-        self.complement = False
+class XpermSet():
+    def __init__(self, blacklist=False):
+        self.blacklist = blacklist
+        self.xperm_set = set()
 
     def extend(self, s):
-        for i in s:
-            self.add(i)
+        self.xperm_set = self.xperm_set.union(s.xperm_set)
 
-    def add_range(self, minimum, maximum):
-        i = minimum
-
-        while i <= maximum:
-            self.add(i)
-            i += 1
+    def add(self, minimum, maximum=None):
+        if maximum is None:
+            maximum = minimum
+        self.xperm_set = self.xperm_set.union(range(minimum, maximum + 1))
 
     def to_string(self):
-        if self.complement:
+        if self.blacklist:
             s = "~ "
         else:
             s = ""
 
-        if len(self) > 1:
+        if len(self.xperm_set) > 1:
             s += "{ "
 
-        for i in sorted(self):
-            s += str(i) + " "
+        ranges = []
 
-        if len(self) > 1:
+        for i in sorted(self.xperm_set):
+            if not ranges or i - 1 != ranges[-1][1]:
+                ranges.append((i, i))
+            else:
+                ranges[-1] = (ranges[-1][0], i)
+
+        for r in ranges:
+            if r[0] == r[1]:
+                s += "%d " % r[0]
+            else:
+                s += "%d-%d " % r
+
+        if len(self.xperm_set) > 1:
             s += "}"
         else:
             s = s[:-1]
@@ -568,7 +576,7 @@ class AVExtRule(Leaf):
             self.tgt_types.add(av.tgt_type)
         self.obj_classes.add(av.obj_class)
         self.operation = op
-        self.xperms.extend(av.xperms[op])
+        self.xperms = av.xperms[op]
 
     def to_string(self):
         return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),

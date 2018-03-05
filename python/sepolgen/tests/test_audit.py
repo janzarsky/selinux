@@ -211,7 +211,7 @@ class TestAuditParser(unittest.TestCase):
         self.assertEqual(len(av_set), 1)
 
         for av in av_set:
-            self.assertEqual(sorted(av.xperms['ioctl']), sorted(set([66, 4660, 57005])))
+            self.assertEqual(sorted(av.xperms['ioctl'].xperm_set), sorted(set([66, 4660, 57005])))
 
 class TestGeneration(unittest.TestCase):
     def test_generation(self):

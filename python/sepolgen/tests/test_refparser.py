@@ -184,8 +184,6 @@ class TestParser(unittest.TestCase):
 
         i = 4
 
-        while i <= 16:
-            # TODO fix ranges
-            if i != 13 and i != 16:
-                self.assertEqual(nodes[i][0].to_string(), refstr[i - 4])
+        while i < len(refstr) + 4:
+            self.assertEqual(nodes[i][0].to_string(), refstr[i - 4])
             i += 1

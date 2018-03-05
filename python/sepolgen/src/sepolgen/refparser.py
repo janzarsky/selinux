@@ -847,7 +847,7 @@ def p_xperms(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[2].complement = True
+        p[2].blacklist = True
         p[0] = p[2]
 
 def p_nested_xperm_set(p):
@@ -858,13 +858,9 @@ def p_nested_xperm_list(p):
     '''nested_xperm_list : nested_xperm_element
                          | nested_xperm_list nested_xperm_element
     '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        s = refpolicy.XpermSet()
-        s.extend(p[1])
-        s.extend(p[2])
-        p[0] = s
+    if len(p) == 3:
+        p[1].extend(p[2])
+    p[0] = p[1]
 
 def p_nested_xperm_element(p):
     '''nested_xperm_element : xperm MINUS xperm
@@ -873,7 +869,7 @@ def p_nested_xperm_element(p):
     '''
     if len(p) == 4:
         s = refpolicy.XpermSet()
-        s.add_range(int(p[1].pop()), int(p[3].pop()))
+        s.add(int(p[1].xperm_set.pop()), int(p[3].xperm_set.pop()))
         p[0] = s
     else:
         p[0] = p[1]
