@@ -351,8 +351,8 @@ class ObjectClass(Leaf):
         self.perms = IdSet()
 
 class XpermSet(set):
-    def __init__(self):
-        set.__init__(self)
+    def __init__(self, *args, **kwargs):
+        super(XpermSet, self).__init__(*args, **kwargs)
         self.complement = False
 
     def extend(self, s):
@@ -539,14 +539,16 @@ class AVExtRule(Leaf):
     AUDITALLOWXPERM = 2
     NEVERALLOWXPERM = 3
 
-    def __init__(self, av=None, parent=None):
+    def __init__(self, av=None, op=None, parent=None):
         Leaf.__init__(self, parent)
         self.src_types = IdSet()
         self.tgt_types = IdSet()
         self.obj_classes = IdSet()
         self.rule_type = self.ALLOWXPERM
-        #if av:
-        #    self.from_av(av)
+        self.xperms = XpermSet()
+        self.operation = None
+        if av:
+            self.from_av(av, op)
 
     def __rule_type_str(self):
         if self.rule_type == self.ALLOWXPERM:
@@ -558,16 +560,15 @@ class AVExtRule(Leaf):
         else:
             return "neverallowxperm"
 
-    # TODO
-    def from_av(self, av):
-        return
-        #self.src_types.add(av.src_type)
-        #if av.src_type == av.tgt_type:
-        #    self.tgt_types.add("self")
-        #else:
-        #    self.tgt_types.add(av.tgt_type)
-        #self.obj_classes.add(av.obj_class)
-        #self.perms.update(av.perms)
+    def from_av(self, av, op):
+        self.src_types.add(av.src_type)
+        if av.src_type == av.tgt_type:
+            self.tgt_types.add("self")
+        else:
+            self.tgt_types.add(av.tgt_type)
+        self.obj_classes.add(av.obj_class)
+        self.operation = op
+        self.xperms.extend(av.xperms[op])
 
     def to_string(self):
         return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),

@@ -235,9 +235,9 @@ class TestAccessVectorSet(unittest.TestCase):
 
     def test_list(self):
         a = access.AccessVectorSet()
-        a.add("$1", "foo", "file", refpolicy.IdSet(["read", "write"]))
-        a.add("$1", "bar", "file", refpolicy.IdSet(["read", "write"]))
-        a.add("what", "bar", "file", refpolicy.IdSet(["read", "write"]))
+        a.add_av(access.AccessVector(["$1", "foo", "file", "read", "write"]))
+        a.add_av(access.AccessVector(["$1", "bar", "file", "read", "write"]))
+        a.add_av(access.AccessVector(["what", "bar", "file", "read", "write"]))
 
         avl = a.to_list()
         avl.sort()

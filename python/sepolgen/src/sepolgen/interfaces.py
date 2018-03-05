@@ -456,7 +456,8 @@ class InterfaceSet:
         for src_type in src_types:
             for tgt_type in tgt_types:
                 for obj_class in obj_classes:
-                    ifv.access.add(src_type, tgt_type, obj_class, new_perms)
+                    av = access.AccessVector([src_type, tgt_type, obj_class] + list(new_perms))
+                    ifv.access.add_av(av)
 
     def do_expand_ifcalls(self, interface, if_by_name):
         # Descend an interface call tree adding the access

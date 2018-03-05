@@ -87,10 +87,11 @@ class AccessVector(util.Comparison):
             self.tgt_type = None
             self.obj_class = None
             self.perms = refpolicy.IdSet()
-            self.audit_msgs = []
-            self.type = audit2why.TERULE
-            self.data = []
-            self.ioctlcmd = set()
+
+        self.audit_msgs = []
+        self.type = audit2why.TERULE
+        self.data = []
+        self.xperms = {}
         # when implementing __eq__ also __hash__ is needed on py2
         # if object is muttable __hash__ should be None
         self.__hash__ = None
@@ -113,8 +114,8 @@ class AccessVector(util.Comparison):
         This format is useful for very simple storage to strings or disc
         (see to_list) and for initializing access vectors.
         """
-        if len(list) < 4:
-            raise ValueError("List must contain at least four elements %s" % str(list))
+        if len(list) < 3:
+            raise ValueError("List must contain at least 3 elements %s" % str(list))
         self.src_type = list[0]
         self.tgt_type = list[1]
         self.obj_class = list[2]
@@ -131,6 +132,16 @@ class AccessVector(util.Comparison):
         l = [self.src_type, self.tgt_type, self.obj_class]
         l.extend(sorted(self.perms))
         return l
+    
+    def merge(self, av):
+        if av.perms:
+            self.perms = self.perms.union(av.perms)
+
+        if av.xperms:
+            for op in av.xperms:
+                if op not in self.xperms:
+                    self.xperms[op] = refpolicy.XpermSet()
+                self.xperms[op].extend(av.xperms[op])
 
     def __str__(self):
         return self.to_string()
@@ -257,36 +268,19 @@ class AccessVectorSet:
         """
         for av in l:
             self.add_av(AccessVector(av))
-
-    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[], ioctlcmd=None):
-        """Add an access vector to the set.
-        """
-        tgt = self.src.setdefault(src_type, { })
-        cls = tgt.setdefault(tgt_type, { })
-        
-        if (obj_class, avc_type) in cls:
-            access = cls[obj_class, avc_type]
-        else:
-            access = AccessVector()
-            access.src_type = src_type
-            access.tgt_type = tgt_type
-            access.obj_class = obj_class
-            access.data = data
-            access.type = avc_type
-            cls[obj_class, avc_type] = access
-
-        access.perms.update(perms)
-
-        if ioctlcmd is not None:
-            access.ioctlcmd.add(ioctlcmd)
-
-        if audit_msg:
-            access.audit_msgs.append(audit_msg)
-
-    def add_av(self, av, audit_msg=None):
+    
+    def add_av(self, av, audit_msg=None, avc_type=audit2why.TERULE):
         """Add an access vector to the set."""
-        self.add(av.src_type, av.tgt_type, av.obj_class, av.perms, ioctlcmd=av.ioctlcmd)
+        tgt = self.src.setdefault(av.src_type, { })
+        cls = tgt.setdefault(av.tgt_type, { })
+        
+        if (av.obj_class, avc_type) in cls:
+            cls[av.obj_class, avc_type].merge(av)
+        else:
+            cls[av.obj_class, avc_type] = av
 
+        if audit_msg is not None:
+            cls[av.obj_class, avc_type].audit_msgs.append(audit_msg)
 
 def avs_extract_types(avs):
     types = refpolicy.IdSet()

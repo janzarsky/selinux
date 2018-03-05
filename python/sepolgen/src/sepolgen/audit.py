@@ -525,15 +525,27 @@ class AuditParser:
         for avc in self.avc_msgs:
             if avc.denial != True and only_denials:
                 continue
+            
+            if avc.ioctlcmd is not None:
+                xperms = {"ioctl": refpolicy.XpermSet([avc.ioctlcmd])}
+            else:
+                xperms = None
+
             if avc_filter:
                 if avc_filter.filter(avc):
-                    av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                               avc.accesses, avc, avc_type=avc.type, data=avc.data,
-                               ioctlcmd=avc.ioctlcmd)
+                    av = access.AccessVector([avc.scontext.type,
+                        avc.tcontext.type, avc.tclass] + avc.accesses)
+                    av.data = avc.data
+                    av.xperms = xperms
+
+                    av_set.add_av(av, audit_msg=avc, avc_type=avc.type)
             else:
-                av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                           avc.accesses, avc, avc_type=avc.type, data=avc.data,
-                           ioctlcmd=avc.ioctlcmd)
+                av = access.AccessVector([avc.scontext.type,
+                    avc.tcontext.type, avc.tclass] + avc.accesses)
+                av.data = avc.data
+                av.xperms = xperms
+
+                av_set.add_av(av, audit_msg=avc, avc_type=avc.type)
         return av_set
 
 class AVCTypeFilter:

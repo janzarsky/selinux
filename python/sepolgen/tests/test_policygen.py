@@ -19,13 +19,49 @@
 
 import unittest
 import sepolgen.policygen as policygen
+import sepolgen.access as access
+import sepolgen.refpolicy as refpolicy
 
-class PolicyGenerator(unittest.TestCase):
-    def __init__(self):
-        g = policygen.PolicyGenerator()
-        
+class TestPolicyGenerator(unittest.TestCase):
+    def setUp(self):
+        self.g = policygen.PolicyGenerator()
 
+    def test_av_rules(self):
+        av1 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "ioctl"])
+        av2 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "open"])
+        av3 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "read"])
 
+        avs = access.AccessVectorSet() 
+        avs.add_av(av1)
+        avs.add_av(av2)
+        avs.add_av(av3)
 
+        self.g.add_access(avs)
 
+        self.assertEqual(len(self.g.module.children), 1)
+        r = self.g.module.children[0]
+        self.assertIsInstance(r, refpolicy.AVRule)
+        self.assertEqual(r.to_string(),
+            "allow test_src_t test_tgt_t:file { ioctl open read };")
+
+    def test_ext_av_rules(self):
+        av1 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
+        av1.xperms['ioctl'] = refpolicy.XpermSet([42])
+        av2 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
+        av2.xperms['ioctl'] = refpolicy.XpermSet([1234])
+        av3 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
+        av3.xperms['ioctl'] = refpolicy.XpermSet([2345])
+
+        avs = access.AccessVectorSet() 
+        avs.add_av(av1)
+        avs.add_av(av2)
+        avs.add_av(av3)
+
+        self.g.add_access(avs)
+
+        self.assertEqual(len(self.g.module.children), 1)
+        r = self.g.module.children[0]
+        self.assertIsInstance(r, refpolicy.AVExtRule)
+        self.assertEqual(r.to_string(),
+            "allowxperm test_src_t test_tgt_t:file ioctl { 42 1234 2345 };")
 

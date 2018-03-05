@@ -57,6 +57,8 @@ type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute_no_trans } for 
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file"""
 
 xperms1 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x42 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+"""
+xperms2 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x42 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
 type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x1234 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
 type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0xdead scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
 """
@@ -112,7 +114,7 @@ class TestAVCMessage(unittest.TestCase):
 
         self.assertEqual(avc.denial, True)
 
-        self.assertEqual(avc.ioctlcmd, 0x42)
+        self.assertEqual(avc.ioctlcmd, 66)
 
     def test_from_split_string(self):
         # syslog message
@@ -203,13 +205,13 @@ class TestAuditParser(unittest.TestCase):
 
     def test_parse_xperms(self):
         a = sepolgen.audit.AuditParser()
-        a.parse_string(xperms1)
+        a.parse_string(xperms2)
         av_set = a.to_access()
 
         self.assertEqual(len(av_set), 1)
 
         for av in av_set:
-            self.assertEqual(sorted(av.ioctlcmd), sorted(set([66, 4660, 57005])))
+            self.assertEqual(sorted(av.xperms['ioctl']), sorted(set([66, 4660, 57005])))
 
 class TestGeneration(unittest.TestCase):
     def test_generation(self):
