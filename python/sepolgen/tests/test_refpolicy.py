@@ -33,6 +33,46 @@ class TestIdSet(unittest.TestCase):
         s.add("read")
         self.assertEqual(s.to_space_str(), "read")
 
+class TestXpermSet(unittest.TestCase):
+    def test_add(self):
+        s = refpolicy.XpermSet()
+        s.add(1, 7)
+        s.add(5, 10)
+        s.add(100, 110)
+        s.add(102, 107)
+        s.add(200, 205)
+        s.add(205, 210)
+        s.add(300, 305)
+        s.add(306, 310)
+        s.add(400, 405)
+        s.add(407, 410)
+        s.add(500, 502)
+        s.add(504, 508)
+        s.add(500, 510)
+        self.assertEqual(s.to_string(), "{ 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
+
+    def test_extend(self):
+        a = refpolicy.XpermSet()
+        a.add(1, 7)
+        a.add(100, 110)
+        a.add(200, 205)
+        a.add(300, 305)
+        a.add(400, 405)
+        a.add(500, 502)
+        a.add(504, 508)
+
+        b = refpolicy.XpermSet()
+        b.add(5, 10)
+        b.add(102, 107)
+        b.add(205, 210)
+        b.add(306, 310)
+        b.add(407, 410)
+        b.add(500, 510)
+
+        a.extend(b)
+
+        self.assertEqual(a.to_string(), "{ 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
+
 class TestSecurityContext(unittest.TestCase):
     def test_init(self):
         sc = refpolicy.SecurityContext()

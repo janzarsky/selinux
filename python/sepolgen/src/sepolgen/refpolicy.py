@@ -353,15 +353,32 @@ class ObjectClass(Leaf):
 class XpermSet():
     def __init__(self, blacklist=False):
         self.blacklist = blacklist
-        self.xperm_set = set()
+        self.ranges = []
+
+    def __normalize_ranges(self):
+        self.ranges.sort()
+
+        for i in range(0, len(self.ranges)):
+            j = i + 1
+            while j < len(self.ranges):
+                if self.ranges[j][0] <= self.ranges[i][1] + 1:
+                    self.ranges[i] = (self.ranges[i][0], max(self.ranges[i][1],
+                                                             self.ranges[j][1]))
+                    del self.ranges[j]
+                elif self.ranges[j][0] > self.ranges[i][1] + 1:
+                    break
+                else:
+                    j += 1
 
     def extend(self, s):
-        self.xperm_set = self.xperm_set.union(s.xperm_set)
+        self.ranges.extend(s.ranges)
+        self.__normalize_ranges()
 
     def add(self, minimum, maximum=None):
         if maximum is None:
             maximum = minimum
-        self.xperm_set = self.xperm_set.union(range(minimum, maximum + 1))
+        self.ranges.append((minimum, maximum))
+        self.__normalize_ranges()
 
     def to_string(self):
         if self.blacklist:
@@ -369,24 +386,16 @@ class XpermSet():
         else:
             s = ""
 
-        if len(self.xperm_set) > 1:
+        if len(self.ranges) > 1 or self.ranges[0][0] != self.ranges[0][1]:
             s += "{ "
 
-        ranges = []
-
-        for i in sorted(self.xperm_set):
-            if not ranges or i - 1 != ranges[-1][1]:
-                ranges.append((i, i))
-            else:
-                ranges[-1] = (ranges[-1][0], i)
-
-        for r in ranges:
+        for r in self.ranges:
             if r[0] == r[1]:
                 s += "%d " % r[0]
             else:
                 s += "%d-%d " % r
 
-        if len(self.xperm_set) > 1:
+        if len(self.ranges) > 1 or self.ranges[0][0] != self.ranges[0][1]:
             s += "}"
         else:
             s = s[:-1]

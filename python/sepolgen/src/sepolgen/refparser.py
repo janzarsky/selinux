@@ -869,7 +869,8 @@ def p_nested_xperm_element(p):
     '''
     if len(p) == 4:
         s = refpolicy.XpermSet()
-        s.add(int(p[1].xperm_set.pop()), int(p[3].xperm_set.pop()))
+        # TODO fix this ugly stuff
+        s.add(int(p[1].ranges[0][0]), int(p[3].ranges[0][0]))
         p[0] = s
     else:
         p[0] = p[1]
