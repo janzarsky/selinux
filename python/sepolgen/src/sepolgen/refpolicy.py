@@ -355,10 +355,40 @@ class XpermSet():
         self.blacklist = blacklist
         self.ranges = []
 
+    def __combine(self, ranges):
+        i = 0
+        while i < len(self.ranges):
+            j = 0
+            while j < len(ranges):
+                a = self.ranges[i]
+                b = ranges[j]
+
+                if b[1] < a[0]:
+                    pass
+                elif a[1] < b[0]:
+                    break
+                elif a[0] >= b[0] and a[1] <= b[1]:
+                    del self.ranges[i]
+                    i -= 1
+                    break
+                elif a[0] < b[0] and b[1] < a[1]:
+                    self.ranges[i] = (a[0], b[0] - 1)
+                    self.ranges.insert(i + 1, (b[1] + 1, a[1]))
+                    break
+                elif a[0] < b[0]:
+                    self.ranges[i] = (a[0], b[0] - 1)
+                    break
+                else:
+                    self.ranges[i] = (b[1] + 1, a[1])
+
+                j += 1
+            i += 1
+
     def __normalize_ranges(self):
         self.ranges.sort()
 
-        for i in range(0, len(self.ranges)):
+        i = 0
+        while i < len(self.ranges):
             j = i + 1
             while j < len(self.ranges):
                 if self.ranges[j][0] <= self.ranges[i][1] + 1:
@@ -369,9 +399,18 @@ class XpermSet():
                     break
                 else:
                     j += 1
+            i += 1
 
     def extend(self, s):
-        self.ranges.extend(s.ranges)
+        if s.blacklist == self.blacklist:
+            self.ranges.extend(s.ranges)
+        elif self.blacklist:
+            self.__combine(s.ranges)
+        else:
+            self.ranges, s.ranges = s.ranges, self.ranges
+            self.blacklist, s.blacklist = True, False
+            self.__combine(s.ranges)
+
         self.__normalize_ranges()
 
     def add(self, minimum, maximum=None):

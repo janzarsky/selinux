@@ -160,7 +160,6 @@ class TestParser(unittest.TestCase):
         self.assertIsInstance(nodes[2][0], refpolicy.AVRule)
         self.assertIsInstance(nodes[3][0], refpolicy.AVRule)
 
-        #import pdb; pdb.set_trace()
         self.assertTrue(len(nodes) == 18)
 
         for n in nodes[4:]:
