@@ -202,6 +202,10 @@ class PolicyGenerator:
     def __add_ext_allow_rule(self, av):
         for op in av.xperms.keys():
             extrule = refpolicy.AVExtRule(av, op)
+
+            if self.dontaudit:
+                extrule.rule_type = extrule.DONTAUDITXPERM
+
             self.module.children.append(extrule)
 
     def __add_allow_rules(self, avs):

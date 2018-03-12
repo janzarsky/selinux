@@ -526,7 +526,7 @@ class AuditParser:
             if avc.denial != True and only_denials:
                 continue
             
-            if avc.ioctlcmd is not None:
+            if avc.ioctlcmd:
                 xperm_set = refpolicy.XpermSet(blacklist=False)
                 xperm_set.add(avc.ioctlcmd)
                 xperms = { "ioctl": xperm_set }
