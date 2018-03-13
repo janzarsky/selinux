@@ -533,15 +533,7 @@ class AuditParser:
             else:
                 xperms = None
 
-            if avc_filter:
-                if avc_filter.filter(avc):
-                    av = access.AccessVector([avc.scontext.type,
-                        avc.tcontext.type, avc.tclass] + avc.accesses)
-                    av.data = avc.data
-                    av.xperms = xperms
-
-                    av_set.add_av(av, audit_msg=avc, avc_type=avc.type)
-            else:
+            if not avc_filter or avc_filter.filter(avc):
                 av = access.AccessVector([avc.scontext.type,
                     avc.tcontext.type, avc.tclass] + avc.accesses)
                 av.data = avc.data
