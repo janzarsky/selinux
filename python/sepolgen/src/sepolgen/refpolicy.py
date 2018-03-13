@@ -389,16 +389,13 @@ class XpermSet():
 
         i = 0
         while i < len(self.ranges):
-            j = i + 1
-            while j < len(self.ranges):
-                if self.ranges[j][0] <= self.ranges[i][1] + 1:
+            while i + 1 < len(self.ranges):
+                if self.ranges[i + 1][0] <= self.ranges[i][1] + 1:
                     self.ranges[i] = (self.ranges[i][0], max(self.ranges[i][1],
-                                                             self.ranges[j][1]))
-                    del self.ranges[j]
-                elif self.ranges[j][0] > self.ranges[i][1] + 1:
-                    break
+                                                             self.ranges[i + 1][1]))
+                    del self.ranges[i + 1]
                 else:
-                    j += 1
+                    break
             i += 1
 
     def extend(self, s):
