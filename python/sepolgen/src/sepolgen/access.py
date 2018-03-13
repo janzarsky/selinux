@@ -267,19 +267,30 @@ class AccessVectorSet:
         """
         for av in l:
             self.add_av(AccessVector(av))
+
+    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[]):
+        av = AccessVector()
+        av.src_type = src_type
+        av.tgt_type = tgt_type
+        av.obj_class = obj_class
+        av.perms = perms
+        av.data = data
+        av.type = avc_type
+
+        self.add_av(av, audit_msg)
     
-    def add_av(self, av, audit_msg=None, avc_type=audit2why.TERULE):
+    def add_av(self, av, audit_msg=None):
         """Add an access vector to the set."""
         tgt = self.src.setdefault(av.src_type, { })
         cls = tgt.setdefault(av.tgt_type, { })
         
-        if (av.obj_class, avc_type) in cls:
-            cls[av.obj_class, avc_type].merge(av)
+        if (av.obj_class, av.type) in cls:
+            cls[av.obj_class, av.type].merge(av)
         else:
-            cls[av.obj_class, avc_type] = av
+            cls[av.obj_class, av.type] = av
 
         if audit_msg:
-            cls[av.obj_class, avc_type].audit_msgs.append(audit_msg)
+            cls[av.obj_class, av.type].audit_msgs.append(audit_msg)
 
 def avs_extract_types(avs):
     types = refpolicy.IdSet()
