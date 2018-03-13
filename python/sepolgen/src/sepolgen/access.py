@@ -134,8 +134,7 @@ class AccessVector(util.Comparison):
         return l
     
     def merge(self, av):
-        if av.perms:
-            self.perms = self.perms.union(av.perms)
+        self.perms = self.perms.union(av.perms)
 
         if av.xperms:
             for op in av.xperms:
