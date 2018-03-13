@@ -419,6 +419,9 @@ class XpermSet():
         self.ranges.append((minimum, maximum))
         self.__normalize_ranges()
 
+    def to_single_value(self):
+        return self.ranges[0][0]
+
     def to_string(self):
         if self.blacklist:
             s = "~ "
