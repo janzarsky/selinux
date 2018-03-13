@@ -278,7 +278,7 @@ class AccessVectorSet:
         else:
             cls[av.obj_class, avc_type] = av
 
-        if audit_msg is not None:
+        if audit_msg:
             cls[av.obj_class, avc_type].audit_msgs.append(audit_msg)
 
 def avs_extract_types(avs):
