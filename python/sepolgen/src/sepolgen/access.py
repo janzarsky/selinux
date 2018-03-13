@@ -114,8 +114,8 @@ class AccessVector(util.Comparison):
         This format is useful for very simple storage to strings or disc
         (see to_list) and for initializing access vectors.
         """
-        if len(list) < 3:
-            raise ValueError("List must contain at least 3 elements %s" % str(list))
+        if len(list) < 4:
+            raise ValueError("List must contain at least four elements %s" % str(list))
         self.src_type = list[0]
         self.tgt_type = list[1]
         self.obj_class = list[2]

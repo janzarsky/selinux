@@ -45,13 +45,13 @@ class TestPolicyGenerator(unittest.TestCase):
             "allow test_src_t test_tgt_t:file { ioctl open read };")
 
     def test_ext_av_rules(self):
-        av1 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
+        av1 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "ioctl"])
         av1.xperms['ioctl'] = refpolicy.XpermSet()
         av1.xperms['ioctl'].add(42)
-        av2 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
+        av2 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "ioctl"])
         av2.xperms['ioctl'] = refpolicy.XpermSet()
         av2.xperms['ioctl'].add(1234)
-        av3 = access.AccessVector(["test_src_t", "test_tgt_t", "file"])
+        av3 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "ioctl"])
         av3.xperms['ioctl'] = refpolicy.XpermSet()
         av3.xperms['ioctl'].add(2345)
 
@@ -62,9 +62,14 @@ class TestPolicyGenerator(unittest.TestCase):
 
         self.g.add_access(avs)
 
-        self.assertEqual(len(self.g.module.children), 1)
-        r = self.g.module.children[0]
-        self.assertIsInstance(r, refpolicy.AVExtRule)
-        self.assertEqual(r.to_string(),
-            "allowxperm test_src_t test_tgt_t:file ioctl { 42 1234 2345 };")
+        self.assertEqual(len(self.g.module.children), 2)
 
+        r1 = self.g.module.children[0]
+        self.assertIsInstance(r1, refpolicy.AVRule)
+        self.assertEqual(r1.to_string(),
+            "allow test_src_t test_tgt_t:file ioctl;")
+
+        r2 = self.g.module.children[1]
+        self.assertIsInstance(r2, refpolicy.AVExtRule)
+        self.assertEqual(r2.to_string(),
+            "allowxperm test_src_t test_tgt_t:file ioctl { 42 1234 2345 };")

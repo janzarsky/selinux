@@ -153,7 +153,7 @@ class PolicyGenerator:
         """Return the generated module"""
         return self.module
 
-    def __add_standard_allow_rule(self, av):
+    def __add_allow_rule(self, av):
         rule = refpolicy.AVRule(av)
 
         if self.dontaudit:
@@ -199,7 +199,7 @@ class PolicyGenerator:
 
         self.module.children.append(rule)
 
-    def __add_ext_allow_rule(self, av):
+    def __add_ext_allow_rules(self, av):
         for op in av.xperms.keys():
             extrule = refpolicy.AVExtRule(av, op)
 
@@ -210,10 +210,9 @@ class PolicyGenerator:
 
     def __add_allow_rules(self, avs):
         for av in avs:
-            if av.perms:
-                self.__add_standard_allow_rule(av)
+            self.__add_allow_rule(av)
             if av.xperms:
-                self.__add_ext_allow_rule(av)
+                self.__add_ext_allow_rules(av)
 
     def add_access(self, av_set):
         """Add the access from the access vector set to this
