@@ -278,3 +278,11 @@ class TestAccessVectorSet(unittest.TestCase):
         b = access.AccessVectorSet()
         b.from_list(avl)
         self.assertEqual(len(b), 3)
+
+    def test_add(self):
+        s = access.AccessVectorSet()
+        s.add("foo", "bar", "file", refpolicy.IdSet(["read"]), audit_msg=1)
+        s.add("foo", "bar", "file", refpolicy.IdSet(["write"]), audit_msg=2)
+        
+        self.assertEqual(s.to_list(), [['foo', 'bar', 'file', 'read', 'write']])
+
