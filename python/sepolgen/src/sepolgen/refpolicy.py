@@ -354,7 +354,11 @@ class XpermSet():
     """Extended permission set.
 
     This class represents one or more extended permissions
-    represented by numeric values.
+    represented by numeric values or ranges of values. The
+    .complement attribute is used to specify all permission
+    except those specified.
+
+    Two xperm set can be merged using the .extend() method.
     """
     def __init__(self, complement=False):
         self.complement = complement
@@ -390,6 +394,8 @@ class XpermSet():
             i += 1
 
     def __normalize_ranges(self):
+        """Ensure that ranges are not overlapping.
+        """
         self.ranges.sort()
 
         i = 0
@@ -404,6 +410,8 @@ class XpermSet():
             i += 1
 
     def extend(self, s):
+        """Add ranges from an xperm set
+        """
         if s.complement == self.complement:
             self.ranges.extend(s.ranges)
         elif self.complement:
@@ -416,12 +424,16 @@ class XpermSet():
         self.__normalize_ranges()
 
     def add(self, minimum, maximum=None):
+        """Add value of range of values to the xperm set.
+        """
         if maximum is None:
             maximum = minimum
         self.ranges.append((minimum, maximum))
         self.__normalize_ranges()
 
     def to_single_value(self):
+        """Return single value - it is used by refparser.
+        """
         return self.ranges[0][0]
 
     def to_string(self):
