@@ -171,8 +171,13 @@ class PolicyGenerator:
         rule.comment = ""
         if self.explain:
             rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
+
         if av.type == audit2why.ALLOW:
             rule.comment += "\n#!!!! This avc is allowed in the current policy"
+
+            if av.xperms:
+                rule.comment += "\n#!!!! This av rule may have been overriden by extended permission av rule"
+
         if av.type == audit2why.DONTAUDIT:
             rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
 
