@@ -82,6 +82,7 @@ class PolicyGenerator:
             self.module = refpolicy.Module()
 
         self.dontaudit = False
+        self.xperms = False
 
         self.domains = None
     def set_gen_refpol(self, if_set=None, perm_maps=None):
@@ -120,6 +121,9 @@ class PolicyGenerator:
     def set_gen_dontaudit(self, dontaudit):
         self.dontaudit = dontaudit
 
+    def set_gen_xperms(self, xperms):
+        self.xperms = xperms
+
     def __set_module_style(self):
         if self.ifgen:
             refpolicy = True
@@ -152,12 +156,6 @@ class PolicyGenerator:
 
         """Return the generated module"""
         return self.module
-
-    def __add_allow_rules(self, avs):
-        for av in avs:
-            self.__add_av_rule(av)
-            if av.xperms:
-                self.__add_ext_av_rules(av)
 
     def __add_av_rule(self, av):
         rule = refpolicy.AVRule(av)
@@ -230,7 +228,10 @@ class PolicyGenerator:
             raw_allow = av_set
 
         # Generate the raw allow rules from the filtered list
-        self.__add_allow_rules(raw_allow)
+        for av in raw_allow:
+            self.__add_av_rule(av)
+            if self.xperms and av.xperms:
+                self.__add_ext_av_rules(av)
 
     def add_role_types(self, role_type_set):
         for role_type in role_type_set:

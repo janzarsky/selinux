@@ -45,6 +45,8 @@ class TestPolicyGenerator(unittest.TestCase):
             "allow test_src_t test_tgt_t:file { ioctl open read };")
 
     def test_ext_av_rules(self):
+        self.g.set_gen_xperms(True)
+
         av1 = access.AccessVector(["test_src_t", "test_tgt_t", "file", "ioctl"])
         av1.xperms['ioctl'] = refpolicy.XpermSet()
         av1.xperms['ioctl'].add(42)
