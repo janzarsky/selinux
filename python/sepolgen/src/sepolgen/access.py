@@ -78,6 +78,7 @@ class AccessVector(util.Comparison):
      .obj_class - The object class to which access is allowed. [String or None]
      .perms - The permissions allowed to the object class. [IdSet]
      .audit_msgs - The audit messages that generated this access vector [List of strings]
+     .xperms - Extended permissions attached to the AV. [Dictionary {operation: xperm set}]
     """
     def __init__(self, init_list=None):
         if init_list:
@@ -134,6 +135,7 @@ class AccessVector(util.Comparison):
         return l
     
     def merge(self, av):
+        """Add permissions and extended permissions from AV"""
         self.perms = self.perms.union(av.perms)
 
         if av.xperms:
@@ -269,6 +271,8 @@ class AccessVectorSet:
             self.add_av(AccessVector(av))
 
     def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[]):
+        """Add an access vector to the set.
+        """
         av = AccessVector()
         av.src_type = src_type
         av.tgt_type = tgt_type

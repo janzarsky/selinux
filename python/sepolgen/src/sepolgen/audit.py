@@ -152,6 +152,7 @@ class AVCMessage(AuditMessage):
        access - list of accesses that were allowed or denied
        denial - boolean indicating whether this was a denial (True) or granted
           (False) message.
+       ioctlcmd - ioctl 'request' parameter
 
     An example audit message generated from the audit daemon looks like (line breaks
     added):

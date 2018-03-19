@@ -50,10 +50,11 @@ class PolicyGenerator:
     in the form of access vectors.
 
     It generates allow rules and optionally module require
-    statements and reference policy interfaces. By default
-    only allow rules are generated. The methods .set_gen_refpol
-    and .set_gen_requires turns on interface generation and
-    requires generation respectively.
+    statements, reference policy interfaces, and extended
+    permission access vector rules. By default only allow rules
+    are generated. The methods .set_gen_refpol, .set_gen_requires
+    and .set_gen_xperms turns on interface generation,
+    requires generation, and xperms rules genration respectively.
 
     PolicyGenerator can also optionally add comments explaining
     why a particular access was allowed based on the audit
@@ -122,6 +123,9 @@ class PolicyGenerator:
         self.dontaudit = dontaudit
 
     def set_gen_xperms(self, xperms):
+        """Set whether extended permission access vector rules
+        are generated.
+        """
         self.xperms = xperms
 
     def __set_module_style(self):
@@ -158,6 +162,8 @@ class PolicyGenerator:
         return self.module
 
     def __add_av_rule(self, av):
+        """Add access vector rule.
+        """
         rule = refpolicy.AVRule(av)
 
         if self.dontaudit:
@@ -204,6 +210,8 @@ class PolicyGenerator:
         self.module.children.append(rule)
 
     def __add_ext_av_rules(self, av):
+        """Add extended permission access vector rules.
+        """
         for op in av.xperms.keys():
             extrule = refpolicy.AVExtRule(av, op)
 

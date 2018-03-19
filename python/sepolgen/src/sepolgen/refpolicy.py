@@ -351,6 +351,11 @@ class ObjectClass(Leaf):
         self.perms = IdSet()
 
 class XpermSet():
+    """Extended permission set.
+
+    This class represents one or more extended permissions
+    represented by numeric values.
+    """
     def __init__(self, blacklist=False):
         self.blacklist = blacklist
         self.ranges = []
