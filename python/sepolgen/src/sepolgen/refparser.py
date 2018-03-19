@@ -847,7 +847,7 @@ def p_xperms(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[2].blacklist = True
+        p[2].complement = True
         p[0] = p[2]
 
 def p_nested_xperm_set(p):

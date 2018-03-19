@@ -356,8 +356,8 @@ class XpermSet():
     This class represents one or more extended permissions
     represented by numeric values.
     """
-    def __init__(self, blacklist=False):
-        self.blacklist = blacklist
+    def __init__(self, complement=False):
+        self.complement = complement
         self.ranges = []
 
     def __combine(self, ranges):
@@ -404,13 +404,13 @@ class XpermSet():
             i += 1
 
     def extend(self, s):
-        if s.blacklist == self.blacklist:
+        if s.complement == self.complement:
             self.ranges.extend(s.ranges)
-        elif self.blacklist:
+        elif self.complement:
             self.__combine(s.ranges)
         else:
             self.ranges, s.ranges = s.ranges, self.ranges
-            self.blacklist, s.blacklist = True, False
+            self.complement, s.complement = True, False
             self.__combine(s.ranges)
 
         self.__normalize_ranges()
@@ -425,7 +425,7 @@ class XpermSet():
         return self.ranges[0][0]
 
     def to_string(self):
-        if self.blacklist:
+        if self.complement:
             s = "~ "
         else:
             s = ""

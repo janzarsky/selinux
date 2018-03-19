@@ -51,7 +51,7 @@ class TestXpermSet(unittest.TestCase):
         s.add(500, 510)
         self.assertEqual(s.to_string(), "{ 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
 
-    def test_extend_whitelist(self):
+    def test_extend(self):
         a = refpolicy.XpermSet()
         a.add(1, 7)
         a.add(100, 110)
@@ -73,8 +73,8 @@ class TestXpermSet(unittest.TestCase):
 
         self.assertEqual(a.to_string(), "{ 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
 
-    def test_extend_blacklist(self):
-        a = refpolicy.XpermSet(blacklist=True)
+    def test_extend_complement(self):
+        a = refpolicy.XpermSet(complement=True)
         a.add(1, 7)
         a.add(100, 110)
         a.add(200, 205)
@@ -83,7 +83,7 @@ class TestXpermSet(unittest.TestCase):
         a.add(500, 502)
         a.add(504, 508)
 
-        b = refpolicy.XpermSet(blacklist=True)
+        b = refpolicy.XpermSet(complement=True)
         b.add(5, 10)
         b.add(102, 107)
         b.add(205, 210)
@@ -95,7 +95,7 @@ class TestXpermSet(unittest.TestCase):
 
         self.assertEqual(a.to_string(), "~ { 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
 
-    def test_extend_blacklist_whitelist(self):
+    def test_extend_complement_2(self):
         a = refpolicy.XpermSet()
         a.add(1, 7)
         a.add(100, 110)
@@ -105,7 +105,7 @@ class TestXpermSet(unittest.TestCase):
         a.add(500, 502)
         a.add(504, 508)
 
-        b = refpolicy.XpermSet(blacklist=True)
+        b = refpolicy.XpermSet(complement=True)
         b.add(5, 10)
         b.add(102, 107)
         b.add(205, 210)
@@ -117,8 +117,8 @@ class TestXpermSet(unittest.TestCase):
 
         self.assertEqual(a.to_string(), "~ { 8-10 206-210 306-310 407-410 503 509-510 }")
 
-    def test_extend_whitelist_blacklist(self):
-        a = refpolicy.XpermSet(blacklist=True)
+    def test_extend_complement_3(self):
+        a = refpolicy.XpermSet(complement=True)
         a.add(5, 10)
         a.add(102, 107)
         a.add(205, 210)
