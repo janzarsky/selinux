@@ -607,6 +607,15 @@ class AVRule(Leaf):
                                      self.perms.to_space_str())
 
 class AVExtRule(Leaf):
+    """Extended permission access vector rule.
+
+    The AVExtRule class represents allowxperm, dontauditxperm,
+    auditallowxperm, and neverallowxperm rules.
+
+    The source and target types, and object classes are represented
+    by sets containing strings. The operation is a single string,
+    e.g. 'ioctl'. Extended permissions are represented by an XpermSet.
+    """
     ALLOWXPERM = 0
     DONTAUDITXPERM = 1
     AUDITALLOWXPERM = 2
@@ -644,6 +653,10 @@ class AVExtRule(Leaf):
         self.xperms = av.xperms[op]
 
     def to_string(self):
+        """Return a string representation of the rule that is
+        a valid policy language representation (assuming that
+        the types, object class, etc. are valie).
+        """
         return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),
                                      self.src_types.to_space_str(),
                                      self.tgt_types.to_space_str(),
