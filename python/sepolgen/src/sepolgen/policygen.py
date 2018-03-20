@@ -82,8 +82,10 @@ class PolicyGenerator:
             self.module = refpolicy.Module()
 
         self.dontaudit = False
-
         self.domains = None
+        # TODO decide what is to be the default
+        self.check_mislabeled = True
+
     def set_gen_refpol(self, if_set=None, perm_maps=None):
         """Set whether reference policy interfaces are generated.
 
@@ -120,6 +122,9 @@ class PolicyGenerator:
     def set_gen_dontaudit(self, dontaudit):
         self.dontaudit = dontaudit
 
+    def set_check_mislabeled(self, mislabeled):
+        self.check_mislabeled = mislabeled
+
     def __set_module_style(self):
         if self.ifgen:
             refpolicy = True
@@ -153,6 +158,20 @@ class PolicyGenerator:
         """Return the generated module"""
         return self.module
 
+    def __check_mislabeled(self, avs):
+        for av in avs:
+            av.mislabeled = []
+            for msg in av.audit_msgs:
+                if msg.path:
+                    import selinux
+                    try:
+                        context = selinux.matchpathcon(msg.path, 0)
+                        split = context[1].split(":")[2]
+                        if split != av.tgt_type:
+                            av.mislabeled.append(msg.path)
+                    except OSError:
+                        pass
+
     def __add_allow_rules(self, avs):
         for av in avs:
             rule = refpolicy.AVRule(av)
@@ -165,6 +184,9 @@ class PolicyGenerator:
                 rule.comment += "\n#!!!! This avc is allowed in the current policy"
             if av.type == audit2why.DONTAUDIT:
                 rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
+
+            for f in av.mislabeled:
+                rule.comment += "\n#!!!! The '%s' file has other than default context" % f
 
             if av.type == audit2why.BOOLEAN:
                 if len(av.data) > 1:
@@ -213,6 +235,9 @@ class PolicyGenerator:
             self.module.children.extend(ifcalls)
         else:
             raw_allow = av_set
+
+        if self.check_mislabeled:
+            self.__check_mislabeled(raw_allow)
 
         # Generate the raw allow rules from the filtered list
         self.__add_allow_rules(raw_allow)

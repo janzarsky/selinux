@@ -237,6 +237,8 @@ class AVCMessage(AuditMessage):
                 self.exe = fields[1][1:-1]
             elif fields[0] == "name":
                 self.name = fields[1][1:-1]
+            elif fields[0] == "path":
+                self.path = fields[1][1:-1]
 
         if not found_src or not found_tgt or not found_class or not found_access:
             raise ValueError("AVC message in invalid format [%s]\n" % self.message)
