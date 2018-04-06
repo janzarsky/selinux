@@ -160,8 +160,8 @@ class TestAccessVector(unittest.TestCase):
         b.xperms = {"ioctl": xp}
 
         a.merge(b)
-        self.assertEqual(list(a.perms), ["read", "write", "append"])
-        self.assertEqual(a.xperms.keys(), ["ioctl"])
+        self.assertEqual(sorted(list(a.perms)), ["append", "read", "write"])
+        self.assertEqual(list(a.xperms.keys()), ["ioctl"])
         self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
                          
 class TestUtilFunctions(unittest.TestCase):
