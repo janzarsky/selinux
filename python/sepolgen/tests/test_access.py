@@ -32,6 +32,7 @@ class TestAccessVector(unittest.TestCase):
         self.assertEqual(a.obj_class, None)
         self.assertTrue(isinstance(a.perms, refpolicy.IdSet))
         self.assertTrue(isinstance(a.audit_msgs, type([])))
+        self.assertTrue(isinstance(a.xperms, type({})))
         self.assertEqual(len(a.audit_msgs), 0)
 
         # Construction from a list
@@ -150,10 +151,18 @@ class TestAccessVector(unittest.TestCase):
         b.perms = refpolicy.IdSet(["read", "append"])
         self.assertNotEqual(a, b)
 
-    def test_merge(self):
+    def test_merge_noxperm(self):
+        """Test merging two AVs without xperms"""
         a = access.AccessVector(["foo", "bar", "file", "read", "write"])
-
         b = access.AccessVector(["foo", "bar", "file", "append"])
+
+        a.merge(b)
+        self.assertEqual(sorted(list(a.perms)), ["append", "read", "write"])
+
+    def text_merge_xperm1(self):
+        """Test merging AV that contains xperms with AV that does not"""
+        a = access.AccessVector(["foo", "bar", "file", "read"])
+        b = access.AccessVector(["foo", "bar", "file", "read"])
         xp = refpolicy.XpermSet()
         xp.add(42)
         xp.add(12345)
@@ -163,6 +172,57 @@ class TestAccessVector(unittest.TestCase):
         self.assertEqual(sorted(list(a.perms)), ["append", "read", "write"])
         self.assertEqual(list(a.xperms.keys()), ["ioctl"])
         self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
+
+    def text_merge_xperm2(self):
+        """Test merging AV that does not contain xperms with AV that does"""
+        a = access.AccessVector(["foo", "bar", "file", "read"])
+        xp = refpolicy.XpermSet()
+        xp.add(42)
+        xp.add(12345)
+        a.xperms = {"ioctl": xp}
+        b = access.AccessVector(["foo", "bar", "file", "read"])
+
+        a.merge(b)
+        self.assertEqual(sorted(list(a.perms)), ["append", "read", "write"])
+        self.assertEqual(list(a.xperms.keys()), ["ioctl"])
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
+
+    def test_merge_xperm_diff_op(self):
+        """Test merging two AVs that contain xperms with different operation"""
+        a = access.AccessVector(["foo", "bar", "file", "read"])
+        xp1 = refpolicy.XpermSet()
+        xp1.add(23)
+        a.xperms = {"asdf": xp1}
+
+        b = access.AccessVector(["foo", "bar", "file", "read"])
+        xp2 = refpolicy.XpermSet()
+        xp2.add(42)
+        xp2.add(12345)
+        b.xperms = {"ioctl": xp2}
+
+        a.merge(b)
+        self.assertEqual(list(a.perms), ["read"])
+        self.assertEqual(sorted(list(a.xperms.keys())), ["asdf", "ioctl"])
+        self.assertEqual(a.xperms["asdf"].to_string(), "23")
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
+                         
+    def test_merge_xperm_same_op(self):
+        """Test merging two AVs that contain xperms with same operation"""
+        a = access.AccessVector(["foo", "bar", "file", "read"])
+        xp1 = refpolicy.XpermSet()
+        xp1.add(23)
+        a.xperms = {"ioctl": xp1}
+
+        b = access.AccessVector(["foo", "bar", "file", "read"])
+        xp2 = refpolicy.XpermSet()
+        xp2.add(42)
+        xp2.add(12345)
+        b.xperms = {"ioctl": xp2}
+
+        a.merge(b)
+        self.assertEqual(list(a.perms), ["read"])
+        self.assertEqual(list(a.xperms.keys()), ["ioctl"])
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 23 42 12345 }")
                          
 class TestUtilFunctions(unittest.TestCase):
     def test_is_idparam(self):
