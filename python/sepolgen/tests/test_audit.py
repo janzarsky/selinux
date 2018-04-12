@@ -97,6 +97,7 @@ class TestAVCMessage(unittest.TestCase):
         self.assertEqual(avc.denial, False)
 
     def test_xperms(self):
+        """Test that the ioctlcmd field is parsed"""
         avc = sepolgen.audit.AVCMessage(xperms1)
         recs = xperms1.split()
         avc.from_split_string(recs)
@@ -104,6 +105,7 @@ class TestAVCMessage(unittest.TestCase):
         self.assertEqual(avc.ioctlcmd, 66)
 
     def test_xperms_invalid(self):
+        """Test message with invalid value in the ioctlcmd field"""
         avc = sepolgen.audit.AVCMessage(xperms_invalid)
         recs = xperms_invalid.split()
         avc.from_split_string(recs)
@@ -111,6 +113,7 @@ class TestAVCMessage(unittest.TestCase):
         self.assertIsNone(avc.ioctlcmd)
 
     def test_xperms_without(self):
+        """Test message without the ioctlcmd field"""
         avc = sepolgen.audit.AVCMessage(xperms_without)
         recs = xperms_without.split()
         avc.from_split_string(recs)
