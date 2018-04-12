@@ -75,6 +75,7 @@ class TestAVCMessage(unittest.TestCase):
         self.assertEqual(avc.tcontext, sc)
         self.assertEqual(avc.tclass, "")
         self.assertEqual(avc.accesses, [])
+        self.assertEqual(avc.ioctlcmd, None)
 
     def test_granted(self):
         avc = sepolgen.audit.AVCMessage(granted1)
