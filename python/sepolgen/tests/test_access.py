@@ -339,10 +339,53 @@ class TestAccessVectorSet(unittest.TestCase):
         b.from_list(avl)
         self.assertEqual(len(b), 3)
 
+    def test_add_av_first(self):
+        """Test adding first AV to the AV set"""
+        avs = access.AccessVectorSet()
+        av = access.AccessVector(['foo', 'bar', 'file', 'read'])
+
+        avs.add_av(av)
+
+        self.assertEqual(avs.to_list(), [['foo', 'bar', 'file', 'read']])
+
+    def test_add_av_second(self):
+        """Test adding second AV to the AV set with same source and target
+        context and class"""
+        avs = access.AccessVectorSet()
+        av1 = access.AccessVector(['foo', 'bar', 'file', 'read'])
+        av2 = access.AccessVector(['foo', 'bar', 'file', 'write'])
+
+        avs.add_av(av1)
+        avs.add_av(av2)
+
+        self.assertEqual(avs.to_list(), [['foo', 'bar', 'file', 'read',
+                         'write']])
+
+    def test_add_av_with_msg(self):
+        """Test adding audit message"""
+        avs = access.AccessVectorSet()
+        av = access.AccessVector(['foo', 'bar', 'file', 'read'])
+
+        avs.add_av(av, 'test message')
+
+        self.assertEqual(avs.src['foo']['bar']['file', av.type].audit_msgs,
+                         ['test message'])
+
     def test_add(self):
+        """Test adding AV to the set"""
         s = access.AccessVectorSet()
-        s.add("foo", "bar", "file", refpolicy.IdSet(["read"]), audit_msg=1)
-        s.add("foo", "bar", "file", refpolicy.IdSet(["write"]), audit_msg=2)
-        
-        self.assertEqual(s.to_list(), [['foo', 'bar', 'file', 'read', 'write']])
+
+        def test_add_av(av, audit_msg=None):
+            self.assertEqual(av.src_type, 'foo')
+            self.assertEqual(av.tgt_type, 'bar')
+            self.assertEqual(av.obj_class, 'file')
+            self.assertEqual(list(av.perms), ['read'])
+            self.assertEqual(av.data, 'test data')
+            self.assertEqual(av.type, 42)
+            self.assertEqual(audit_msg, 'test message')
+
+        s.add_av = test_add_av
+
+        s.add("foo", "bar", "file", refpolicy.IdSet(["read"]),
+              audit_msg='test message', avc_type=42, data='test data')
 
