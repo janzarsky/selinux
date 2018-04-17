@@ -83,7 +83,6 @@ class PolicyGenerator:
 
         self.dontaudit = False
         self.domains = None
-        # TODO decide what is to be the default
         self.check_mislabeled = True
 
     def set_gen_refpol(self, if_set=None, perm_maps=None):
@@ -123,6 +122,8 @@ class PolicyGenerator:
         self.dontaudit = dontaudit
 
     def set_check_mislabeled(self, mislabeled):
+        """Set whether to check for mislabeled files.
+        """
         self.check_mislabeled = mislabeled
 
     def __set_module_style(self):
@@ -185,8 +186,8 @@ class PolicyGenerator:
             if av.type == audit2why.DONTAUDIT:
                 rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
 
-            for f in av.mislabeled:
-                rule.comment += "\n#!!!! The '%s' file has other than default context" % f
+            for filename in av.mislabeled:
+                rule.comment += "\n#!!!! The '%s' file has other than default context" % filename
 
             if av.type == audit2why.BOOLEAN:
                 if len(av.data) > 1:
