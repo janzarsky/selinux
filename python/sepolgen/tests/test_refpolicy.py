@@ -34,44 +34,47 @@ class TestIdSet(unittest.TestCase):
         self.assertEqual(s.to_space_str(), "read")
 
 class TestXpermSet(unittest.TestCase):
+    def test_init(self):
+        s1 = refpolicy.XpermSet()
+        self.assertEqual(s1.complement, False)
+        self.assertEqual(s1.ranges, [])
+        
+        s2 = refpolicy.XpermSet(True)
+        self.assertEqual(s2.complement, True)
+        self.assertEqual(s2.ranges, [])
+
+    def test_normalize_ranges(self):
+        s = refpolicy.XpermSet()
+        s.ranges = [(1, 7), (5, 10), (100, 110), (102, 107), (200, 205),
+            (205, 210), (300, 305), (306, 310), (400, 405), (407, 410),
+            (500, 502), (504, 508), (500, 510)]
+        s._XpermSet__normalize_ranges()
+
+        i = 0
+        r = list(sorted(s.ranges))
+        while i < len(r) - 1:
+            # check that range low bound is less than equal than the upper bound
+            self.assertLessEqual(r[i][0], r[i][1])
+            # check that two ranges are not overlapping or neighboring
+            self.assertGreater(r[i + 1][0] - r[i][1], 1)
+            i += 1
+
     def test_add(self):
         s = refpolicy.XpermSet()
         s.add(1, 7)
         s.add(5, 10)
-        s.add(100, 110)
-        s.add(102, 107)
-        s.add(200, 205)
-        s.add(205, 210)
-        s.add(300, 305)
-        s.add(306, 310)
-        s.add(400, 405)
-        s.add(407, 410)
-        s.add(500, 502)
-        s.add(504, 508)
-        s.add(500, 510)
-        self.assertEqual(s.to_string(), "{ 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
+        self.assertEqual(s.to_string(), "{ 1-10 }")
 
     def test_extend(self):
         a = refpolicy.XpermSet()
         a.add(1, 7)
-        a.add(100, 110)
-        a.add(200, 205)
-        a.add(300, 305)
-        a.add(400, 405)
-        a.add(500, 502)
-        a.add(504, 508)
 
         b = refpolicy.XpermSet()
         b.add(5, 10)
-        b.add(102, 107)
-        b.add(205, 210)
-        b.add(306, 310)
-        b.add(407, 410)
-        b.add(500, 510)
 
         a.extend(b)
 
-        self.assertEqual(a.to_string(), "{ 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
+        self.assertEqual(a.to_string(), "{ 1-10 }")
 
     def test_extend_complement(self):
         a = refpolicy.XpermSet(complement=True)
