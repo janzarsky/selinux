@@ -138,11 +138,10 @@ class AccessVector(util.Comparison):
         """Add permissions and extended permissions from AV"""
         self.perms = self.perms.union(av.perms)
 
-        if av.xperms:
-            for op in av.xperms:
-                if op not in self.xperms:
-                    self.xperms[op] = refpolicy.XpermSet()
-                self.xperms[op].extend(av.xperms[op])
+        for op in av.xperms:
+            if op not in self.xperms:
+                self.xperms[op] = refpolicy.XpermSet()
+            self.xperms[op].extend(av.xperms[op])
 
     def __str__(self):
         return self.to_string()
