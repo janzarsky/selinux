@@ -64,7 +64,7 @@ class TestXpermSet(unittest.TestCase):
         s = refpolicy.XpermSet()
         s.add(1, 7)
         s.add(5, 10)
-        self.assertEqual(s.to_string(), "{ 1-10 }")
+        self.assertEqual(s.ranges, [(1,10)])
 
     def test_extend(self):
         a = refpolicy.XpermSet()
@@ -74,8 +74,7 @@ class TestXpermSet(unittest.TestCase):
         b.add(5, 10)
 
         a.extend(b)
-
-        self.assertEqual(a.to_string(), "{ 1-10 }")
+        self.assertEqual(a.ranges, [(1,10)])
 
     def test_extend_complement(self):
         a = refpolicy.XpermSet(complement=True)
@@ -97,7 +96,9 @@ class TestXpermSet(unittest.TestCase):
 
         a.extend(b)
 
-        self.assertEqual(a.to_string(), "~ { 1-10 100-110 200-210 300-310 400-405 407-410 500-510 }")
+        self.assertTrue(a.complement)
+        self.assertEqual(a.ranges, [(1,10), (100,110), (200,210), (300,310),
+            (400,405), (407,410), (500,510)])
 
     def test_extend_complement_2(self):
         a = refpolicy.XpermSet()
@@ -119,7 +120,9 @@ class TestXpermSet(unittest.TestCase):
 
         a.extend(b)
 
-        self.assertEqual(a.to_string(), "~ { 8-10 206-210 306-310 407-410 503 509-510 }")
+        self.assertTrue(a.complement)
+        self.assertEqual(a.ranges, [(8,10), (206,210), (306,310), (407,410),
+            (503,503), (509,510)])
 
     def test_extend_complement_3(self):
         a = refpolicy.XpermSet(complement=True)
@@ -141,7 +144,9 @@ class TestXpermSet(unittest.TestCase):
 
         a.extend(b)
 
-        self.assertEqual(a.to_string(), "~ { 8-10 206-210 306-310 407-410 503 509-510 }")
+        self.assertTrue(a.complement)
+        self.assertEqual(a.ranges, [(8,10), (206,210), (306,310), (407,410),
+            (503,503), (509,510)])
 
 class TestSecurityContext(unittest.TestCase):
     def test_init(self):
