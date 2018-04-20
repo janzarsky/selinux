@@ -655,7 +655,7 @@ class AVExtRule(Leaf):
     def to_string(self):
         """Return a string representation of the rule that is
         a valid policy language representation (assuming that
-        the types, object class, etc. are valie).
+        the types, object class, etc. are valid).
         """
         return "%s %s %s:%s %s %s;" % (self.__rule_type_str(),
                                      self.src_types.to_space_str(),
