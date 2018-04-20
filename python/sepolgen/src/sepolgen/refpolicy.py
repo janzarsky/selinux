@@ -141,10 +141,20 @@ class Node(PolicyBase):
         else:
             return self.to_string()
 
+    def cil_str(self):
+        if self.comment:
+            comment = "\n".join([";" + x[1:] for x in self.comment.split("\n")])
+            return comment + "\n" + self.to_cil()
+        else:
+            return self.to_cil()
+
     def __repr__(self):
         return "<%s(%s)>" % (self.__class__.__name__, self.to_string())
 
     def to_string(self):
+        return ""
+
+    def to_cil(self):
         return ""
 
 
@@ -158,10 +168,20 @@ class Leaf(PolicyBase):
         else:
             return self.to_string()
 
+    def cil_str(self):
+        if self.comment:
+            comment = "\n".join([";" + x[1:] for x in self.comment.split("\n")])
+            return comment + "\n" + self.to_cil()
+        else:
+            return self.to_cil()
+
     def __repr__(self):
         return "<%s(%s)>" % (self.__class__.__name__, self.to_string())
 
     def to_string(self):
+        return ""
+
+    def to_cil(self):
         return ""
 
 
@@ -497,6 +517,14 @@ class AVRule(Leaf):
                                      self.tgt_types.to_space_str(),
                                      self.obj_classes.to_space_str(),
                                      self.perms.to_space_str())
+
+    def to_cil(self):
+        return "(%s %s %s (%s (%s)))" % (self.__rule_type_str(),
+                                         self.src_types.to_space_str(),
+                                         self.tgt_types.to_space_str(),
+                                         self.obj_classes.to_space_str(),
+                                         self.perms.to_space_str())
+
 class TypeRule(Leaf):
     """SELinux type rules.
 
@@ -741,6 +769,9 @@ class Module(Node):
     def to_string(self):
         return ""
 
+    def to_cil(self):
+        return ""
+
 class Interface(Node):
     """A reference policy interface definition.
 
@@ -925,6 +956,15 @@ class Comment:
                 out.append("#" + line)
             return "\n".join(out)
 
+    def to_cil(self):
+        if len(self.lines) == 0:
+            return ""
+        else:
+            out = []
+            for line in self.lines:
+                out.append(";" + line)
+            return "\n".join(out)
+
     def merge(self, other):
         if len(other.lines):
             for line in other.lines:
@@ -933,5 +973,8 @@ class Comment:
 
     def __str__(self):
         return self.to_string()
+
+    def cil_str(self):
+        return self.to_cil()
 
 

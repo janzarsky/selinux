@@ -78,6 +78,8 @@ class AuditToPolicy:
 
         parser.add_option("-N", "--noreference", action="store_false", dest="refpolicy",
                           default=False, help="do not generate refpolicy style output")
+        parser.add_option("-c", "--cil", action="store_true", dest="cil",
+                          default=False, help="generate output in the Common Intermediate Language (CIL)")
         parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
                           default=False, help="explain generated output")
         parser.add_option("-e", "--explain", action="store_true", dest="explain_long",
@@ -330,6 +332,9 @@ class AuditToPolicy:
 
         # Output
         writer = output.ModuleWriter()
+
+        if self.__options.cil:
+            writer.cil = True
 
         # Module package
         if self.__options.module_package:

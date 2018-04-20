@@ -40,6 +40,7 @@ class ModuleWriter:
         self.module = None
         self.sort = True
         self.requires = True
+        self.cil = False
 
     def write(self, module, fd):
         self.module = module
@@ -49,7 +50,10 @@ class ModuleWriter:
 
         # FIXME - make this handle nesting
         for node, depth in refpolicy.walktree(self.module, showdepth=True):
-            fd.write("%s\n" % str(node))
+            if self.cil:
+                fd.write("%s\n" % node.cil_str())
+            else:
+                fd.write("%s\n" % str(node))
 
 # Helper functions for sort_filter - this is all done old school
 # C style rather than with polymorphic methods because this sorting
