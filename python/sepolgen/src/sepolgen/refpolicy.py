@@ -628,7 +628,7 @@ class AVExtRule(Leaf):
         self.obj_classes = IdSet()
         self.rule_type = self.ALLOWXPERM
         self.xperms = XpermSet()
-        self.operation = None
+        self.operation = op
         if av:
             self.from_av(av, op)
 
