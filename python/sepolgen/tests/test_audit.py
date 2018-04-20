@@ -61,6 +61,7 @@ xperms1 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } fo
 xperms2 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x42 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
 type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x1234 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
 type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0xdead scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+type=AVC msg=audit(1516626657.910:4461): avc:  denied  { getattr } for  pid=4310 comm="test" path="/root/test" ino=8619937 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=dir permissive=0
 """
 xperms_invalid = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=asdf scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
 """
@@ -212,10 +213,12 @@ class TestAuditParser(unittest.TestCase):
         a.parse_string(xperms2)
         av_set = a.to_access()
 
-        self.assertEqual(len(av_set), 1)
-
-        for av in av_set:
-            self.assertEqual(av.xperms['ioctl'].to_string(), "{ 66 4660 57005 }")
+        self.assertEqual(len(av_set), 2)
+        av_list = list(sorted(av_set))
+        self.assertEqual(av_list[0].xperms, {})
+        self.assertEqual(list(av_list[1].xperms), ["ioctl"])
+        self.assertEqual(av_list[1].xperms["ioctl"].ranges, [(66,66),
+            (4660,4660), (57005,57005)])
 
 class TestGeneration(unittest.TestCase):
     def test_generation(self):
