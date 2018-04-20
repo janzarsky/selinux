@@ -19,6 +19,7 @@
 
 import unittest
 import sepolgen.refpolicy as refpolicy
+import sepolgen.access as access
 import selinux
 
 class TestIdSet(unittest.TestCase):
@@ -218,6 +219,71 @@ class TestAVRule(unittest.TestCase):
         b = "dontaudit { foo_t user_t } { user_home_t bar_t }:{ lnk_file file } { read write };".split(' ')
         b.sort()
         self.assertEqual(a, b)
+
+class TestAVExtRule(unittest.TestCase):
+    def test_init(self):
+        """ Test initialization of attributes """
+        a = refpolicy.AVExtRule()
+        self.assertEqual(a.rule_type, a.ALLOWXPERM)
+        self.assertIsInstance(a.src_types, set)
+        self.assertIsInstance(a.tgt_types, set)
+        self.assertIsInstance(a.obj_classes, set)
+        self.assertIsNone(a.operation)
+        self.assertIsInstance(a.xperms, refpolicy.XpermSet)
+    
+    def test_rule_type_str(self):
+        """ Test strings returned by __rule_type_str() """
+        a = refpolicy.AVExtRule()
+        self.assertEqual(a._AVExtRule__rule_type_str(), "allowxperm")
+        a.rule_type = a.ALLOWXPERM
+        self.assertEqual(a._AVExtRule__rule_type_str(), "allowxperm")
+        a.rule_type = a.DONTAUDITXPERM
+        self.assertEqual(a._AVExtRule__rule_type_str(), "dontauditxperm")
+        a.rule_type = a.NEVERALLOWXPERM
+        self.assertEqual(a._AVExtRule__rule_type_str(), "neverallowxperm")
+        a.rule_type = a.AUDITALLOWXPERM
+        self.assertEqual(a._AVExtRule__rule_type_str(), "auditallowxperm")
+        a.rule_type = 42
+        self.assertIsNone(a._AVExtRule__rule_type_str())
+
+    def test_from_av(self):
+        av = access.AccessVector(["foo", "bar", "file", "ioctl"])
+        xp = refpolicy.XpermSet()
+        av.xperms = { "ioctl": xp }
+
+        a = refpolicy.AVExtRule()
+
+        a.from_av(av, "ioctl")
+        self.assertEqual(a.src_types, {"foo"})
+        self.assertEqual(a.tgt_types, {"bar"})
+        self.assertEqual(a.obj_classes, {"file"})
+        self.assertEqual(a.operation, "ioctl")
+        self.assertIs(a.xperms, xp)
+
+    def test_from_av_self(self):
+        av = access.AccessVector(["foo", "foo", "file", "ioctl"])
+        xp = refpolicy.XpermSet()
+        av.xperms = { "ioctl": xp }
+
+        a = refpolicy.AVExtRule()
+
+        a.from_av(av, "ioctl")
+        self.assertEqual(a.src_types, {"foo"})
+        self.assertEqual(a.tgt_types, {"self"})
+        self.assertEqual(a.obj_classes, {"file"})
+        self.assertEqual(a.operation, "ioctl")
+        self.assertIs(a.xperms, xp)
+
+    def test_to_string(self):
+        a = refpolicy.AVExtRule()
+        a._AVExtRule__rule_type_str = lambda: "first"
+        a.src_types.to_space_str = lambda: "second"
+        a.tgt_types.to_space_str = lambda: "third"
+        a.obj_classes.to_space_str = lambda: "fourth"
+        a.operation = "fifth"
+        a.xperms.to_string = lambda: "seventh"
+
+        self.assertEqual(a.to_string(), "first second third:fourth fifth seventh;")
 
 class TestTypeRule(unittest.TestCase):
     def test_init(self):
