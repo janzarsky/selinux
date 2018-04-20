@@ -639,7 +639,7 @@ class AVExtRule(Leaf):
             return "dontauditxperm"
         elif self.rule_type == self.AUDITALLOWXPERM:
             return "auditallowxperm"
-        else:
+        elif self.rule_type == self.NEVERALLOWXPERM:
             return "neverallowxperm"
 
     def from_av(self, av, op):
