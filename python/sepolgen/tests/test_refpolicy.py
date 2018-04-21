@@ -64,7 +64,8 @@ class TestXpermSet(unittest.TestCase):
         s = refpolicy.XpermSet()
         s.add(1, 7)
         s.add(5, 10)
-        self.assertEqual(s.ranges, [(1,10)])
+        s.add(42)
+        self.assertEqual(s.ranges, [(1,10), (42,42)])
 
     def test_extend(self):
         a = refpolicy.XpermSet()
