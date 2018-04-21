@@ -33,6 +33,7 @@ class PolicyGenerator(unittest.TestCase):
         selinux.matchpathcon = mock_matchpathcon
 
     def test_check_mislabeled_nothing(self):
+        """ Test AVC messages without mislabeled files. """
         g = policygen.PolicyGenerator()
         avs = access.AccessVectorSet()
         msg = audit.AVCMessage('')
@@ -45,6 +46,7 @@ class PolicyGenerator(unittest.TestCase):
             self.assertEqual(av.mislabeled, [])
 
     def test_check_mislabeled_one(self):
+        """ Test AVC messages with mislabeled files. """
         g = policygen.PolicyGenerator()
         avs = access.AccessVectorSet()
         msg = audit.AVCMessage('')
