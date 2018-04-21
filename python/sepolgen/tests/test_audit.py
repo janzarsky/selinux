@@ -56,6 +56,8 @@ type=SYSCALL msg=audit(1162852201.019:1225): arch=40000003 syscall=11 success=ye
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute_no_trans } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file"""
 
+path2 = """type=AVC msg=audit(1162852201.019:1225): avc:  denied  { getattr } for  pid=6974 comm="sh" path="/etc/testfile" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:admin_home_t:s0 tclass=file"""
+
 class TestAVCMessage(unittest.TestCase):
     def test_defs(self):
         avc = sepolgen.audit.AVCMessage(audit1)
@@ -132,6 +134,14 @@ class TestAVCMessage(unittest.TestCase):
         self.assertEqual(avc.comm, "sh")
 
         self.assertEqual(avc.denial, True)
+
+    def test_path(self):
+        """Test that the path field is parsed"""
+        avc = sepolgen.audit.AVCMessage(path2)
+        recs = path2.split()
+        avc.from_split_string(recs)
+
+        self.assertEqual(avc.path, "/etc/testfile")
 
 class TestPathMessage(unittest.TestCase):
     def test_from_split_string(self):
