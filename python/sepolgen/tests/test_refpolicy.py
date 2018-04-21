@@ -148,6 +148,25 @@ class TestXpermSet(unittest.TestCase):
         self.assertEqual(a.ranges, [(8,10), (206,210), (306,310), (407,410),
             (503,503), (509,510)])
 
+    def test_to_string(self):
+        a = refpolicy.XpermSet()
+        a.complement = False
+        self.assertEqual(a.to_string(), "")
+        a.complement = True
+        self.assertEqual(a.to_string(), "")
+        a.add(1234)
+        self.assertEqual(a.to_string(), "~ 1234")
+        a.complement = False
+        self.assertEqual(a.to_string(), "1234")
+        a.add(2345)
+        self.assertEqual(a.to_string(), "{ 1234 2345 }")
+        a.complement = True
+        self.assertEqual(a.to_string(), "~ { 1234 2345 }")
+        a.add(42,64)
+        self.assertEqual(a.to_string(), "~ { 42-64 1234 2345 }")
+        a.complement = False
+        self.assertEqual(a.to_string(), "{ 42-64 1234 2345 }")
+
 class TestSecurityContext(unittest.TestCase):
     def test_init(self):
         sc = refpolicy.SecurityContext()

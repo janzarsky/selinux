@@ -437,26 +437,19 @@ class XpermSet():
         return self.ranges[0][0]
 
     def to_string(self):
-        if self.complement:
-            s = "~ "
-        else:
-            s = ""
+        if not self.ranges:
+            return ""
 
-        if len(self.ranges) > 1 or self.ranges[0][0] != self.ranges[0][1]:
-            s += "{ "
+        compl = "~ " if self.complement else ""
 
-        for r in self.ranges:
-            if r[0] == r[1]:
-                s += "%d " % r[0]
-            else:
-                s += "%d-%d " % r
+        # print single value without braces
+        if len(self.ranges) == 1 and self.ranges[0][0] == self.ranges[0][1]:
+            return compl + str(self.ranges[0][0])
 
-        if len(self.ranges) > 1 or self.ranges[0][0] != self.ranges[0][1]:
-            s += "}"
-        else:
-            s = s[:-1]
+        vals = map(lambda x: str(x[0]) if x[0] == x[1] else "%s-%s" % x,
+                   self.ranges)
 
-        return s
+        return "%s{ %s }" % (compl, " ".join(vals))
 
 # Basic statements
 
