@@ -209,6 +209,8 @@ class TestAuditParser(unittest.TestCase):
         self.assertEqual(len(a.policy_load_msgs), 0)
 
     def test_parse_xperms(self):
+        """ Test that correct access vectors are generated from a set of AVC
+            denial messages. """
         a = sepolgen.audit.AuditParser()
         a.parse_string(xperms2)
         av_set = a.to_access()

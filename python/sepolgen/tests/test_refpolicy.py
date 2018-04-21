@@ -36,6 +36,7 @@ class TestIdSet(unittest.TestCase):
 
 class TestXpermSet(unittest.TestCase):
     def test_init(self):
+        """ Test that all atttributes are correctly initialized. """
         s1 = refpolicy.XpermSet()
         self.assertEqual(s1.complement, False)
         self.assertEqual(s1.ranges, [])
@@ -45,6 +46,8 @@ class TestXpermSet(unittest.TestCase):
         self.assertEqual(s2.ranges, [])
 
     def test_normalize_ranges(self):
+        """ Test that ranges that are overlapping or neighboring are correctly
+            merged into one range. """
         s = refpolicy.XpermSet()
         s.ranges = [(1, 7), (5, 10), (100, 110), (102, 107), (200, 205),
             (205, 210), (300, 305), (306, 310), (400, 405), (407, 410),
@@ -61,6 +64,7 @@ class TestXpermSet(unittest.TestCase):
             i += 1
 
     def test_add(self):
+        """ Test adding new values or ranges to the set. """
         s = refpolicy.XpermSet()
         s.add(1, 7)
         s.add(5, 10)
@@ -68,6 +72,7 @@ class TestXpermSet(unittest.TestCase):
         self.assertEqual(s.ranges, [(1,10), (42,42)])
 
     def test_extend(self):
+        """ Test adding ranges from another XpermSet object. """
         a = refpolicy.XpermSet()
         a.add(1, 7)
 
@@ -150,6 +155,7 @@ class TestXpermSet(unittest.TestCase):
             (503,503), (509,510)])
 
     def test_to_string(self):
+        """ Test printing the values to a string. """
         a = refpolicy.XpermSet()
         a.complement = False
         self.assertEqual(a.to_string(), "")
@@ -272,6 +278,7 @@ class TestAVExtRule(unittest.TestCase):
         self.assertIsNone(a._AVExtRule__rule_type_str())
 
     def test_from_av(self):
+        """ Test creating the rule from an access vector. """
         av = access.AccessVector(["foo", "bar", "file", "ioctl"])
         xp = refpolicy.XpermSet()
         av.xperms = { "ioctl": xp }
@@ -286,6 +293,8 @@ class TestAVExtRule(unittest.TestCase):
         self.assertIs(a.xperms, xp)
 
     def test_from_av_self(self):
+        """ Test creating the rule from an access vector that has same
+            source and target context. """
         av = access.AccessVector(["foo", "foo", "file", "ioctl"])
         xp = refpolicy.XpermSet()
         av.xperms = { "ioctl": xp }
@@ -300,6 +309,7 @@ class TestAVExtRule(unittest.TestCase):
         self.assertIs(a.xperms, xp)
 
     def test_to_string(self):
+        """ Test printing the rule to a string. """
         a = refpolicy.AVExtRule()
         a._AVExtRule__rule_type_str = lambda: "first"
         a.src_types.to_space_str = lambda: "second"
@@ -308,7 +318,8 @@ class TestAVExtRule(unittest.TestCase):
         a.operation = "fifth"
         a.xperms.to_string = lambda: "seventh"
 
-        self.assertEqual(a.to_string(), "first second third:fourth fifth seventh;")
+        self.assertEqual(a.to_string(),
+                         "first second third:fourth fifth seventh;")
 
 class TestTypeRule(unittest.TestCase):
     def test_init(self):
