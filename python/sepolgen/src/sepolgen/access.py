@@ -136,7 +136,7 @@ class AccessVector(util.Comparison):
     
     def merge(self, av):
         """Add permissions and extended permissions from AV"""
-        self.perms = self.perms.union(av.perms)
+        self.perms.update(av.perms)
 
         for op in av.xperms:
             if op not in self.xperms:
