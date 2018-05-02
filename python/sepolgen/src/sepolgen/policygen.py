@@ -161,15 +161,15 @@ class PolicyGenerator:
 
     def __check_mislabeled(self, avs):
         for av in avs:
-            av.mislabeled = []
+            av.mislabeled = set()
             for msg in av.audit_msgs:
-                if msg.path:
+                if msg.path and msg.path not in av.mislabeled:
                     import selinux
                     try:
                         context = selinux.matchpathcon(msg.path, 0)
                         split = context[1].split(":")[2]
                         if split != av.tgt_type:
-                            av.mislabeled.append(msg.path)
+                            av.mislabeled.add(msg.path)
                     except OSError:
                         pass
 
@@ -187,7 +187,7 @@ class PolicyGenerator:
                 rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
 
             for filename in av.mislabeled:
-                rule.comment += "\n#!!!! The '%s' file has other than default context" % filename
+                rule.comment += "\n#!!!! The '%s' file has other than the default context" % filename
 
             if av.type == audit2why.BOOLEAN:
                 if len(av.data) > 1:

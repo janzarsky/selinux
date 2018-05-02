@@ -43,7 +43,7 @@ class PolicyGenerator(unittest.TestCase):
         g._PolicyGenerator__check_mislabeled(avs)
 
         for av in avs:
-            self.assertEqual(av.mislabeled, [])
+            self.assertEqual(av.mislabeled, set())
 
     def test_check_mislabeled_one(self):
         """ Test AVC messages with mislabeled files. """
@@ -56,7 +56,7 @@ class PolicyGenerator(unittest.TestCase):
         g._PolicyGenerator__check_mislabeled(avs)
 
         for av in avs:
-            self.assertEqual(av.mislabeled, ['/test'])
+            self.assertEqual(av.mislabeled, set(['/test']))
 
     def tearDown(self):
         selinux.matchpathcon = self.matchpathcon_bak
