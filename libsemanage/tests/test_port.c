@@ -159,10 +159,6 @@ void test_port_compare(void) {
     helper_port_compare(I_FIRST,  I_SECOND);
     helper_port_compare(I_SECOND, I_FIRST);
     helper_port_compare(I_SECOND, I_SECOND);
-
-    CU_ASSERT_SIGNAL(helper_port_compare(I_NULL,  I_FIRST), SIGSEGV);
-    CU_ASSERT_SIGNAL(helper_port_compare(I_FIRST, I_NULL), SIGSEGV);
-    CU_ASSERT_SIGNAL(helper_port_compare(I_NULL,  I_NULL), SIGSEGV);
 }
 
 // Function semanage_port_compare2
@@ -199,10 +195,6 @@ void test_port_compare2(void) {
     helper_port_compare2(I_FIRST,  I_SECOND);
     helper_port_compare2(I_SECOND, I_FIRST);
     helper_port_compare2(I_SECOND, I_SECOND);
-
-    CU_ASSERT_SIGNAL(helper_port_compare2(I_NULL,  I_FIRST), SIGSEGV);
-    CU_ASSERT_SIGNAL(helper_port_compare2(I_FIRST, I_NULL), SIGSEGV);
-    CU_ASSERT_SIGNAL(helper_port_compare2(I_NULL,  I_NULL), SIGSEGV);
 }
 
 // Function semanage_port_create

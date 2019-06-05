@@ -30,21 +30,6 @@ int destroy_test_store(void);
 void enable_test_store(void);
 void disable_test_store(void);
 
-// forks, runs code and checks signal returned by child process
-#define CU_ASSERT_SIGNAL(CODE,SIGNAL) \
-    do { \
-        pid_t pid = fork(); \
-        if (pid == 0) { \
-            CODE; \
-            exit(0); \
-        } else { \
-            int stat_val; \
-            wait(&stat_val); \
-            CU_ASSERT_FALSE(WIFEXITED(stat_val)); \
-            CU_ASSERT_EQUAL(WTERMSIG(stat_val), SIGNAL); \
-        } \
-    } while(0)
-
 #define CU_ASSERT_CONTEXT(CON1,CON2,EQUAL) \
     do { \
         char *str; \

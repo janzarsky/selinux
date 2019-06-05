@@ -70,8 +70,6 @@ void test_connect(void) {
     // test without handle
     setup_handle(SH_NULL);
 
-    CU_ASSERT_SIGNAL(semanage_connect(sh), SIGABRT);
-
     // test handle created
     helper_handle_create();
 
@@ -109,11 +107,7 @@ void test_connect(void) {
 void test_disconnect(void) {
     setup_handle(SH_NULL);
 
-    CU_ASSERT_SIGNAL(semanage_disconnect(sh), SIGABRT);
-
     helper_handle_create();
-
-    CU_ASSERT_SIGNAL(semanage_disconnect(sh), SIGABRT);
 
     helper_connect();
 
@@ -144,12 +138,8 @@ void test_transaction(void) {
     // test without handle
     setup_handle(SH_NULL);
 
-    CU_ASSERT_SIGNAL(semanage_begin_transaction(sh), SIGABRT);
-
     // test with handle
     helper_handle_create();
-
-    CU_ASSERT_SIGNAL(semanage_begin_transaction(sh), SIGABRT);
 
     // test disconnected
     helper_connect();
@@ -186,11 +176,7 @@ void test_transaction(void) {
 void test_commit(void) {
     setup_handle(SH_NULL);
 
-    CU_ASSERT_SIGNAL(semanage_commit(sh), SIGABRT);
-
     helper_handle_create();
-
-    CU_ASSERT_SIGNAL(semanage_commit(sh), SIGABRT);
 
     helper_connect();
 
@@ -208,8 +194,6 @@ void test_commit(void) {
 
 void test_is_connected(void) {
     setup_handle(SH_NULL);
-
-    CU_ASSERT_SIGNAL(semanage_is_connected(sh), SIGABRT);
 
     helper_handle_create();
 
@@ -234,8 +218,6 @@ void test_access_check(void) {
 
     // test without handle
     setup_handle(SH_NULL);
-
-    CU_ASSERT_SIGNAL(semanage_access_check(sh), SIGABRT);
 
     // test with handle
     helper_handle_create();
@@ -275,8 +257,6 @@ void test_is_managed(void) {
     // test without handle
     setup_handle(SH_NULL);
 
-    CU_ASSERT_SIGNAL(semanage_is_managed(sh), SIGABRT);
-
     // test with handle
     helper_handle_create();
 
@@ -301,8 +281,6 @@ void test_mls_enabled(void) {
 
     // test without handle
     setup_handle(SH_NULL);
-
-    CU_ASSERT_SIGNAL(semanage_mls_enabled(sh), SIGABRT);
 
     // test with handle
     helper_handle_create();
@@ -423,8 +401,6 @@ void test_select_store(void) {
     helper_select_store("asdf", SEMANAGE_CON_INVALID - 1, -1);
     helper_select_store("asdf", SEMANAGE_CON_POLSERV_REMOTE + 1, -1);
     helper_select_store("", SEMANAGE_CON_DIRECT, 0);
-    CU_ASSERT_SIGNAL(helper_select_store(NULL, SEMANAGE_CON_DIRECT, -1),
-                     SIGSEGV);
 
     helper_select_store("asdf", SEMANAGE_CON_INVALID, -1);
     helper_select_store("asdf", SEMANAGE_CON_DIRECT, 0);
