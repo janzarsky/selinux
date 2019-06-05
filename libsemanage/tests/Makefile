@@ -5,7 +5,7 @@ SOURCES = $(sort $(wildcard *.c))
 
 EXECUTABLE = libsemanage-tests
 CFLAGS += -g -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
-override CFLAGS += -I../src -I../include
+override CFLAGS += -I../src -I../include -Wno-error
 override LDLIBS += -lcunit -lbz2 -laudit -lselinux -lsepol
 
 OBJECTS = $(SOURCES:.c=.o) 
