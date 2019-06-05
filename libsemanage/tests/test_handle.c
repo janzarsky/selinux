@@ -90,11 +90,6 @@ void test_connect(void) {
 
     CU_ASSERT(semanage_connect(sh) >= 0);
 
-    // test connecting twice
-    // TODO: connecting twice creates memory leaks
-    //CU_ASSERT(semanage_connect(sh) < 0);
-    CU_ASSERT(semanage_connect(sh) >= 0);
-
     CU_ASSERT(semanage_disconnect(sh) >= 0);
 
     cleanup_handle(SH_HANDLE);
