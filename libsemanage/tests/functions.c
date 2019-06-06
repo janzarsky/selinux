@@ -58,7 +58,7 @@ int create_test_store() {
 
     fclose(fptr);
 
-    test_store_enabled = 1;
+    enable_test_store();
     return 0;
 }
 
@@ -134,7 +134,7 @@ int destroy_test_store() {
     FTSENT *curr = NULL;
     int ret = 0;
 
-    test_store_enabled = 0;
+    disable_test_store();
 
     char *files[] = { "test_root", NULL };
 
