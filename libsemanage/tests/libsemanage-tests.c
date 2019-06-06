@@ -66,8 +66,6 @@ static bool do_tests(int interactive, int verbose)
 	if (CUE_SUCCESS != CU_initialize_registry())
 		return CU_get_error();
 
-	DECLARE_SUITE(semanage_store);
-	DECLARE_SUITE(semanage_utilities);
 	DECLARE_SUITE(handle);
 	DECLARE_SUITE(fcontext);
 	DECLARE_SUITE(bool);
@@ -77,6 +75,9 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(other);
 	DECLARE_SUITE(user);
 	DECLARE_SUITE(ibendport);
+	DECLARE_SUITE(semanage_utilities);
+	/* The semanage_store suite is not cleaning up properly, must be last */
+	DECLARE_SUITE(semanage_store);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
