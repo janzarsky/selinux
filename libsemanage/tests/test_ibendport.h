@@ -3,7 +3,7 @@
 
 #include <CUnit/Basic.h>
 
-#include "functions.h"
+#include "utilities.h"
 
 int ibendport_test_init(void);
 int ibendport_test_cleanup(void);

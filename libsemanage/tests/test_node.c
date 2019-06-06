@@ -5,7 +5,7 @@
 
 #include "test_node.h"
 #include "test_node_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 extern semanage_handle_t *sh;
 

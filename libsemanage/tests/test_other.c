@@ -4,7 +4,7 @@
 #include <CUnit/Basic.h>
 
 #include "test_other.h"
-#include "functions.h"
+#include "utilities.h"
 
 extern semanage_handle_t *sh;
 

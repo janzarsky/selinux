@@ -8,7 +8,7 @@
 
 #include "test_fcontext.h"
 #include "test_fcontext_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 /* TODO: test function type_str
  * TODO: test function fcontext_print

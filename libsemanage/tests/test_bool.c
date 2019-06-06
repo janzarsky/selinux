@@ -5,7 +5,7 @@
 
 #include "test_bool.h"
 #include "test_bool_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 /*  The following functions does not have 100 % code coverage because we do not
  *  test bad mallocs:

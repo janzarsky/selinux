@@ -3,7 +3,7 @@
 
 #include <CUnit/Basic.h>
 
-#include "functions.h"
+#include "utilities.h"
 
 int handle_test_init(void);
 int handle_test_cleanup(void);

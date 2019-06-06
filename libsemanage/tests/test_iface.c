@@ -5,7 +5,7 @@
 
 #include "test_iface.h"
 #include "test_iface_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 extern semanage_handle_t *sh;
 

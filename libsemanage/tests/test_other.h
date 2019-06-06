@@ -3,7 +3,7 @@
 
 #include <CUnit/Basic.h>
 
-#include "functions.h"
+#include "utilities.h"
 
 int other_test_init(void);
 int other_test_cleanup(void);

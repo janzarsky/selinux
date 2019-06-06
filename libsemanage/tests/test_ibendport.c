@@ -6,7 +6,7 @@
 
 #include "test_ibendport.h"
 #include "test_ibendport_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 extern semanage_handle_t *sh;
 

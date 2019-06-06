@@ -7,7 +7,7 @@
 
 #include "test_handle.h"
 #include "test_handle_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 extern semanage_handle_t *sh;
 

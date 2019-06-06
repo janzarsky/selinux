@@ -5,7 +5,7 @@
 
 #include "test_user.h"
 #include "test_user_policy.h"
-#include "functions.h"
+#include "utilities.h"
 
 extern semanage_handle_t *sh;
 
