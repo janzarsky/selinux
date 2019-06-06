@@ -35,4 +35,3 @@ indent:
 
 test: all
 	$(MAKE) -C tests test
-	$(MAKE) -C new_tests test
