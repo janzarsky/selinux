@@ -15,7 +15,6 @@
 
 int result;
 int test_store_enabled = 0;
-const char *test_root_orig = NULL;
 
 semanage_handle_t *sh = NULL;
 
@@ -33,25 +32,25 @@ void stderr_callback(void *varg, semanage_handle_t *sh, const char *fmt, ...) {
 int create_test_store() {
     FILE *fptr;
 
-    if (mkdir("test_root", 0700) < 0)
+    if (mkdir("test-policy", 0700) < 0)
         return -1;
 
-    if (mkdir("test_root/test_store", 0700) < 0)
+    if (mkdir("test-policy/store", 0700) < 0)
         return -1;
 
-    if (mkdir("test_root/test_store/active", 0700) < 0)
+    if (mkdir("test-policy/store/active", 0700) < 0)
         return -1;
 
-    if (mkdir("test_root/test_store/active/modules", 0700) < 0)
+    if (mkdir("test-policy/store/active/modules", 0700) < 0)
         return -1;
 
-    if (mkdir("test_root/etc", 0700) < 0)
+    if (mkdir("test-policy/etc", 0700) < 0)
         return -1;
 
-    if (mkdir("test_root/etc/selinux", 0700) < 0)
+    if (mkdir("test-policy/etc/selinux", 0700) < 0)
         return -1;
 
-    fptr = fopen("test_root/etc/selinux/semanage.conf", "w+");
+    fptr = fopen("test-policy/etc/selinux/semanage.conf", "w+");
 
     if (!fptr)
         return -1;
@@ -64,9 +63,6 @@ int create_test_store() {
 
 void disable_test_store(void) {
     test_store_enabled = 0;
-
-    if (test_root_orig)
-        semanage_set_root(test_root_orig);
 }
 
 void enable_test_store(void) {
@@ -74,7 +70,7 @@ void enable_test_store(void) {
 }
 
 int write_test_policy(unsigned char *data, unsigned int data_len) {
-    FILE *fptr = fopen("test_root/test_store/active/policy.kern", "wb+");
+    FILE *fptr = fopen("test-policy/store/active/policy.kern", "wb+");
 
     if (!fptr) {
         perror("fopen");
@@ -92,13 +88,13 @@ int write_test_policy(unsigned char *data, unsigned int data_len) {
 }
 
 int write_test_policy_src(unsigned char *data, unsigned int data_len) {
-    if (mkdir("test_root/test_store/active/modules/100", 0700) < 0)
+    if (mkdir("test-policy/store/active/modules/100", 0700) < 0)
         return -1;
 
-    if (mkdir("test_root/test_store/active/modules/100/base", 0700) < 0)
+    if (mkdir("test-policy/store/active/modules/100/base", 0700) < 0)
         return -1;
 
-    FILE *fptr = fopen("test_root/test_store/active/modules/100/base/cil", "w+");
+    FILE *fptr = fopen("test-policy/store/active/modules/100/base/cil", "w+");
 
     if (!fptr) {
         perror("fopen");
@@ -112,7 +108,7 @@ int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 
     fclose(fptr);
 
-    fptr = fopen("test_root/test_store/active/modules/100/base/lang_ext", "w+");
+    fptr = fopen("test-policy/store/active/modules/100/base/lang_ext", "w+");
 
     if (!fptr) {
         perror("fopen");
@@ -136,7 +132,7 @@ int destroy_test_store() {
 
     disable_test_store();
 
-    char *files[] = { "test_root", NULL };
+    char *files[] = { "test-policy", NULL };
 
     ftsp = fts_open(files, FTS_NOCHDIR | FTS_PHYSICAL | FTS_XDEV, NULL);
 
@@ -166,12 +162,8 @@ void helper_handle_create(void) {
     /* some testsuites uses custom semanage store, some uses
      * /var/lib/selinux/targeted/ */
 
-    if (test_store_enabled) {
-        if (!test_root_orig)
-            test_root_orig = semanage_root();
-
-        semanage_set_root("test_root");
-    }
+    if (test_store_enabled)
+        semanage_set_root("test-policy");
 
     sh = semanage_handle_create();
     CU_ASSERT_PTR_NOT_NULL(sh);
@@ -182,7 +174,7 @@ void helper_handle_create(void) {
         semanage_set_create_store(sh, 1);
         semanage_set_reload(sh, 0);
         semanage_set_store_root(sh, "");
-        semanage_select_store(sh, "test_store", SEMANAGE_CON_DIRECT);
+        semanage_select_store(sh, "store", SEMANAGE_CON_DIRECT);
     }
 }
 

@@ -40,7 +40,7 @@ int get_type(char *t) {
 }
 
 int write_file_contexts(const char *data, unsigned int data_len) {
-    FILE *fptr = fopen("test_root/test_store/active/file_contexts", "w+");
+    FILE *fptr = fopen("test-policy/store/active/file_contexts", "w+");
 
     if (!fptr) {
         perror("fopen");
