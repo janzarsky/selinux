@@ -36,18 +36,6 @@ void test_msg_handler(void *varg,
 {
 }
 
-void stderr_callback(void *varg,
-		     semanage_handle_t *handle, const char *fmt, ...) {
-	va_list args;
-	va_start(args, fmt);
-
-	vfprintf(stderr, fmt, args);
-
-	fprintf(stderr, "\n");
-
-	va_end(args);
-}
-
 int create_test_store() {
 	FILE *fptr;
 
@@ -186,7 +174,7 @@ void helper_handle_create(void) {
 	sh = semanage_handle_create();
 	CU_ASSERT_PTR_NOT_NULL(sh);
 
-	semanage_msg_set_callback(sh, stderr_callback, NULL);
+	semanage_msg_set_callback(sh, test_msg_handler, NULL);
 
 	if (test_store_enabled) {
 		semanage_set_create_store(sh, 1);
