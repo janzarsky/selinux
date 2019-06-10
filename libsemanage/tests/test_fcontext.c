@@ -301,7 +301,7 @@ void test_fcontext_key_extract(void) {
 void test_fcontext_get_set_expr(void) {
 	semanage_fcontext_t *fcontext;
 	const char *expr = NULL;
-	char *expr_exp = "/asdf";
+	const char *expr_exp = "/asdf";
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -518,7 +518,7 @@ void test_fcontext_query(void) {
 }
 
 /* Function semanage_fcontext_exists */
-void helper_fcontext_exists(level_t level, char * fcontext_expr,
+void helper_fcontext_exists(level_t level, const char * fcontext_expr,
 			    int fcontext_type, int exp_response) {
 	semanage_fcontext_key_t *key;
 	int response;

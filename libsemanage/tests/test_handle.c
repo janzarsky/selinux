@@ -192,7 +192,7 @@ void test_mls_enabled(void) {
 /* Function semanage_set_callback */
 int msg_set_callback_count = 0;
 
-void helper_msg_set_callback(void *varg, semanage_handle_t *sh,
+void helper_msg_set_callback(void *varg, semanage_handle_t *handle,
 			     const char *fmt, ...) {
 	msg_set_callback_count++;
 }
@@ -244,10 +244,14 @@ void test_root(void) {
 }
 
 /* Function semanage_select_store */
-void helper_select_store(char *name, enum semanage_connect_type type,
+void helper_select_store(const char *name, enum semanage_connect_type type,
 			 int exp_result) {
 	setup_handle(SH_HANDLE);
-	semanage_select_store(sh, name, type);
+
+	/* FIXME: the storename parameter of semanage_select_store should be
+	 * 'const char *'
+	 */
+	semanage_select_store(sh, (char *) name, type);
 
 	int result = semanage_connect(sh);
 

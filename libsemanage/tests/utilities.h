@@ -32,16 +32,16 @@
 
 #define CU_ASSERT_CONTEXT(CON1,CON2,EQUAL) \
 	do { \
-		char *str; \
-		char *str2; \
+		char *CU_str; \
+		char *CU_str2; \
 		CU_ASSERT_PTR_NOT_NULL(CON1); \
 		CU_ASSERT_PTR_NOT_NULL(CON2); \
-		CU_ASSERT(semanage_context_to_string(sh, CON1, &str) >= 0); \
-		CU_ASSERT(semanage_context_to_string(sh, CON2, &str2) >= 0); \
+		CU_ASSERT(semanage_context_to_string(sh, CON1, &CU_str) >= 0); \
+		CU_ASSERT(semanage_context_to_string(sh, CON2, &CU_str2) >= 0); \
 		if (EQUAL) {\
-			CU_ASSERT_STRING_EQUAL(str, str2); \
+			CU_ASSERT_STRING_EQUAL(CU_str, CU_str2); \
 		} else {\
-			CU_ASSERT_STRING_NOT_EQUAL(str, str2); \
+			CU_ASSERT_STRING_NOT_EQUAL(CU_str, CU_str2); \
 		} \
 	} while(0)
 
