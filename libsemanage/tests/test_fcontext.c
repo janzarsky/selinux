@@ -112,7 +112,7 @@ int fcontext_add_tests(CU_pSuite suite) {
 
 /* Helpers */
 
-semanage_fcontext_t *get_fcontext_new() {
+semanage_fcontext_t *get_fcontext_new(void) {
 	semanage_fcontext_t *fcontext;
 
 	CU_ASSERT_FATAL(semanage_fcontext_create(sh, &fcontext) >= 0);

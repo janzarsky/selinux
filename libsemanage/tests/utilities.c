@@ -141,7 +141,7 @@ int destroy_test_store() {
 
 	disable_test_store();
 
-	char *files[] = { "test-policy", NULL };
+	char * const files[] = { "test-policy", NULL };
 
 	ftsp = fts_open(files, FTS_NOCHDIR | FTS_PHYSICAL | FTS_XDEV, NULL);
 
@@ -180,7 +180,8 @@ void helper_handle_create(void) {
 		semanage_set_create_store(sh, 1);
 		semanage_set_reload(sh, 0);
 		semanage_set_store_root(sh, "");
-		semanage_select_store(sh, "store", SEMANAGE_CON_DIRECT);
+		semanage_select_store(sh, (char *) "store",
+				      SEMANAGE_CON_DIRECT);
 	}
 }
 
@@ -237,7 +238,7 @@ void setup_handle_invalid_store(level_t level) {
 
 	helper_handle_create();
 
-	semanage_select_store(sh, "", SEMANAGE_CON_INVALID);
+	semanage_select_store(sh, (char *) "", SEMANAGE_CON_INVALID);
 
 	if (level >= SH_CONNECT)
 		helper_connect();
