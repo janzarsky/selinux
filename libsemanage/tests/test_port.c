@@ -1,6 +1,19 @@
 #include "utilities.h"
 #include "test_port.h"
-#include "test_port_policy.h"
+
+#define PORT_COUNT 3
+
+#define PORT1_LOW 80
+#define PORT1_HIGH 80
+#define PORT1_PROTO SEPOL_PROTO_TCP
+
+#define PORT2_LOW 1
+#define PORT2_HIGH 1023
+#define PORT2_PROTO SEPOL_PROTO_UDP
+
+#define PORT3_LOW 12345
+#define PORT3_HIGH 12345
+#define PORT3_PROTO SEPOL_PROTO_TCP
 
 /* port_record.h */
 void test_port_compare(void);
@@ -40,7 +53,7 @@ int port_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(PORT_POLICY, PORT_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_port.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

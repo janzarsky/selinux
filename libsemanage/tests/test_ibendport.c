@@ -1,6 +1,16 @@
 #include "utilities.h"
 #include "test_ibendport.h"
-#include "test_ibendport_policy.h"
+
+#define IBENDPORT_COUNT 3
+#define IBENDPORT_1_NAME "mlx4_0"
+#define IBENDPORT_1_PORT 1
+#define IBENDPORT_1_CON "system_u:object_r:first_ibendport_t:s0"
+#define IBENDPORT_2_NAME "mlx4_1"
+#define IBENDPORT_2_PORT 2
+#define IBENDPORT_2_CON "system_u:object_r:second_ibendport_second_t:s0"
+#define IBENDPORT_3_NAME "mlx4_1"
+#define IBENDPORT_3_PORT 3
+#define IBENDPORT_3_CON "system_u:object_r:third_ibendport_second_t:s0"
 
 /* ibendports_policy.h */
 void test_ibendport_query(void);
@@ -24,7 +34,7 @@ int ibendport_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(IBENDPORT_POLICY, IBENDPORT_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_ibendport.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

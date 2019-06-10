@@ -1,6 +1,5 @@
 #include "utilities.h"
 #include "test_handle.h"
-#include "test_handle_policy.h"
 
 void test_handle_create(void);
 void test_connect(void);
@@ -23,7 +22,7 @@ int handle_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(HANDLE_POLICY, HANDLE_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_handle.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

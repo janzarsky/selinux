@@ -1,6 +1,20 @@
 #include "utilities.h"
 #include "test_iface.h"
-#include "test_iface_policy.h"
+
+#define IFACE_COUNT 3
+
+#define IFACE1_NAME "eth0"
+#define IFACE1_IFCON "system_u:object_r:first_netif_t:s0"
+#define IFACE1_MSGCON IFACE1_IFCON
+
+#define IFACE2_NAME "eth1"
+#define IFACE2_IFCON "system_u:object_r:second_netif_t:s0"
+#define IFACE2_MSGCON IFACE2_IFCON
+
+#define IFACE3_NAME "eth2"
+#define IFACE3_IFCON "system_u:object_r:third_netif_t:s0"
+#define IFACE3_MSGCON IFACE3_IFCON
+
 
 /* iface_record.h */
 void test_iface_compare(void);
@@ -35,7 +49,7 @@ int iface_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(IFACE_POLICY, IFACE_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_iface.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

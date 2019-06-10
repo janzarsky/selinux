@@ -94,6 +94,34 @@ int write_test_policy(unsigned char *data, unsigned int data_len) {
 	return 0;
 }
 
+int write_test_policy_from_file(const char *filename) {
+	char *buf = NULL;
+	size_t len = 0;
+	FILE *fptr = fopen(filename, "rb");
+
+	if (!fptr) {
+		perror("fopen");
+		return -1;
+	}
+
+	fseek(fptr, 0, SEEK_END);
+	len = ftell(fptr);
+	fseek(fptr, 0, SEEK_SET);
+
+	buf = (char *) malloc(len);
+
+	if (!buf) {
+		perror("malloc");
+		fclose(fptr);
+		return -1;
+	}
+
+	fread(buf, len, 1, fptr);
+	fclose(fptr);
+
+	return write_test_policy((unsigned char *) buf, len);
+}
+
 int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 	if (mkdir("test-policy/store/active/modules/100", 0700) < 0)
 		return -1;

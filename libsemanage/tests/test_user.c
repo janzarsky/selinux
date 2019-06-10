@@ -1,6 +1,7 @@
 #include "utilities.h"
 #include "test_user.h"
-#include "test_user_policy.h"
+
+#define USER_COUNT 3
 
 /* user_record.h */
 void test_user_compare(void);
@@ -37,7 +38,7 @@ int user_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(USER_POLICY, USER_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_user.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

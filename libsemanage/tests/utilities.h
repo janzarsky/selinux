@@ -72,7 +72,7 @@ void helper_commit(void);
 int context_compare(semanage_context_t *con, const char *str);
 
 int create_test_store(void);
-int write_test_policy(unsigned char *data, unsigned int data_len);
+int write_test_policy_from_file(const char *filename);
 int write_test_policy_src(unsigned char *data, unsigned int data_len);
 int destroy_test_store(void);
 void enable_test_store(void);

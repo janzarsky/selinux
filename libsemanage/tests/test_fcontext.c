@@ -1,6 +1,28 @@
 #include "utilities.h"
 #include "test_fcontext.h"
-#include "test_fcontext_policy.h"
+
+char FCONTEXTS[] =
+    "/etc/selinux(/.*) -s system_u:object_r:first_t:s0\n"
+    "/etc/selinux/targeted -- system_u:object_r:second_t:s0\n"
+    "/etc/selinux(/.*) -b system_u:object_r:third_t:s0\n";
+unsigned int FCONTEXTS_LEN = sizeof FCONTEXTS;
+
+#define FCONTEXTS_COUNT 3
+
+#define FCONTEXT1_EXPR "/etc/selinux(/.*)"
+#define FCONTEXT1_TYPE SEMANAGE_FCONTEXT_SOCK
+#define FCONTEXT1_CON "system_u:object_r:first_t:s0"
+
+#define FCONTEXT2_EXPR "/etc/selinux/targeted"
+#define FCONTEXT2_TYPE SEMANAGE_FCONTEXT_REG
+#define FCONTEXT2_CON "system_u:object_r:second_t:s0"
+
+#define FCONTEXT3_EXPR "/etc/selinux(/.*)"
+#define FCONTEXT3_TYPE SEMANAGE_FCONTEXT_BLOCK
+#define FCONTEXT3_CON "system_u:object_r:third_t:s0"
+
+#define FCONTEXT_NONEXISTENT_EXPR "/asdf"
+#define FCONTEXT_NONEXISTENT_TYPE SEMANAGE_FCONTEXT_ALL
 
 /* fcontext_record.h */
 void test_fcontext_compare(void);
@@ -76,7 +98,7 @@ int fcontext_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(FCONTEXT_POLICY, FCONTEXT_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_fcontext.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

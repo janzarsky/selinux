@@ -1,6 +1,22 @@
 #include "utilities.h"
 #include "test_node.h"
-#include "test_node_policy.h"
+
+#define NODE_COUNT 3
+
+#define NODE1_ADDR "192.168.0.0"
+#define NODE1_MASK "255.255.255.0"
+#define NODE1_PROTO SEPOL_PROTO_IP4
+#define NODE1_CONTEXT "system_u:object_r:first_node_t:s0"
+
+#define NODE2_ADDR "2001:db8:85a3::8a2e:370:7334"
+#define NODE2_MASK "2001:db8:85a3::8a2e:370:7334"
+#define NODE2_PROTO SEPOL_PROTO_IP6
+#define NODE2_CONTEXT "system_u:object_r:second_node_t:s0"
+
+#define NODE3_ADDR "127.0.0.1"
+#define NODE3_MASK "255.255.0.0"
+#define NODE3_PROTO SEPOL_PROTO_IP4
+#define NODE3_CONTEXT "system_u:object_r:third_node_t:s0"
 
 /* node_record.h */
 void test_node_compare(void);
@@ -39,7 +55,7 @@ int node_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(NODE_POLICY, NODE_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_node.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}

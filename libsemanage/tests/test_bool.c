@@ -1,6 +1,14 @@
 #include "utilities.h"
 #include "test_bool.h"
-#include "test_bool_policy.h"
+
+#define BOOL_COUNT 3
+#define BOOL1_NAME "first_bool"
+#define BOOL1_VALUE 1
+#define BOOL2_NAME "second_bool"
+#define BOOL2_VALUE 0
+#define BOOL3_NAME "third_bool"
+#define BOOL3_VALUE 0
+#define BOOL_NONEXISTENT "asdf"
 
 /* boolean_record.h */
 void test_bool_key_create(void);
@@ -35,7 +43,7 @@ int bool_test_init(void) {
 		return 1;
 	}
 
-	if (write_test_policy(BOOL_POLICY, BOOL_POLICY_LEN) < 0) {
+	if (write_test_policy_from_file("test_bool.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
 		return 1;
 	}
