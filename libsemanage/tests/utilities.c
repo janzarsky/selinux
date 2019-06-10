@@ -141,7 +141,7 @@ int destroy_test_store() {
 
 	disable_test_store();
 
-	char * const files[] = { "test-policy", NULL };
+	char * files[] = { (char *) "test-policy", NULL };
 
 	ftsp = fts_open(files, FTS_NOCHDIR | FTS_PHYSICAL | FTS_XDEV, NULL);
 
