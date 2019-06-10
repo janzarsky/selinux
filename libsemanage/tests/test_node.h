@@ -7,8 +7,7 @@ int node_test_init(void);
 int node_test_cleanup(void);
 int node_add_tests(CU_pSuite suite);
 
-// node_record.h
-
+/* node_record.h */
 void test_node_compare(void);
 void test_node_compare2(void);
 void test_node_key_create(void);
@@ -23,16 +22,14 @@ void test_node_get_set_con(void);
 void test_node_create(void);
 void test_node_clone(void);
 
-// nodes_policy.h
-
+/* nodes_policy.h */
 void test_node_query(void);
 void test_node_exists(void);
 void test_node_count(void);
 void test_node_iterate(void);
 void test_node_list(void);
 
-// nodes_local.h
-
+/* nodes_local.h */
 void test_node_modify_del_query_local(void);
 void test_node_exists_local(void);
 void test_node_count_local(void);
