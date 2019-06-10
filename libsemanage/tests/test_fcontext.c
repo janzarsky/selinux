@@ -64,7 +64,7 @@ int fcontext_test_init(void) {
 
 int fcontext_test_cleanup(void) {
 	if (destroy_test_store() < 0) {
-		fprintf(stderr, "Could destroy test store\n");
+		fprintf(stderr, "Could not destroy test store\n");
 		return 1;
 	}
 
