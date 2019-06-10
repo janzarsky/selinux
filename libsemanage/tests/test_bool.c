@@ -182,8 +182,8 @@ void test_bool_key_create(void) {
 #define SK_INDEX 3
 #define SK_KEY_NULL 4
 void helper_bool_key_extract(level_t level, int mode) {
-	semanage_bool_t *boolean;
-	semanage_bool_key_t *key;
+	semanage_bool_t *boolean = NULL;
+	semanage_bool_key_t *key = NULL;
 	int result;
 
 	setup_handle(level);
