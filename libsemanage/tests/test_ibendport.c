@@ -2,6 +2,20 @@
 #include "test_ibendport.h"
 #include "test_ibendport_policy.h"
 
+/* ibendports_policy.h */
+void test_ibendport_query(void);
+void test_ibendport_exists(void);
+void test_ibendport_count(void);
+void test_ibendport_iterate(void);
+void test_ibendport_list(void);
+
+/* ibendports_local.h */
+void test_ibendport_modify_del_query_local(void);
+void test_ibendport_exists_local(void);
+void test_ibendport_count_local(void);
+void test_ibendport_iterate_local(void);
+void test_ibendport_list_local(void);
+
 extern semanage_handle_t *sh;
 
 int ibendport_test_init(void) {

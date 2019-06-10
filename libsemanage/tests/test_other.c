@@ -1,6 +1,12 @@
 #include "utilities.h"
 #include "test_other.h"
 
+/* context_record.h */
+void test_semanage_context(void);
+
+/* debug.h */
+void test_debug(void);
+
 extern semanage_handle_t *sh;
 
 int other_test_init(void) {

@@ -2,6 +2,31 @@
 #include "test_bool.h"
 #include "test_bool_policy.h"
 
+/* boolean_record.h */
+void test_bool_key_create(void);
+void test_bool_key_extract(void);
+void test_bool_compare(void);
+void test_bool_compare2(void);
+void test_bool_get_set_name(void);
+void test_bool_get_set_value(void);
+void test_bool_create(void);
+void test_bool_clone(void);
+
+/* booleans_policy.h */
+void test_bool_query(void);
+void test_bool_exists(void);
+void test_bool_count(void);
+void test_bool_iterate(void);
+void test_bool_list(void);
+
+/* booleans_local.h */
+void test_bool_modify_del_local(void);
+void test_bool_query_local(void);
+void test_bool_exists_local(void);
+void test_bool_count_local(void);
+void test_bool_iterate_local(void);
+void test_bool_list_local(void);
+
 extern semanage_handle_t *sh;
 
 int bool_test_init(void) {

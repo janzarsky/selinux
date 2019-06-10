@@ -2,6 +2,33 @@
 #include "test_fcontext.h"
 #include "test_fcontext_policy.h"
 
+/* fcontext_record.h */
+void test_fcontext_compare(void);
+void test_fcontext_compare2(void);
+void test_fcontext_key_create(void);
+void test_fcontext_key_extract(void);
+void test_fcontext_get_set_expr(void);
+void test_fcontext_get_set_type(void);
+void test_fcontext_get_type_str(void);
+void test_fcontext_get_set_con(void);
+void test_fcontext_create(void);
+void test_fcontext_clone(void);
+
+/* fcontext_policy.h */
+void test_fcontext_query(void);
+void test_fcontext_exists(void);
+void test_fcontext_count(void);
+void test_fcontext_iterate(void);
+void test_fcontext_list(void);
+
+/* fcontext_local.h */
+void test_fcontext_modify_del_local(void);
+void test_fcontext_query_local(void);
+void test_fcontext_exists_local(void);
+void test_fcontext_count_local(void);
+void test_fcontext_iterate_local(void);
+void test_fcontext_list_local(void);
+
 extern semanage_handle_t *sh;
 
 int get_type(char *t) {
