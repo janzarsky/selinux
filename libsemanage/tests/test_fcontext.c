@@ -134,7 +134,7 @@ semanage_fcontext_t *get_fcontext_nth(int index) {
 	fcontext = records[index];
 
 	for (unsigned int i = 0; i < count; i++) {
-		if (i != index)
+		if (i != (unsigned int) index)
 			semanage_fcontext_free(records[i]);
 	}
 

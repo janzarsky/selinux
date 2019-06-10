@@ -68,12 +68,12 @@ semanage_iface_t *get_iface_nth(int index) {
     result = semanage_iface_list(sh, &records, &count);
 
     CU_ASSERT_FATAL(result >= 0);
-    CU_ASSERT_FATAL(count >= index + 1);
+    CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
 
     iface = records[index];
 
     for (unsigned int i = 0; i < count; i++) {
-        if (i != index)
+        if (i != (unsigned int) index)
             semanage_iface_free(records[i]);
     }
 

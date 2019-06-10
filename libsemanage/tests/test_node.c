@@ -69,12 +69,12 @@ semanage_node_t *get_node_nth(int index) {
         return NULL;
 
     CU_ASSERT_FATAL(semanage_node_list(sh, &records, &count) >= 0);
-    CU_ASSERT_FATAL(count >= index + 1);
+    CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
 
     node = records[index];
 
     for (unsigned int i = 0; i < count; i++) {
-        if (i != index)
+        if (i != (unsigned int) index)
             semanage_node_free(records[i]);
     }
 

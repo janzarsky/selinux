@@ -57,12 +57,12 @@ semanage_ibendport_t *get_ibendport_nth(int index) {
 		return NULL;
 
 	CU_ASSERT_FATAL(semanage_ibendport_list(sh, &records, &count) >= 0);
-	CU_ASSERT_FATAL(count >= index + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
 
 	ibendport = records[index];
 
 	for (unsigned int i = 0; i < count; i++) {
-		if (i != index)
+		if (i != (unsigned int) index)
 			semanage_ibendport_free(records[i]);
 	}
 
