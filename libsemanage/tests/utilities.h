@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <fts.h>
+#include <assert.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <CUnit/Basic.h>

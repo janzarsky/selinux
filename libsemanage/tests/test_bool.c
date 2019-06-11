@@ -352,6 +352,8 @@ void helper_bool_get_set_name(level_t level, int bool_index, const char *name) {
 	new_name = semanage_bool_get_name(boolean);
 
 	CU_ASSERT_PTR_NOT_NULL(new_name);
+	/* Use assert to silence the clang analyzer */
+	assert(new_name);
 	CU_ASSERT_STRING_EQUAL(new_name, name);
 
 	semanage_bool_free(boolean);
@@ -455,7 +457,6 @@ void test_bool_clone(void) {
 void helper_bool_query(level_t level, const char *bool_str, int exp_result) {
 	semanage_bool_key_t *key;
 	semanage_bool_t *response = (void *) 42;
-	const char *name;
 
 	setup_handle(level);
 
@@ -464,8 +465,7 @@ void helper_bool_query(level_t level, const char *bool_str, int exp_result) {
 	CU_ASSERT(semanage_bool_query(sh, key, &response) >= 0);
 
 	if (exp_result >= 0) {
-		name = semanage_bool_get_name(response);
-
+		const char *name = semanage_bool_get_name(response);
 		CU_ASSERT_STRING_EQUAL(name, bool_str);
 	}
 	else {
