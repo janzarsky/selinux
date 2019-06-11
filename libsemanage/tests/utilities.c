@@ -276,19 +276,3 @@ void setup_handle_invalid_store(level_t level) {
 	if (level >= SH_TRANS)
 		helper_begin_transaction();
 }
-
-int context_compare(semanage_context_t *con, const char *str) {
-	char *con_str = NULL;
-	int rc;
-
-	CU_ASSERT_PTR_NOT_NULL_FATAL(con);
-
-	CU_ASSERT(semanage_context_to_string(sh, con, &con_str) >= 0);
-	CU_ASSERT_PTR_NOT_NULL_FATAL(con_str);
-	assert(con_str);
-
-	rc = strcmp(con_str, str);
-
-	free(con_str);
-	return rc;
-}

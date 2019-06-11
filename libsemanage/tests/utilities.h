@@ -32,23 +32,14 @@
 
 #include "semanage/semanage.h"
 
-#define CU_ASSERT_CONTEXT(CON1,CON2,EQUAL) \
+#define CU_ASSERT_CONTEXT_EQUAL(CON1,CON2) \
 	do { \
-		char *CU_str; \
-		char *CU_str2; \
-		CU_ASSERT_PTR_NOT_NULL(CON1); \
-		CU_ASSERT_PTR_NOT_NULL(CON2); \
-		CU_ASSERT(semanage_context_to_string(sh, CON1, &CU_str) >= 0); \
-		CU_ASSERT(semanage_context_to_string(sh, CON2, &CU_str2) >= 0); \
-		if (EQUAL) {\
-			CU_ASSERT_STRING_EQUAL(CU_str, CU_str2); \
-		} else {\
-			CU_ASSERT_STRING_NOT_EQUAL(CU_str, CU_str2); \
-		} \
+		char *__str; \
+		char *__str2; \
+		CU_ASSERT(semanage_context_to_string(sh, CON1, &__str) >= 0); \
+		CU_ASSERT(semanage_context_to_string(sh, CON2, &__str2) >= 0); \
+		CU_ASSERT_STRING_EQUAL(__str, __str2); \
 	} while (0)
-
-#define CU_ASSERT_CONTEXT_EQUAL(CON1,CON2) CU_ASSERT_CONTEXT(CON1,CON2,1)
-#define CU_ASSERT_CONTEXT_NOT_EQUAL(CON1,CON2) CU_ASSERT_CONTEXT(CON1,CON2,0)
 
 #define I_NULL  -1
 #define I_FIRST  0
@@ -70,8 +61,6 @@ void helper_connect(void);
 void helper_disconnect(void);
 void helper_begin_transaction(void);
 void helper_commit(void);
-
-int context_compare(semanage_context_t *con, const char *str);
 
 int create_test_store(void);
 int write_test_policy_from_file(const char *filename);
