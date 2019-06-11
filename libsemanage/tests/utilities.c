@@ -23,7 +23,6 @@
 
 #include "utilities.h"
 
-int result;
 int test_store_enabled = 0;
 
 semanage_handle_t *sh = NULL;
