@@ -98,54 +98,54 @@ int iface_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_iface_t *get_iface_nth(int index)
+semanage_iface_t *get_iface_nth(int idx)
 {
-	int result;
+	int res;
 	semanage_iface_t **records;
 	semanage_iface_t *iface;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	result = semanage_iface_list(sh, &records, &count);
+	res = semanage_iface_list(sh, &records, &count);
 
-	CU_ASSERT_FATAL(result >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(res >= 0);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	iface = records[index];
+	iface = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_iface_free(records[i]);
 
 	return iface;
 }
 
-semanage_iface_key_t *get_iface_key_nth(int index)
+semanage_iface_key_t *get_iface_key_nth(int idx)
 {
 	semanage_iface_key_t *key;
 	semanage_iface_t *iface;
-	int result;
+	int res;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	iface = get_iface_nth(index);
-	result = semanage_iface_key_extract(sh, iface, &key);
+	iface = get_iface_nth(idx);
+	res = semanage_iface_key_extract(sh, iface, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
 }
 
-void add_local_iface(int index)
+void add_local_iface(int idx)
 {
 	semanage_iface_t *iface;
 	semanage_iface_key_t *key = NULL;
 
-	iface = get_iface_nth(index);
+	iface = get_iface_nth(idx);
 
 	CU_ASSERT_FATAL(semanage_iface_key_extract(sh, iface, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
@@ -153,10 +153,10 @@ void add_local_iface(int index)
 	CU_ASSERT_FATAL(semanage_iface_modify_local(sh, key, iface) >= 0);
 }
 
-void delete_local_iface(int index)
+void delete_local_iface(int idx)
 {
 	semanage_iface_key_t *key = NULL;
-	key = get_iface_key_nth(index);
+	key = get_iface_key_nth(idx);
 	CU_ASSERT_FATAL(semanage_iface_del_local(sh, key) >= 0);
 }
 
@@ -166,7 +166,7 @@ void test_iface_compare(void)
 	semanage_iface_t *iface = NULL;
 	semanage_iface_key_t *key1 = NULL;
 	semanage_iface_key_t *key2 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -176,10 +176,10 @@ void test_iface_compare(void)
 	CU_ASSERT_PTR_NOT_NULL(key2);
 
 	/* test */
-	result = semanage_iface_compare(iface, key1);
-	CU_ASSERT(result == 0);
-	result = semanage_iface_compare(iface, key2);
-	CU_ASSERT(result != 0);
+	res = semanage_iface_compare(iface, key1);
+	CU_ASSERT(res == 0);
+	res = semanage_iface_compare(iface, key2);
+	CU_ASSERT(res != 0);
 
 	/* cleanup */
 	semanage_iface_free(iface);
@@ -194,7 +194,7 @@ void test_iface_compare2(void)
 	semanage_iface_t *iface1 = NULL;
 	semanage_iface_t *iface2 = NULL;
 	semanage_iface_t *iface3 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -203,10 +203,10 @@ void test_iface_compare2(void)
 	iface3 = get_iface_nth(I_SECOND);
 
 	/* test */
-	result = semanage_iface_compare2(iface1, iface2);
-	CU_ASSERT(result == 0);
-	result = semanage_iface_compare2(iface1, iface3);
-	CU_ASSERT(result != 0);
+	res = semanage_iface_compare2(iface1, iface2);
+	CU_ASSERT(res == 0);
+	res = semanage_iface_compare2(iface1, iface3);
+	CU_ASSERT(res != 0);
 
 	/* cleanup */
 	semanage_iface_free(iface1);
@@ -416,7 +416,7 @@ void test_iface_exists(void)
 {
 	semanage_iface_key_t *key1 = NULL;
 	semanage_iface_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -424,10 +424,10 @@ void test_iface_exists(void)
 	CU_ASSERT(semanage_iface_key_create(sh, "asdf", &key2) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_iface_exists(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_iface_exists(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_iface_exists(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_iface_exists(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	semanage_iface_key_free(key1);
@@ -535,7 +535,7 @@ void test_iface_exists_local(void)
 {
 	semanage_iface_key_t *key1 = NULL;
 	semanage_iface_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_TRANS);
@@ -544,10 +544,10 @@ void test_iface_exists_local(void)
 	key2 = get_iface_key_nth(I_SECOND);
 
 	/* test */
-	CU_ASSERT(semanage_iface_exists_local(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_iface_exists_local(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_iface_exists_local(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_iface_exists_local(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	CU_ASSERT(semanage_iface_del_local(sh, key1) >= 0);

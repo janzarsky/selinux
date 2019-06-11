@@ -149,13 +149,13 @@ void test_is_connected(void)
 /* Function semanage_access_check */
 void test_access_check(void)
 {
-	int result = 0;
+	int res = 0;
 
 	/* test with handle */
 	setup_handle(SH_HANDLE);
-	result = semanage_access_check(sh);
-	CU_ASSERT(result == 0 || result == SEMANAGE_CAN_READ
-		  || result == SEMANAGE_CAN_WRITE);
+	res = semanage_access_check(sh);
+	CU_ASSERT(res == 0 || res == SEMANAGE_CAN_READ
+		  || res == SEMANAGE_CAN_WRITE);
 	cleanup_handle(SH_HANDLE);
 
 	/* test with invalid store */
@@ -165,26 +165,26 @@ void test_access_check(void)
 
 	/* test connected */
 	setup_handle(SH_CONNECT);
-	result = semanage_access_check(sh);
-	CU_ASSERT(result == 0 || result == SEMANAGE_CAN_READ
-		  || result == SEMANAGE_CAN_WRITE);
+	res = semanage_access_check(sh);
+	CU_ASSERT(res == 0 || res == SEMANAGE_CAN_READ
+		  || res == SEMANAGE_CAN_WRITE);
 	cleanup_handle(SH_CONNECT);
 }
 
 /* Function semanage_is_managed */
 void test_is_managed(void)
 {
-	int result = 0;
+	int res = 0;
 
 	/* test with handle */
 	setup_handle(SH_HANDLE);
-	result = semanage_is_managed(sh);
-	CU_ASSERT(result == 0 || result == 1);
+	res = semanage_is_managed(sh);
+	CU_ASSERT(res == 0 || res == 1);
 
 	/* test connected */
 	helper_connect();
-	result = semanage_is_managed(sh);
-	CU_ASSERT(result < 0);
+	res = semanage_is_managed(sh);
+	CU_ASSERT(res < 0);
 
 	cleanup_handle(SH_CONNECT);
 }
@@ -192,12 +192,12 @@ void test_is_managed(void)
 /* Function semanage_mls_enabled */
 void test_mls_enabled(void)
 {
-	int result = 0;
+	int res = 0;
 
 	/* test with handle */
 	setup_handle(SH_HANDLE);
-	result = semanage_mls_enabled(sh);
-	CU_ASSERT(result == 0 || result == 1);
+	res = semanage_mls_enabled(sh);
+	CU_ASSERT(res == 0 || res == 1);
 	cleanup_handle(SH_HANDLE);
 
 	/* test with invalid store */
@@ -207,8 +207,8 @@ void test_mls_enabled(void)
 
 	/* test connected */
 	setup_handle(SH_CONNECT);
-	result = semanage_mls_enabled(sh);
-	CU_ASSERT(result == 0 || result == 1);
+	res = semanage_mls_enabled(sh);
+	CU_ASSERT(res == 0 || res == 1);
 
 	cleanup_handle(SH_CONNECT);
 }
@@ -273,7 +273,7 @@ void test_root(void)
 
 /* Function semanage_select_store */
 void helper_select_store(const char *name, enum semanage_connect_type type,
-			 int exp_result)
+			 int exp_res)
 {
 	setup_handle(SH_HANDLE);
 
@@ -282,15 +282,15 @@ void helper_select_store(const char *name, enum semanage_connect_type type,
 	 */
 	semanage_select_store(sh, (char *) name, type);
 
-	int result = semanage_connect(sh);
+	int res = semanage_connect(sh);
 
-	if (exp_result < 0) {
-		CU_ASSERT(result < 0);
+	if (exp_res < 0) {
+		CU_ASSERT(res < 0);
 	} else {
-		CU_ASSERT(result >= 0);
+		CU_ASSERT(res >= 0);
 	}
 
-	if (result >= 0)
+	if (res >= 0)
 		cleanup_handle(SH_CONNECT);
 	else
 		cleanup_handle(SH_HANDLE);

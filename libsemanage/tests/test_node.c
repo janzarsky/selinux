@@ -110,52 +110,52 @@ int node_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_node_t *get_node_nth(int index)
+semanage_node_t *get_node_nth(int idx)
 {
 	semanage_node_t **records;
 	semanage_node_t *node;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
 	CU_ASSERT_FATAL(semanage_node_list(sh, &records, &count) >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	node = records[index];
+	node = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_node_free(records[i]);
 
 	return node;
 }
 
-semanage_node_key_t *get_node_key_nth(int index)
+semanage_node_key_t *get_node_key_nth(int idx)
 {
 	semanage_node_key_t *key;
 	semanage_node_t *node;
-	int result;
+	int res;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	node = get_node_nth(index);
+	node = get_node_nth(idx);
 
-	result = semanage_node_key_extract(sh, node, &key);
+	res = semanage_node_key_extract(sh, node, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
 }
 
-void add_local_node(int index)
+void add_local_node(int idx)
 {
 	semanage_node_t *node;
 	semanage_node_key_t *key = NULL;
 
-	node = get_node_nth(index);
+	node = get_node_nth(idx);
 
 	CU_ASSERT_FATAL(semanage_node_key_extract(sh, node, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
@@ -163,11 +163,11 @@ void add_local_node(int index)
 	CU_ASSERT_FATAL(semanage_node_modify_local(sh, key, node) >= 0);
 }
 
-void delete_local_node(int index)
+void delete_local_node(int idx)
 {
 	semanage_node_key_t *key = NULL;
 
-	key = get_node_key_nth(index);
+	key = get_node_key_nth(idx);
 
 	CU_ASSERT_FATAL(semanage_node_del_local(sh, key) >= 0);
 }
@@ -178,7 +178,7 @@ void test_node_compare(void)
 	semanage_node_t *node = NULL;
 	semanage_node_key_t *key1 = NULL;
 	semanage_node_key_t *key2 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -189,10 +189,10 @@ void test_node_compare(void)
 	CU_ASSERT_PTR_NOT_NULL(key2);
 
 	/* test */
-	result = semanage_node_compare(node, key1);
-	CU_ASSERT(result == 0);
-	result = semanage_node_compare(node, key2);
-	CU_ASSERT(result != 0);
+	res = semanage_node_compare(node, key1);
+	CU_ASSERT(res == 0);
+	res = semanage_node_compare(node, key2);
+	CU_ASSERT(res != 0);
 
 	/* cleanup */
 	semanage_node_free(node);
@@ -207,7 +207,7 @@ void test_node_compare2(void)
 	semanage_node_t *node1 = NULL;
 	semanage_node_t *node2 = NULL;
 	semanage_node_t *node3 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -216,10 +216,10 @@ void test_node_compare2(void)
 	node3 = get_node_nth(I_SECOND);
 
 	/* test */
-	result = semanage_node_compare2(node1, node2);
-	CU_ASSERT(result == 0);
-	result = semanage_node_compare2(node1, node3);
-	CU_ASSERT(result != 0);
+	res = semanage_node_compare2(node1, node2);
+	CU_ASSERT(res == 0);
+	res = semanage_node_compare2(node1, node3);
+	CU_ASSERT(res != 0);
 
 	/* cleanup */
 	semanage_node_free(node1);
@@ -535,7 +535,7 @@ void test_node_exists(void)
 {
 	semanage_node_key_t *key1 = NULL;
 	semanage_node_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -544,10 +544,10 @@ void test_node_exists(void)
 					   SEMANAGE_PROTO_IP4, &key2) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_node_exists(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_node_exists(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_node_exists(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_node_exists(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	semanage_node_key_free(key1);
@@ -670,7 +670,7 @@ void test_node_exists_local(void)
 {
 	semanage_node_key_t *key1 = NULL;
 	semanage_node_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_TRANS);
@@ -679,10 +679,10 @@ void test_node_exists_local(void)
 	key2 = get_node_key_nth(I_SECOND);
 
 	/* test */
-	CU_ASSERT(semanage_node_exists_local(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_node_exists_local(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_node_exists_local(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_node_exists_local(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	CU_ASSERT(semanage_node_del_local(sh, key1) >= 0);

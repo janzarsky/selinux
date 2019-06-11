@@ -175,36 +175,36 @@ semanage_fcontext_t *get_fcontext_new(void)
 	return fcontext;
 }
 
-semanage_fcontext_t *get_fcontext_nth(int index)
+semanage_fcontext_t *get_fcontext_nth(int idx)
 {
 	semanage_fcontext_t **records;
 	semanage_fcontext_t *fcontext;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
 	CU_ASSERT_FATAL(semanage_fcontext_list(sh, &records, &count) >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	fcontext = records[index];
+	fcontext = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_fcontext_free(records[i]);
 
 	return fcontext;
 }
 
-semanage_fcontext_key_t *get_fcontext_key_nth(int index)
+semanage_fcontext_key_t *get_fcontext_key_nth(int idx)
 {
 	semanage_fcontext_key_t *key;
 	semanage_fcontext_t *fcontext;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	fcontext = get_fcontext_nth(index);
+	fcontext = get_fcontext_nth(idx);
 
 	CU_ASSERT_FATAL(semanage_fcontext_key_extract(sh, fcontext, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
@@ -212,14 +212,14 @@ semanage_fcontext_key_t *get_fcontext_key_nth(int index)
 	return key;
 }
 
-void add_local_fcontext(int fcontext_index)
+void add_local_fcontext(int fcontext_idx)
 {
 	semanage_fcontext_t *fcontext;
 	semanage_fcontext_key_t *key = NULL;
 
-	CU_ASSERT_FATAL(fcontext_index != I_NULL);
+	CU_ASSERT_FATAL(fcontext_idx != I_NULL);
 
-	fcontext = get_fcontext_nth(fcontext_index);
+	fcontext = get_fcontext_nth(fcontext_idx);
 
 	CU_ASSERT_FATAL(semanage_fcontext_key_extract(sh, fcontext, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
@@ -227,13 +227,13 @@ void add_local_fcontext(int fcontext_index)
 	CU_ASSERT_FATAL(semanage_fcontext_modify_local(sh, key, fcontext) >= 0);
 }
 
-void delete_local_fcontext(int fcontext_index)
+void delete_local_fcontext(int fcontext_idx)
 {
 	semanage_fcontext_key_t *key = NULL;
 
-	CU_ASSERT_FATAL(fcontext_index != I_NULL);
+	CU_ASSERT_FATAL(fcontext_idx != I_NULL);
 
-	key = get_fcontext_key_nth(fcontext_index);
+	key = get_fcontext_key_nth(fcontext_idx);
 
 	CU_ASSERT_FATAL(semanage_fcontext_del_local(sh, key) >= 0);
 }
@@ -241,14 +241,14 @@ void delete_local_fcontext(int fcontext_index)
 semanage_fcontext_key_t *get_fcontext_key_from_str(const char *str, int type)
 {
 	semanage_fcontext_key_t *key;
-	int result;
+	int res;
 
 	if (str == NULL)
 		return NULL;
 
-	result = semanage_fcontext_key_create(sh, str, type, &key);
+	res = semanage_fcontext_key_create(sh, str, type, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
@@ -426,7 +426,7 @@ void test_fcontext_get_type_str(void)
 }
 
 /* Function semanage_fcontext_get_con, semanage_fcontext_set_con */
-void helper_fcontext_get_set_con(level_t level, int fcontext_index,
+void helper_fcontext_get_set_con(level_t level, int fcontext_idx,
 				 const char *con_str)
 {
 	semanage_fcontext_t *fcontext;
@@ -435,7 +435,7 @@ void helper_fcontext_get_set_con(level_t level, int fcontext_index,
 
 	/* setup */
 	setup_handle(level);
-	fcontext = get_fcontext_nth(fcontext_index);
+	fcontext = get_fcontext_nth(fcontext_idx);
 
 	if (con_str != NULL) {
 		CU_ASSERT(semanage_context_from_string(sh, con_str, &con) >= 0);
@@ -502,7 +502,7 @@ void test_fcontext_create(void)
 }
 
 /* Function semanage_fcontext_clone */
-void helper_fcontext_clone(level_t level, int fcontext_index)
+void helper_fcontext_clone(level_t level, int fcontext_idx)
 {
 	semanage_fcontext_t *fcontext;
 	semanage_fcontext_t *fcontext_clone;
@@ -515,7 +515,7 @@ void helper_fcontext_clone(level_t level, int fcontext_index)
 
 	/* setup */
 	setup_handle(level);
-	fcontext = get_fcontext_nth(fcontext_index);
+	fcontext = get_fcontext_nth(fcontext_idx);
 
 	/* test */
 	CU_ASSERT(semanage_fcontext_clone(sh, fcontext, &fcontext_clone) >= 0);
@@ -548,27 +548,27 @@ void test_fcontext_clone(void)
 
 /* Function semanage_fcontext_query */
 void helper_fcontext_query(level_t level, const char *fcontext_expr,
-			   int fcontext_type, int exp_result)
+			   int fcontext_type, int exp_res)
 {
 	semanage_fcontext_key_t *key;
-	semanage_fcontext_t *response = (void *) 42;
+	semanage_fcontext_t *resp = (void *) 42;
 	const char *expr;
-	int result;
+	int res;
 
 	/* setup */
 	setup_handle(level);
 	key = get_fcontext_key_from_str(fcontext_expr, fcontext_type);
 
 	/* test */
-	result = semanage_fcontext_query(sh, key, &response);
+	res = semanage_fcontext_query(sh, key, &resp);
 
-	if (exp_result >= 0) {
-		CU_ASSERT(result >= 0);
-		expr = semanage_fcontext_get_expr(response);
+	if (exp_res >= 0) {
+		CU_ASSERT(res >= 0);
+		expr = semanage_fcontext_get_expr(resp);
 		CU_ASSERT_STRING_EQUAL(expr, fcontext_expr);
 	} else {
-		CU_ASSERT(result < 0);
-		CU_ASSERT(response == (void *) 42);
+		CU_ASSERT(res < 0);
+		CU_ASSERT(resp == (void *) 42);
 	}
 
 	/* cleanup */
@@ -591,18 +591,18 @@ void test_fcontext_query(void)
 
 /* Function semanage_fcontext_exists */
 void helper_fcontext_exists(level_t level, const char *fcontext_expr,
-			    int fcontext_type, int exp_response)
+			    int fcontext_type, int exp_resp)
 {
 	semanage_fcontext_key_t *key;
-	int response;
+	int resp;
 
 	/* setup */
 	setup_handle(level);
 	key = get_fcontext_key_from_str(fcontext_expr, fcontext_type);
 
 	/* test */
-	CU_ASSERT(semanage_fcontext_exists(sh, key, &response) >= 0);
-	CU_ASSERT(response == exp_response);
+	CU_ASSERT(semanage_fcontext_exists(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == exp_resp);
 
 	/* cleanup */
 	semanage_fcontext_key_free(key);
@@ -626,26 +626,26 @@ void test_fcontext_exists(void)
 /* Function semanage_fcontext_count */
 void test_fcontext_count(void)
 {
-	unsigned int response;
+	unsigned int resp;
 
 	/* handle */
 	setup_handle(SH_HANDLE);
-	CU_ASSERT(semanage_fcontext_count(sh, &response) < 0);
+	CU_ASSERT(semanage_fcontext_count(sh, &resp) < 0);
 	CU_ASSERT(semanage_fcontext_count(sh, NULL) < 0);
 	cleanup_handle(SH_HANDLE);
 
 	/* connect */
-	response = 0;
+	resp = 0;
 	setup_handle(SH_CONNECT);
-	CU_ASSERT(semanage_fcontext_count(sh, &response) >= 0);
-	CU_ASSERT(response == FCONTEXTS_COUNT);
+	CU_ASSERT(semanage_fcontext_count(sh, &resp) >= 0);
+	CU_ASSERT(resp == FCONTEXTS_COUNT);
 	cleanup_handle(SH_CONNECT);
 
 	/* trans */
-	response = 0;
+	resp = 0;
 	setup_handle(SH_TRANS);
-	CU_ASSERT(semanage_fcontext_count(sh, &response) >= 0);
-	CU_ASSERT(response == FCONTEXTS_COUNT);
+	CU_ASSERT(semanage_fcontext_count(sh, &resp) >= 0);
+	CU_ASSERT(resp == FCONTEXTS_COUNT);
 	cleanup_handle(SH_TRANS);
 }
 
@@ -743,18 +743,18 @@ void test_fcontext_list(void)
 }
 
 /* Function semanage_fcontext_modify_local, semanage_fcontext_del_local */
-void helper_fcontext_modify_del_local(level_t level, int fcontext_index,
-				      const char *con_str, int exp_result)
+void helper_fcontext_modify_del_local(level_t level, int fcontext_idx,
+				      const char *con_str, int exp_res)
 {
 	semanage_fcontext_t *fcontext;
 	semanage_fcontext_t *fcontext_local;
 	semanage_fcontext_key_t *key = NULL;
 	semanage_context_t *con = NULL;
-	int result;
+	int res;
 
 	/* setup */
 	setup_handle(level);
-	fcontext = get_fcontext_nth(fcontext_index);
+	fcontext = get_fcontext_nth(fcontext_idx);
 	CU_ASSERT(semanage_fcontext_key_extract(sh, fcontext, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(key);
 
@@ -768,10 +768,10 @@ void helper_fcontext_modify_del_local(level_t level, int fcontext_index,
 	CU_ASSERT(semanage_fcontext_set_con(sh, fcontext, con) >= 0);
 
 	/* test */
-	result = semanage_fcontext_modify_local(sh, key, fcontext);
+	res = semanage_fcontext_modify_local(sh, key, fcontext);
 
-	if (exp_result >= 0) {
-		CU_ASSERT(result >= 0);
+	if (exp_res >= 0) {
+		CU_ASSERT(res >= 0);
 
 		if (level == SH_TRANS) {
 			helper_commit();
@@ -786,7 +786,7 @@ void helper_fcontext_modify_del_local(level_t level, int fcontext_index,
 		CU_ASSERT(semanage_fcontext_query_local(sh, key,
 					                &fcontext_local) < 0);
 	} else {
-		CU_ASSERT(result < 0);
+		CU_ASSERT(res < 0);
 	}
 
 	/* cleanup */
@@ -811,14 +811,14 @@ void test_fcontext_modify_del_local(void)
 void test_fcontext_query_local(void)
 {
 	semanage_fcontext_key_t *key = NULL;
-	semanage_fcontext_t *response = NULL;
+	semanage_fcontext_t *resp = NULL;
 
 	/* connect */
 	setup_handle(SH_CONNECT);
 
 	key = get_fcontext_key_nth(I_FIRST);
-	CU_ASSERT(semanage_fcontext_query_local(sh, key, &response) < 0);
-	CU_ASSERT_PTR_NULL(response);
+	CU_ASSERT(semanage_fcontext_query_local(sh, key, &resp) < 0);
+	CU_ASSERT_PTR_NULL(resp);
 
 	cleanup_handle(SH_CONNECT);
 
@@ -826,18 +826,18 @@ void test_fcontext_query_local(void)
 	setup_handle(SH_TRANS);
 
 	key = get_fcontext_key_nth(I_FIRST);
-	CU_ASSERT(semanage_fcontext_query_local(sh, key, &response) < 0);
-	CU_ASSERT_PTR_NULL(response);
+	CU_ASSERT(semanage_fcontext_query_local(sh, key, &resp) < 0);
+	CU_ASSERT_PTR_NULL(resp);
 
 	add_local_fcontext(I_FIRST);
-	CU_ASSERT(semanage_fcontext_query_local(sh, key, &response) >= 0);
-	CU_ASSERT_PTR_NOT_NULL(response);
+	CU_ASSERT(semanage_fcontext_query_local(sh, key, &resp) >= 0);
+	CU_ASSERT_PTR_NOT_NULL(resp);
 
 	semanage_fcontext_key_free(key);
 	key = get_fcontext_key_nth(I_SECOND);
 	add_local_fcontext(I_SECOND);
-	CU_ASSERT(semanage_fcontext_query_local(sh, key, &response) >= 0);
-	CU_ASSERT_PTR_NOT_NULL(response);
+	CU_ASSERT(semanage_fcontext_query_local(sh, key, &resp) >= 0);
+	CU_ASSERT_PTR_NOT_NULL(resp);
 
 	/* cleanup */
 	delete_local_fcontext(I_FIRST);
@@ -848,7 +848,7 @@ void test_fcontext_query_local(void)
 /* Function semanage_fcontext_exists_local */
 void test_fcontext_exists_local(void)
 {
-	int response = -1;
+	int resp = -1;
 	semanage_fcontext_key_t *key;
 
 	/* setup */
@@ -856,25 +856,25 @@ void test_fcontext_exists_local(void)
 	key = get_fcontext_key_nth(I_FIRST);
 
 	/* test */
-	CU_ASSERT(semanage_fcontext_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response == 0);
+	CU_ASSERT(semanage_fcontext_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 
 	add_local_fcontext(I_FIRST);
-	response = -1;
+	resp = -1;
 
-	CU_ASSERT(semanage_fcontext_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response == 1);
+	CU_ASSERT(semanage_fcontext_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == 1);
 
 	delete_local_fcontext(I_FIRST);
-	response = -1;
+	resp = -1;
 
-	CU_ASSERT(semanage_fcontext_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response == 0);
+	CU_ASSERT(semanage_fcontext_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 
-	response = -1;
+	resp = -1;
 
-	CU_ASSERT(semanage_fcontext_exists_local(sh, NULL, &response) >= 0);
-	CU_ASSERT(response == 0);
+	CU_ASSERT(semanage_fcontext_exists_local(sh, NULL, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 
 	/* cleanup */
 	cleanup_handle(SH_TRANS);
@@ -883,35 +883,35 @@ void test_fcontext_exists_local(void)
 /* Function semanage_fcontext_count_local */
 void test_fcontext_count_local(void)
 {
-	unsigned int response;
+	unsigned int resp;
 
 	/* handle */
 	setup_handle(SH_HANDLE);
-	CU_ASSERT(semanage_fcontext_count_local(sh, &response) < 0);
+	CU_ASSERT(semanage_fcontext_count_local(sh, &resp) < 0);
 	cleanup_handle(SH_HANDLE);
 
 	/* connect */
 	setup_handle(SH_CONNECT);
-	CU_ASSERT(semanage_fcontext_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == 0);
+	CU_ASSERT(semanage_fcontext_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 	cleanup_handle(SH_CONNECT);
 
 	/* transaction */
 	setup_handle(SH_TRANS);
-	CU_ASSERT(semanage_fcontext_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == 0);
+	CU_ASSERT(semanage_fcontext_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 
 	add_local_fcontext(I_FIRST);
-	CU_ASSERT(semanage_fcontext_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == 1);
+	CU_ASSERT(semanage_fcontext_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == 1);
 
 	add_local_fcontext(I_SECOND);
-	CU_ASSERT(semanage_fcontext_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == 2);
+	CU_ASSERT(semanage_fcontext_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == 2);
 
 	delete_local_fcontext(I_SECOND);
-	CU_ASSERT(semanage_fcontext_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == 1);
+	CU_ASSERT(semanage_fcontext_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == 1);
 
 	/* cleanup */
 	delete_local_fcontext(I_FIRST);

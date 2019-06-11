@@ -105,57 +105,57 @@ int port_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_port_t *get_port_nth(int index)
+semanage_port_t *get_port_nth(int idx)
 {
-	int result;
+	int res;
 	semanage_port_t **records;
 	semanage_port_t *port;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	result = semanage_port_list(sh, &records, &count);
+	res = semanage_port_list(sh, &records, &count);
 
-	CU_ASSERT_FATAL(result >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(res >= 0);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	port = records[index];
+	port = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_port_free(records[i]);
 
 	return port;
 }
 
-semanage_port_key_t *get_port_key_nth(int index)
+semanage_port_key_t *get_port_key_nth(int idx)
 {
 	semanage_port_key_t *key;
 	semanage_port_t *port;
-	int result;
+	int res;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	port = get_port_nth(index);
+	port = get_port_nth(idx);
 
-	result = semanage_port_key_extract(sh, port, &key);
+	res = semanage_port_key_extract(sh, port, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
 }
 
-void add_local_port(int port_index)
+void add_local_port(int port_idx)
 {
 	semanage_port_t *port;
 	semanage_port_key_t *key = NULL;
 
-	CU_ASSERT_FATAL(port_index != I_NULL);
+	CU_ASSERT_FATAL(port_idx != I_NULL);
 
-	port = get_port_nth(port_index);
+	port = get_port_nth(port_idx);
 
 	CU_ASSERT_FATAL(semanage_port_key_extract(sh, port, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
@@ -163,36 +163,36 @@ void add_local_port(int port_index)
 	CU_ASSERT_FATAL(semanage_port_modify_local(sh, key, port) >= 0);
 }
 
-void delete_local_port(int port_index)
+void delete_local_port(int port_idx)
 {
 	semanage_port_key_t *key = NULL;
 
-	CU_ASSERT_FATAL(port_index != I_NULL);
+	CU_ASSERT_FATAL(port_idx != I_NULL);
 
-	key = get_port_key_nth(port_index);
+	key = get_port_key_nth(port_idx);
 
 	CU_ASSERT_FATAL(semanage_port_del_local(sh, key) >= 0);
 }
 
 /* Function semanage_port_compare */
-void helper_port_compare(int index1, int index2)
+void helper_port_compare(int idx1, int idx2)
 {
 	semanage_port_t *port = NULL;
 	semanage_port_key_t *key = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
-	port = get_port_nth(index1);
-	key = get_port_key_nth(index2);
+	port = get_port_nth(idx1);
+	key = get_port_key_nth(idx2);
 
 	/* test */
-	result = semanage_port_compare(port, key);
+	res = semanage_port_compare(port, key);
 
-	if (index1 == index2) {
-		CU_ASSERT(result == 0);
+	if (idx1 == idx2) {
+		CU_ASSERT(res == 0);
 	} else {
-		CU_ASSERT(result != 0);
+		CU_ASSERT(res != 0);
 	}
 
 	/* cleanup */
@@ -210,25 +210,25 @@ void test_port_compare(void)
 }
 
 /* Function semanage_port_compare2 */
-void helper_port_compare2(int index1, int index2)
+void helper_port_compare2(int idx1, int idx2)
 {
 	semanage_port_t *port1 = NULL;
 	semanage_port_t *port2 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
 
-	port1 = get_port_nth(index1);
-	port2 = get_port_nth(index2);
+	port1 = get_port_nth(idx1);
+	port2 = get_port_nth(idx2);
 
 	/* test */
-	result = semanage_port_compare2(port1, port2);
+	res = semanage_port_compare2(port1, port2);
 
-	if (index1 == index2) {
-		CU_ASSERT(result == 0);
+	if (idx1 == idx2) {
+		CU_ASSERT(res == 0);
 	} else {
-		CU_ASSERT(result != 0);
+		CU_ASSERT(res != 0);
 	}
 
 	/* cleanup */
@@ -283,13 +283,13 @@ void test_port_key_extract(void)
 }
 
 /* Function semanage_port_get_proto, semanage_port_set_proto */
-void helper_port_get_set_proto(int index)
+void helper_port_get_set_proto(int idx)
 {
 	semanage_port_t *port = NULL;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
-	port = get_port_nth(index);
+	port = get_port_nth(idx);
 
 	/* test */
 	semanage_port_set_proto(port, 0);
@@ -470,7 +470,7 @@ void test_port_exists(void)
 {
 	semanage_port_key_t *key1 = NULL;
 	semanage_port_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -478,10 +478,10 @@ void test_port_exists(void)
 	CU_ASSERT(semanage_port_key_create(sh, 123, 456, 0, &key2) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_port_exists(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_port_exists(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_port_exists(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_port_exists(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	semanage_port_key_free(key1);
@@ -623,7 +623,7 @@ void test_port_exists_local(void)
 {
 	semanage_port_key_t *key1 = NULL;
 	semanage_port_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_TRANS);
@@ -632,10 +632,10 @@ void test_port_exists_local(void)
 	key2 = get_port_key_nth(I_SECOND);
 
 	/* test */
-	CU_ASSERT(semanage_port_exists_local(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_port_exists_local(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_port_exists_local(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_port_exists_local(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	delete_local_port(I_FIRST);
@@ -737,15 +737,15 @@ void test_port_list_local(void)
 void helper_port_validate_local_noport(void)
 {
 	semanage_port_key_t *key = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_TRANS);
 	add_local_port(I_FIRST);
 	helper_commit();
 	key = get_port_key_nth(I_FIRST);
-	CU_ASSERT(semanage_port_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response);
+	CU_ASSERT(semanage_port_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp);
 
 	/* test */
 	helper_begin_transaction();

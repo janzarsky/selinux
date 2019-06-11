@@ -91,25 +91,25 @@ int bool_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_bool_t *get_bool_nth(int index)
+semanage_bool_t *get_bool_nth(int idx)
 {
-	int result;
+	int res;
 	semanage_bool_t **records;
 	semanage_bool_t *boolean;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	result = semanage_bool_list(sh, &records, &count);
+	res = semanage_bool_list(sh, &records, &count);
 
-	CU_ASSERT_FATAL(result >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(res >= 0);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	boolean = records[index];
+	boolean = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_bool_free(records[i]);
 
 	return boolean;
@@ -117,30 +117,30 @@ semanage_bool_t *get_bool_nth(int index)
 
 semanage_bool_t *get_bool_new(void)
 {
-	int result;
+	int res;
 	semanage_bool_t *boolean;
 
-	result = semanage_bool_create(sh, &boolean);
+	res = semanage_bool_create(sh, &boolean);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 
 	return boolean;
 }
 
-semanage_bool_key_t *get_bool_key_nth(int index)
+semanage_bool_key_t *get_bool_key_nth(int idx)
 {
 	semanage_bool_key_t *key;
 	semanage_bool_t *boolean;
-	int result;
+	int res;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	boolean = get_bool_nth(index);
+	boolean = get_bool_nth(idx);
 
-	result = semanage_bool_key_extract(sh, boolean, &key);
+	res = semanage_bool_key_extract(sh, boolean, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
@@ -149,14 +149,14 @@ semanage_bool_key_t *get_bool_key_nth(int index)
 semanage_bool_key_t *get_bool_key_from_str(const char *str)
 {
 	semanage_bool_key_t *key;
-	int result;
+	int res;
 
 	if (str == NULL)
 		return NULL;
 
-	result = semanage_bool_key_create(sh, str, &key);
+	res = semanage_bool_key_create(sh, str, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
@@ -228,7 +228,7 @@ void helper_bool_key_extract(level_t level, int mode)
 {
 	semanage_bool_t *boolean = NULL;
 	semanage_bool_key_t *key = NULL;
-	int result;
+	int res;
 
 	setup_handle(level);
 
@@ -250,15 +250,15 @@ void helper_bool_key_extract(level_t level, int mode)
 	}
 
 	if (mode == SK_KEY_NULL)
-		result = semanage_bool_key_extract(sh, boolean, NULL);
+		res = semanage_bool_key_extract(sh, boolean, NULL);
 	else
-		result = semanage_bool_key_extract(sh, boolean, &key);
+		res = semanage_bool_key_extract(sh, boolean, &key);
 
-	CU_ASSERT(result >= 0);
+	CU_ASSERT(res >= 0);
 
-	result = semanage_bool_compare(boolean, key);
+	res = semanage_bool_compare(boolean, key);
 
-	CU_ASSERT(result == 0);
+	CU_ASSERT(res == 0);
 
 	semanage_bool_key_free(key);
 	semanage_bool_free(boolean);
@@ -277,23 +277,23 @@ void test_bool_key_extract(void)
 #undef SK_KEY_NULL
 
 /* Function bool_compare */
-void helper_bool_compare(level_t level, int bool_index1, int bool_index2)
+void helper_bool_compare(level_t level, int bool_idx1, int bool_idx2)
 {
 	semanage_bool_t *boolean;
 	semanage_bool_key_t *key;
-	int result;
+	int res;
 
 	setup_handle(level);
 
-	boolean = get_bool_nth(bool_index1);
-	key = get_bool_key_nth(bool_index2);
+	boolean = get_bool_nth(bool_idx1);
+	key = get_bool_key_nth(bool_idx2);
 
-	result = semanage_bool_compare(boolean, key);
+	res = semanage_bool_compare(boolean, key);
 
-	if (bool_index1 == bool_index2) {
-		CU_ASSERT(result == 0);
+	if (bool_idx1 == bool_idx2) {
+		CU_ASSERT(res == 0);
 	} else {
-		CU_ASSERT(result != 0);
+		CU_ASSERT(res != 0);
 	}
 
 	semanage_bool_free(boolean);
@@ -315,23 +315,23 @@ void test_bool_compare(void)
 }
 
 /* Function bool_compare2 */
-void helper_bool_compare2(level_t level, int bool_index1, int bool_index2)
+void helper_bool_compare2(level_t level, int bool_idx1, int bool_idx2)
 {
 	semanage_bool_t *bool1;
 	semanage_bool_t *bool2;
-	int result;
+	int res;
 
 	setup_handle(level);
 
-	bool1 = get_bool_nth(bool_index1);
-	bool2 = get_bool_nth(bool_index2);
+	bool1 = get_bool_nth(bool_idx1);
+	bool2 = get_bool_nth(bool_idx2);
 
-	result = semanage_bool_compare2(bool1, bool2);
+	res = semanage_bool_compare2(bool1, bool2);
 
-	if (bool_index1 == bool_index2) {
-		CU_ASSERT(result == 0);
+	if (bool_idx1 == bool_idx2) {
+		CU_ASSERT(res == 0);
 	} else {
-		CU_ASSERT(result != 0);
+		CU_ASSERT(res != 0);
 	}
 
 	semanage_bool_free(bool1);
@@ -353,14 +353,14 @@ void test_bool_compare2(void)
 }
 
 /* Function bool_get_name, bool_set_name */
-void helper_bool_get_set_name(level_t level, int bool_index, const char *name)
+void helper_bool_get_set_name(level_t level, int bool_idx, const char *name)
 {
 	semanage_bool_t *boolean;
 	const char *new_name = NULL;
 
 	setup_handle(level);
 
-	boolean = get_bool_nth(bool_index);
+	boolean = get_bool_nth(bool_idx);
 
 	CU_ASSERT(semanage_bool_set_name(sh, boolean, name) >= 0);
 
@@ -389,20 +389,20 @@ void test_bool_get_set_name(void)
 }
 
 /* Function bool_get_value, bool_set_value */
-void helper_bool_get_set_value(int bool_index, int value)
+void helper_bool_get_set_value(int bool_idx, int val)
 {
 	semanage_bool_t *boolean;
-	int new_value = 0;
+	int new_val = 0;
 
 	setup_handle(SH_CONNECT);
-	boolean = get_bool_nth(bool_index);
+	boolean = get_bool_nth(bool_idx);
 	cleanup_handle(SH_CONNECT);
 
-	semanage_bool_set_value(boolean, value);
+	semanage_bool_set_value(boolean, val);
 
-	new_value = semanage_bool_get_value(boolean);
+	new_val = semanage_bool_get_value(boolean);
 
-	CU_ASSERT(new_value == value);
+	CU_ASSERT(new_val == val);
 
 	semanage_bool_free(boolean);
 }
@@ -438,18 +438,18 @@ void test_bool_create(void)
 }
 
 /* Function bool_clone */
-void helper_bool_clone(level_t level, int bool_index)
+void helper_bool_clone(level_t level, int bool_idx)
 {
 	semanage_bool_t *boolean;
 	semanage_bool_t *boolean_clone;
 	const char *str;
 	const char *str_clone;
-	int value;
-	int value_clone;
+	int val;
+	int val_clone;
 
 	setup_handle(level);
 
-	boolean = get_bool_nth(bool_index);
+	boolean = get_bool_nth(bool_idx);
 
 	CU_ASSERT(semanage_bool_clone(sh, boolean, &boolean_clone) >= 0);
 
@@ -458,10 +458,10 @@ void helper_bool_clone(level_t level, int bool_index)
 
 	CU_ASSERT_STRING_EQUAL(str, str_clone);
 
-	value = semanage_bool_get_value(boolean);
-	value_clone = semanage_bool_get_value(boolean_clone);
+	val = semanage_bool_get_value(boolean);
+	val_clone = semanage_bool_get_value(boolean_clone);
 
-	CU_ASSERT_EQUAL(value, value_clone);
+	CU_ASSERT_EQUAL(val, val_clone);
 
 	cleanup_handle(level);
 }
@@ -476,22 +476,22 @@ void test_bool_clone(void)
 }
 
 /* Function bool_query */
-void helper_bool_query(level_t level, const char *bool_str, int exp_result)
+void helper_bool_query(level_t level, const char *bool_str, int exp_res)
 {
 	semanage_bool_key_t *key;
-	semanage_bool_t *response = (void *) 42;
+	semanage_bool_t *resp = (void *) 42;
 
 	setup_handle(level);
 
 	key = get_bool_key_from_str(bool_str);
 
-	CU_ASSERT(semanage_bool_query(sh, key, &response) >= 0);
+	CU_ASSERT(semanage_bool_query(sh, key, &resp) >= 0);
 
-	if (exp_result >= 0) {
-		const char *name = semanage_bool_get_name(response);
+	if (exp_res >= 0) {
+		const char *name = semanage_bool_get_name(resp);
 		CU_ASSERT_STRING_EQUAL(name, bool_str);
 	} else {
-		CU_ASSERT_PTR_NULL(response);
+		CU_ASSERT_PTR_NULL(resp);
 	}
 
 	cleanup_handle(level);
@@ -509,17 +509,17 @@ void test_bool_query(void)
 }
 
 /* Functon bool_exists */
-void helper_bool_exists(level_t level, const char *bool_str, int exp_response)
+void helper_bool_exists(level_t level, const char *bool_str, int exp_resp)
 {
 	semanage_bool_key_t *key;
-	int response;
+	int resp;
 
 	setup_handle(level);
 
 	key = get_bool_key_from_str(bool_str);
 
-	CU_ASSERT(semanage_bool_exists(sh, key, &response) >= 0);
-	CU_ASSERT(response == exp_response);
+	CU_ASSERT(semanage_bool_exists(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == exp_resp);
 
 	semanage_bool_key_free(key);
 
@@ -540,26 +540,26 @@ void test_bool_exists(void)
 /* Function bool_count */
 void test_bool_count(void)
 {
-	unsigned int response;
+	unsigned int resp;
 
 	/* handle */
 	setup_handle(SH_HANDLE);
-	CU_ASSERT(semanage_bool_count(sh, &response) < 0);
+	CU_ASSERT(semanage_bool_count(sh, &resp) < 0);
 	CU_ASSERT(semanage_bool_count(sh, NULL) < 0);
 	cleanup_handle(SH_HANDLE);
 
 	/* connect */
-	response = 0;
+	resp = 0;
 	setup_handle(SH_CONNECT);
-	CU_ASSERT(semanage_bool_count(sh, &response) >= 0);
-	CU_ASSERT(response == BOOL_COUNT);
+	CU_ASSERT(semanage_bool_count(sh, &resp) >= 0);
+	CU_ASSERT(resp == BOOL_COUNT);
 	cleanup_handle(SH_CONNECT);
 
 	/* trans */
-	response = 0;
+	resp = 0;
 	setup_handle(SH_TRANS);
-	CU_ASSERT(semanage_bool_count(sh, &response) >= 0);
-	CU_ASSERT(response == BOOL_COUNT);
+	CU_ASSERT(semanage_bool_count(sh, &resp) >= 0);
+	CU_ASSERT(resp == BOOL_COUNT);
 	cleanup_handle(SH_TRANS);
 }
 
@@ -639,13 +639,13 @@ void test_bool_list(void)
 
 /* Function bool_modify_local, bool_del_local */
 void helper_bool_modify_del_local(level_t level, const char *name,
-				  int old_value, int exp_result)
+				  int old_val, int exp_res)
 {
 	semanage_bool_t *boolean;
 	semanage_bool_t *boolean_local;
 	semanage_bool_key_t *key = NULL;
-	int result;
-	int new_value;
+	int res;
+	int new_val;
 
 	/* setup */
 	setup_handle(level);
@@ -656,16 +656,16 @@ void helper_bool_modify_del_local(level_t level, const char *name,
 	CU_ASSERT(semanage_bool_query(sh, key, &boolean) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(boolean);
 
-	new_value = !old_value;
-	semanage_bool_set_value(boolean, new_value);
+	new_val = !old_val;
+	semanage_bool_set_value(boolean, new_val);
 
 	/* test */
-	result = semanage_bool_modify_local(sh, key, boolean);
+	res = semanage_bool_modify_local(sh, key, boolean);
 
-	if (exp_result < 0) {
-		CU_ASSERT(result < 0);
+	if (exp_res < 0) {
+		CU_ASSERT(res < 0);
 	} else {
-		CU_ASSERT(result >= 0);
+		CU_ASSERT(res >= 0);
 
 		/* write changes to file */
 		if (level == SH_TRANS) {
@@ -700,15 +700,15 @@ void test_bool_modify_del_local(void)
 void test_bool_query_local(void)
 {
 	semanage_bool_key_t *key = NULL;
-	semanage_bool_t *response = NULL;
+	semanage_bool_t *resp = NULL;
 
 	/* connect */
 	setup_handle(SH_CONNECT);
 	CU_ASSERT(semanage_bool_key_create(sh, BOOL1_NAME, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(key);
 
-	CU_ASSERT(semanage_bool_query_local(sh, key, &response) < 0);
-	CU_ASSERT_PTR_NULL(response);
+	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) < 0);
+	CU_ASSERT_PTR_NULL(resp);
 
 	cleanup_handle(SH_CONNECT);
 
@@ -717,20 +717,20 @@ void test_bool_query_local(void)
 	CU_ASSERT(semanage_bool_key_create(sh, BOOL1_NAME, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(key);
 
-	CU_ASSERT(semanage_bool_query_local(sh, key, &response) < 0);
-	CU_ASSERT_PTR_NULL(response);
+	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) < 0);
+	CU_ASSERT_PTR_NULL(resp);
 
 	add_local_bool(BOOL1_NAME);
-	CU_ASSERT(semanage_bool_query_local(sh, key, &response) >= 0);
-	CU_ASSERT_PTR_NOT_NULL(response);
+	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) >= 0);
+	CU_ASSERT_PTR_NOT_NULL(resp);
 
 	semanage_bool_key_free(key);
 	CU_ASSERT(semanage_bool_key_create(sh, BOOL2_NAME, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(key);
 
 	add_local_bool(BOOL2_NAME);
-	CU_ASSERT(semanage_bool_query_local(sh, key, &response) >= 0);
-	CU_ASSERT_PTR_NOT_NULL(response);
+	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) >= 0);
+	CU_ASSERT_PTR_NOT_NULL(resp);
 
 	/* cleanup */
 	delete_local_bool(BOOL1_NAME);
@@ -741,7 +741,7 @@ void test_bool_query_local(void)
 /* Function bool_exists_local */
 void test_bool_exists_local(void)
 {
-	int response = -1;
+	int resp = -1;
 	semanage_bool_key_t *key;
 
 	/* setup */
@@ -750,18 +750,18 @@ void test_bool_exists_local(void)
 	CU_ASSERT_PTR_NOT_NULL(key);
 
 	/* test */
-	CU_ASSERT(semanage_bool_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response == 0);
+	CU_ASSERT(semanage_bool_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 
 	add_local_bool(BOOL1_NAME);
-	response = -1;
-	CU_ASSERT(semanage_bool_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response == 1);
+	resp = -1;
+	CU_ASSERT(semanage_bool_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == 1);
 
 	delete_local_bool(BOOL1_NAME);
-	response = -1;
-	CU_ASSERT(semanage_bool_exists_local(sh, key, &response) >= 0);
-	CU_ASSERT(response == 0);
+	resp = -1;
+	CU_ASSERT(semanage_bool_exists_local(sh, key, &resp) >= 0);
+	CU_ASSERT(resp == 0);
 
 	/* cleanup */
 	cleanup_handle(SH_TRANS);
@@ -770,40 +770,40 @@ void test_bool_exists_local(void)
 /* Function bool_count_local */
 void test_bool_count_local(void)
 {
-	unsigned int response;
+	unsigned int resp;
 	unsigned int init_count;
 
 	/* handle */
 	setup_handle(SH_HANDLE);
-	CU_ASSERT(semanage_bool_count_local(sh, &response) < 0);
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) < 0);
 	cleanup_handle(SH_HANDLE);
 
 	/* connect */
 	setup_handle(SH_CONNECT);
-	CU_ASSERT(semanage_bool_count_local(sh, &response) >= 0);
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) >= 0);
 	cleanup_handle(SH_CONNECT);
 
 	/* transaction */
 	setup_handle(SH_TRANS);
 
-	CU_ASSERT(semanage_bool_count_local(sh, &response) >= 0);
-	init_count = response;
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) >= 0);
+	init_count = resp;
 
 	add_local_bool(BOOL1_NAME);
-	CU_ASSERT(semanage_bool_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == init_count + 1);
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == init_count + 1);
 
 	add_local_bool(BOOL2_NAME);
-	CU_ASSERT(semanage_bool_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == init_count + 2);
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == init_count + 2);
 
 	delete_local_bool(BOOL2_NAME);
-	CU_ASSERT(semanage_bool_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == init_count + 1);
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == init_count + 1);
 
 	delete_local_bool(BOOL1_NAME);
-	CU_ASSERT(semanage_bool_count_local(sh, &response) >= 0);
-	CU_ASSERT(response == init_count);
+	CU_ASSERT(semanage_bool_count_local(sh, &resp) >= 0);
+	CU_ASSERT(resp == init_count);
 
 	/* cleanup */
 	cleanup_handle(SH_TRANS);

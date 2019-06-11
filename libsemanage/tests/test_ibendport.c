@@ -75,52 +75,52 @@ int ibendport_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_ibendport_t *get_ibendport_nth(int index)
+semanage_ibendport_t *get_ibendport_nth(int idx)
 {
 	semanage_ibendport_t **records;
 	semanage_ibendport_t *ibendport;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
 	CU_ASSERT_FATAL(semanage_ibendport_list(sh, &records, &count) >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	ibendport = records[index];
+	ibendport = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_ibendport_free(records[i]);
 
 	return ibendport;
 }
 
-semanage_ibendport_key_t *get_ibendport_key_nth(int index)
+semanage_ibendport_key_t *get_ibendport_key_nth(int idx)
 {
 	semanage_ibendport_key_t *key;
 	semanage_ibendport_t *ibendport;
-	int result;
+	int res;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	ibendport = get_ibendport_nth(index);
+	ibendport = get_ibendport_nth(idx);
 
-	result = semanage_ibendport_key_extract(sh, ibendport, &key);
+	res = semanage_ibendport_key_extract(sh, ibendport, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
 }
 
-void add_local_ibendport(int index)
+void add_local_ibendport(int idx)
 {
 	semanage_ibendport_t *ibendport;
 	semanage_ibendport_key_t *key = NULL;
 
-	ibendport = get_ibendport_nth(index);
+	ibendport = get_ibendport_nth(idx);
 
 	CU_ASSERT_FATAL(semanage_ibendport_key_extract(sh, ibendport,
 						       &key) >= 0);
@@ -130,10 +130,10 @@ void add_local_ibendport(int index)
 							ibendport) >= 0);
 }
 
-void delete_local_ibendport(int index)
+void delete_local_ibendport(int idx)
 {
 	semanage_ibendport_key_t *key = NULL;
-	key = get_ibendport_key_nth(index);
+	key = get_ibendport_key_nth(idx);
 	CU_ASSERT_FATAL(semanage_ibendport_del_local(sh, key) >= 0);
 }
 
@@ -185,7 +185,7 @@ void test_ibendport_exists(void)
 {
 	semanage_ibendport_key_t *key1 = NULL;
 	semanage_ibendport_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -193,11 +193,11 @@ void test_ibendport_exists(void)
 	CU_ASSERT(semanage_ibendport_key_create(sh, "asdf", 1, &key2) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_ibendport_exists(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
+	CU_ASSERT(semanage_ibendport_exists(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
 
-	CU_ASSERT(semanage_ibendport_exists(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_ibendport_exists(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	semanage_ibendport_key_free(key1);
@@ -349,7 +349,7 @@ void test_ibendport_exists_local(void)
 {
 	semanage_ibendport_key_t *key1 = NULL;
 	semanage_ibendport_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_TRANS);
@@ -358,11 +358,11 @@ void test_ibendport_exists_local(void)
 	key2 = get_ibendport_key_nth(I_SECOND);
 
 	/* test */
-	CU_ASSERT(semanage_ibendport_exists_local(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
+	CU_ASSERT(semanage_ibendport_exists_local(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
 
-	CU_ASSERT(semanage_ibendport_exists_local(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_ibendport_exists_local(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	CU_ASSERT(semanage_ibendport_del_local(sh, key1) >= 0);

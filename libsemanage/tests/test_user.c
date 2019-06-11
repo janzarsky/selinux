@@ -89,57 +89,57 @@ int user_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_user_t *get_user_nth(int index)
+semanage_user_t *get_user_nth(int idx)
 {
-	int result;
+	int res;
 	semanage_user_t **records;
 	semanage_user_t *user;
 	unsigned int count;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	result = semanage_user_list(sh, &records, &count);
+	res = semanage_user_list(sh, &records, &count);
 
-	CU_ASSERT_FATAL(result >= 0);
-	CU_ASSERT_FATAL(count >= (unsigned int) index + 1);
+	CU_ASSERT_FATAL(res >= 0);
+	CU_ASSERT_FATAL(count >= (unsigned int) idx + 1);
 
-	user = records[index];
+	user = records[idx];
 
 	for (unsigned int i = 0; i < count; i++)
-		if (i != (unsigned int) index)
+		if (i != (unsigned int) idx)
 			semanage_user_free(records[i]);
 
 	return user;
 }
 
-semanage_user_key_t *get_user_key_nth(int index)
+semanage_user_key_t *get_user_key_nth(int idx)
 {
 	semanage_user_key_t *key;
 	semanage_user_t *user;
-	int result;
+	int res;
 
-	if (index == I_NULL)
+	if (idx == I_NULL)
 		return NULL;
 
-	user = get_user_nth(index);
+	user = get_user_nth(idx);
 
-	result = semanage_user_key_extract(sh, user, &key);
+	res = semanage_user_key_extract(sh, user, &key);
 
-	CU_ASSERT_FATAL(result >= 0);
+	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	return key;
 }
 
-void add_local_user(int user_index)
+void add_local_user(int user_idx)
 {
 	semanage_user_t *user;
 	semanage_user_key_t *key = NULL;
 
-	CU_ASSERT_FATAL(user_index != I_NULL);
+	CU_ASSERT_FATAL(user_idx != I_NULL);
 
-	user = get_user_nth(user_index);
+	user = get_user_nth(user_idx);
 
 	CU_ASSERT_FATAL(semanage_user_key_extract(sh, user, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
@@ -147,13 +147,13 @@ void add_local_user(int user_index)
 	CU_ASSERT_FATAL(semanage_user_modify_local(sh, key, user) >= 0);
 }
 
-void delete_local_user(int user_index)
+void delete_local_user(int user_idx)
 {
 	semanage_user_key_t *key = NULL;
 
-	CU_ASSERT_FATAL(user_index != I_NULL);
+	CU_ASSERT_FATAL(user_idx != I_NULL);
 
-	key = get_user_key_nth(user_index);
+	key = get_user_key_nth(user_idx);
 
 	CU_ASSERT_FATAL(semanage_user_del_local(sh, key) >= 0);
 }
@@ -164,7 +164,7 @@ void test_user_compare(void)
 	semanage_user_t *user = NULL;
 	semanage_user_key_t *key1 = NULL;
 	semanage_user_key_t *key2 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -173,10 +173,10 @@ void test_user_compare(void)
 	key2 = get_user_key_nth(I_SECOND);
 
 	/* test */
-	result = semanage_user_compare(user, key1);
-	CU_ASSERT(result == 0);
-	result = semanage_user_compare(user, key2);
-	CU_ASSERT(result != 0);
+	res = semanage_user_compare(user, key1);
+	CU_ASSERT(res == 0);
+	res = semanage_user_compare(user, key2);
+	CU_ASSERT(res != 0);
 
 	/* cleanup */
 	semanage_user_free(user);
@@ -191,7 +191,7 @@ void test_user_compare2(void)
 	semanage_user_t *user1 = NULL;
 	semanage_user_t *user2 = NULL;
 	semanage_user_t *user3 = NULL;
-	int result = 42;
+	int res = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -200,10 +200,10 @@ void test_user_compare2(void)
 	user3 = get_user_nth(I_SECOND);
 
 	/* test */
-	result = semanage_user_compare2(user1, user2);
-	CU_ASSERT(result == 0);
-	result = semanage_user_compare2(user1, user3);
-	CU_ASSERT(result != 0);
+	res = semanage_user_compare2(user1, user2);
+	CU_ASSERT(res == 0);
+	res = semanage_user_compare2(user1, user3);
+	CU_ASSERT(res != 0);
 
 	/* cleanup */
 	semanage_user_free(user1);
@@ -448,7 +448,7 @@ void test_user_exists(void)
 {
 	semanage_user_key_t *key1 = NULL;
 	semanage_user_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -456,10 +456,10 @@ void test_user_exists(void)
 	CU_ASSERT(semanage_user_key_create(sh, "asdf", &key2) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_user_exists(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_user_exists(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_user_exists(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_user_exists(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	semanage_user_key_free(key1);
@@ -567,7 +567,7 @@ void test_user_exists_local(void)
 	semanage_user_t *user = NULL;
 	semanage_user_key_t *key1 = NULL;
 	semanage_user_key_t *key2 = NULL;
-	int response = 42;
+	int resp = 42;
 
 	/* setup */
 	setup_handle(SH_TRANS);
@@ -577,10 +577,10 @@ void test_user_exists_local(void)
 	CU_ASSERT_PTR_NOT_NULL(key2);
 
 	/* test */
-	CU_ASSERT(semanage_user_exists_local(sh, key1, &response) >= 0);
-	CU_ASSERT(response);
-	CU_ASSERT(semanage_user_exists_local(sh, key2, &response) >= 0);
-	CU_ASSERT(!response);
+	CU_ASSERT(semanage_user_exists_local(sh, key1, &resp) >= 0);
+	CU_ASSERT(resp);
+	CU_ASSERT(semanage_user_exists_local(sh, key2, &resp) >= 0);
+	CU_ASSERT(!resp);
 
 	/* cleanup */
 	CU_ASSERT(semanage_user_del_local(sh, key1) >= 0);
