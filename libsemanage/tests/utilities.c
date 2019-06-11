@@ -76,7 +76,7 @@ void enable_test_store(void) {
 	test_store_enabled = 1;
 }
 
-int write_test_policy(unsigned char *data, unsigned int data_len) {
+int write_test_policy(char *data, size_t data_len) {
 	FILE *fptr = fopen("test-policy/store/active/policy.kern", "wb+");
 
 	if (!fptr) {
@@ -120,7 +120,7 @@ int write_test_policy_from_file(const char *filename) {
 	fread(buf, len, 1, fptr);
 	fclose(fptr);
 
-	return write_test_policy((unsigned char *) buf, len);
+	return write_test_policy(buf, len);
 }
 
 int write_test_policy_src(unsigned char *data, unsigned int data_len) {
