@@ -44,7 +44,7 @@
 		} else {\
 			CU_ASSERT_STRING_NOT_EQUAL(CU_str, CU_str2); \
 		} \
-	} while(0)
+	} while (0)
 
 #define CU_ASSERT_CONTEXT_EQUAL(CON1,CON2) CU_ASSERT_CONTEXT(CON1,CON2,1)
 #define CU_ASSERT_CONTEXT_NOT_EQUAL(CON1,CON2) CU_ASSERT_CONTEXT(CON1,CON2,0)
@@ -56,7 +56,7 @@
 
 typedef enum { SH_NULL, SH_HANDLE, SH_CONNECT, SH_TRANS } level_t;
 
-void test_msg_handler(void *varg, semanage_handle_t * handle, const char *fmt,
+void test_msg_handler(void *varg, semanage_handle_t *handle, const char *fmt,
 		      ...);
 
 void setup_handle(level_t level);

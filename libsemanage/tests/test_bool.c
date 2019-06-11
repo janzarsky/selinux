@@ -509,8 +509,8 @@ void test_bool_query(void)
 }
 
 /* Functon bool_exists */
-void helper_bool_exists(level_t level, const char * bool_str,
-			int exp_response) {
+void helper_bool_exists(level_t level, const char *bool_str, int exp_response)
+{
 	semanage_bool_key_t *key;
 	int response;
 

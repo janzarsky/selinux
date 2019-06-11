@@ -31,8 +31,8 @@ semanage_handle_t *sh = NULL;
 /* Silence any error output caused by our tests
  * by using this dummy function to catch messages.
  */
-void test_msg_handler(void *varg,
-		      semanage_handle_t * handle, const char *fmt, ...)
+void test_msg_handler(void *varg, semanage_handle_t *handle, const char *fmt,
+		      ...)
 {
 }
 
@@ -152,7 +152,7 @@ int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 		return -1;
 	}
 
-	if (fwrite("cil", sizeof "cil", 1, fptr) != 1) {
+	if (fwrite("cil", sizeof("cil"), 1, fptr) != 1) {
 		perror("fwrite");
 		return -1;
 	}
@@ -169,7 +169,7 @@ int destroy_test_store() {
 
 	disable_test_store();
 
-	char * files[] = { (char *) "test-policy", NULL };
+	char *files[] = { (char *) "test-policy", NULL };
 
 	ftsp = fts_open(files, FTS_NOCHDIR | FTS_PHYSICAL | FTS_XDEV, NULL);
 

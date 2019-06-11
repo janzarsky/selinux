@@ -5,7 +5,7 @@ char FCONTEXTS[] =
     "/etc/selinux(/.*) -s system_u:object_r:first_t:s0\n"
     "/etc/selinux/targeted -- system_u:object_r:second_t:s0\n"
     "/etc/selinux(/.*) -b system_u:object_r:third_t:s0\n";
-unsigned int FCONTEXTS_LEN = sizeof FCONTEXTS;
+unsigned int FCONTEXTS_LEN = sizeof(FCONTEXTS);
 
 #define FCONTEXTS_COUNT 3
 
@@ -590,7 +590,7 @@ void test_fcontext_query(void)
 }
 
 /* Function semanage_fcontext_exists */
-void helper_fcontext_exists(level_t level, const char * fcontext_expr,
+void helper_fcontext_exists(level_t level, const char *fcontext_expr,
 			    int fcontext_type, int exp_response)
 {
 	semanage_fcontext_key_t *key;
