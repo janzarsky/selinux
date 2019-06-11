@@ -9,15 +9,18 @@ void test_debug(void);
 
 extern semanage_handle_t *sh;
 
-int other_test_init(void) {
+int other_test_init(void)
+{
 	return 0;
 }
 
-int other_test_cleanup(void) {
+int other_test_cleanup(void)
+{
 	return 0;
 }
 
-int other_add_tests(CU_pSuite suite) {
+int other_add_tests(CU_pSuite suite)
+{
 	CU_add_test(suite, "semanage_context", test_semanage_context);
 	CU_add_test(suite, "debug", test_debug);
 
@@ -32,7 +35,8 @@ int other_add_tests(CU_pSuite suite) {
  * semanage_context_free, semanage_context_from_string
  * semanage_context_to_string
  */
-void test_semanage_context(void) {
+void test_semanage_context(void)
+{
 	semanage_context_t *con = NULL;
 	semanage_context_t *con_clone = NULL;
 	char *str = NULL;
@@ -76,7 +80,8 @@ void test_semanage_context(void) {
 }
 
 /* Function semanage_msg_default_handler */
-void test_debug(void) {
+void test_debug(void)
+{
 	semanage_module_info_t *modinfo = NULL;
 
 	/* setup */

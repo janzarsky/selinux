@@ -47,7 +47,8 @@ void test_port_validate_local(void);
 
 extern semanage_handle_t *sh;
 
-int port_test_init(void) {
+int port_test_init(void)
+{
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
 		return 1;
@@ -61,7 +62,8 @@ int port_test_init(void) {
 	return 0;
 }
 
-int port_test_cleanup(void) {
+int port_test_cleanup(void)
+{
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
 		return 1;
@@ -70,7 +72,8 @@ int port_test_cleanup(void) {
 	return 0;
 }
 
-int port_add_tests(CU_pSuite suite) {
+int port_add_tests(CU_pSuite suite)
+{
 	CU_add_test(suite, "port_compare", test_port_compare);
 	CU_add_test(suite, "port_compare2", test_port_compare2);
 	CU_add_test(suite, "port_key_create", test_port_key_create);
@@ -102,7 +105,8 @@ int port_add_tests(CU_pSuite suite) {
 
 /* Helpers */
 
-semanage_port_t *get_port_nth(int index) {
+semanage_port_t *get_port_nth(int index)
+{
 	int result;
 	semanage_port_t **records;
 	semanage_port_t *port;
@@ -126,7 +130,8 @@ semanage_port_t *get_port_nth(int index) {
 	return port;
 }
 
-semanage_port_key_t *get_port_key_nth(int index) {
+semanage_port_key_t *get_port_key_nth(int index)
+{
 	semanage_port_key_t *key;
 	semanage_port_t *port;
 	int result;
@@ -144,7 +149,8 @@ semanage_port_key_t *get_port_key_nth(int index) {
 	return key;
 }
 
-void add_local_port(int port_index) {
+void add_local_port(int port_index)
+{
 	semanage_port_t *port;
 	semanage_port_key_t *key = NULL;
 
@@ -158,7 +164,8 @@ void add_local_port(int port_index) {
 	CU_ASSERT_FATAL(semanage_port_modify_local(sh, key, port) >= 0);
 }
 
-void delete_local_port(int port_index) {
+void delete_local_port(int port_index)
+{
 	semanage_port_key_t *key = NULL;
 
 	CU_ASSERT_FATAL(port_index != I_NULL);
@@ -169,7 +176,8 @@ void delete_local_port(int port_index) {
 }
 
 /* Function semanage_port_compare */
-void helper_port_compare(int index1, int index2) {
+void helper_port_compare(int index1, int index2)
+{
 	semanage_port_t *port = NULL;
 	semanage_port_key_t *key = NULL;
 	int result = 42;
@@ -195,7 +203,8 @@ void helper_port_compare(int index1, int index2) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_port_compare(void) {
+void test_port_compare(void)
+{
 	helper_port_compare(I_FIRST,  I_FIRST);
 	helper_port_compare(I_FIRST,  I_SECOND);
 	helper_port_compare(I_SECOND, I_FIRST);
@@ -203,7 +212,8 @@ void test_port_compare(void) {
 }
 
 /* Function semanage_port_compare2 */
-void helper_port_compare2(int index1, int index2) {
+void helper_port_compare2(int index1, int index2)
+{
 	semanage_port_t *port1 = NULL;
 	semanage_port_t *port2 = NULL;
 	int result = 42;
@@ -230,7 +240,8 @@ void helper_port_compare2(int index1, int index2) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_port_compare2(void) {
+void test_port_compare2(void)
+{
 	helper_port_compare2(I_FIRST,  I_FIRST);
 	helper_port_compare2(I_FIRST,  I_SECOND);
 	helper_port_compare2(I_SECOND, I_FIRST);
@@ -238,7 +249,8 @@ void test_port_compare2(void) {
 }
 
 /* Function semanage_port_create */
-void test_port_key_create(void) {
+void test_port_key_create(void)
+{
 	semanage_port_key_t *key = NULL;
 
 	/* setup */
@@ -254,7 +266,8 @@ void test_port_key_create(void) {
 }
 
 /* Function semanage_port_extract */
-void test_port_key_extract(void) {
+void test_port_key_extract(void)
+{
 	semanage_port_t *port = NULL;
 	semanage_port_key_t *key = NULL;
 
@@ -273,7 +286,8 @@ void test_port_key_extract(void) {
 }
 
 /* Function semanage_port_get_proto, semanage_port_set_proto */
-void helper_port_get_set_proto(int index) {
+void helper_port_get_set_proto(int index)
+{
 	semanage_port_t *port = NULL;
 
 	/* setup */
@@ -291,13 +305,15 @@ void helper_port_get_set_proto(int index) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_port_get_set_proto(void) {
+void test_port_get_set_proto(void)
+{
 	helper_port_get_set_proto(I_FIRST);
 	helper_port_get_set_proto(I_SECOND);
 }
 
 /* Function semanage_port_get_proto_str */
-void test_port_get_proto_str(void) {
+void test_port_get_proto_str(void)
+{
 	const char *str = NULL;
 
 	str = semanage_port_get_proto_str(-1);
@@ -321,7 +337,8 @@ void test_port_get_proto_str(void) {
 
 /* Function semanage_port_get_low, semanage_port_get_high, */
 /* semanage_port_set_port, semanage_port_set_range */
-void test_port_get_set_port(void) {
+void test_port_get_set_port(void)
+{
 	semanage_port_t *port = NULL;
 
 	/* setup */
@@ -343,7 +360,8 @@ void test_port_get_set_port(void) {
 }
 
 /* Function semanage_port_get_con, semanage_port_set_con */
-void test_port_get_set_con(void) {
+void test_port_get_set_con(void)
+{
 	semanage_port_t *port = NULL;
 	semanage_port_t *port_tmp = NULL;
 	semanage_context_t *con1 = NULL;
@@ -367,7 +385,8 @@ void test_port_get_set_con(void) {
 }
 
 /* Function semanage_port_create */
-void test_port_create(void) {
+void test_port_create(void)
+{
 	semanage_port_t *port = NULL;
 
 	/* setup */
@@ -386,7 +405,8 @@ void test_port_create(void) {
 }
 
 /* Function semanage_port_clone */
-void test_port_clone(void) {
+void test_port_clone(void)
+{
 	semanage_port_t *port = NULL;
 	semanage_port_t *port_clone = NULL;
 	semanage_context_t *con = NULL;
@@ -416,7 +436,8 @@ void test_port_clone(void) {
 }
 
 /* Function semanage_port_query */
-void test_port_query(void) {
+void test_port_query(void)
+{
 	semanage_port_t *port = NULL;
 	semanage_port_t *port_exp = NULL;
 	semanage_port_key_t *key = NULL;
@@ -448,7 +469,8 @@ void test_port_query(void) {
 }
 
 /* Function semanage_port_exists */
-void test_port_exists(void) {
+void test_port_exists(void)
+{
 	semanage_port_key_t *key1 = NULL;
 	semanage_port_key_t *key2 = NULL;
 	int response = 42;
@@ -471,7 +493,8 @@ void test_port_exists(void) {
 }
 
 /* Function semanage_port_count */
-void test_port_count(void) {
+void test_port_count(void)
+{
 	unsigned int count = 42;
 
 	/* setup */
@@ -488,12 +511,14 @@ void test_port_count(void) {
 /* Function semanage_port_iterate */
 unsigned int counter_port_iterate = 0;
 
-int handler_port_iterate(const semanage_port_t *record, void *varg) {
+int handler_port_iterate(const semanage_port_t *record, void *varg)
+{
 	counter_port_iterate++;
 	return 0;
 }
 
-void test_port_iterate(void) {
+void test_port_iterate(void)
+{
 	/* setup */
 	setup_handle(SH_CONNECT);
 
@@ -506,7 +531,8 @@ void test_port_iterate(void) {
 }
 
 /* Function semanage_port_list */
-void test_port_list(void) {
+void test_port_list(void)
+{
 	semanage_port_t **records = NULL;
 	unsigned int count = 42;
 
@@ -529,7 +555,8 @@ void test_port_list(void) {
 }
 
 /* Function semanage_port_modify_local, semanage_port_del_local */
-void test_port_modify_del_local(void) {
+void test_port_modify_del_local(void)
+{
 	semanage_port_t *port;
 	semanage_port_t *port_local;
 	semanage_port_key_t *key = NULL;
@@ -561,7 +588,8 @@ void test_port_modify_del_local(void) {
 }
 
 /* Function semanage_port_query_local */
-void test_port_query_local(void) {
+void test_port_query_local(void)
+{
 	semanage_port_t *port = NULL;
 	semanage_port_t *port_exp = NULL;
 	semanage_port_key_t *key = NULL;
@@ -595,7 +623,8 @@ void test_port_query_local(void) {
 }
 
 /* Function semanage_port_exists_local */
-void test_port_exists_local(void) {
+void test_port_exists_local(void)
+{
 	semanage_port_key_t *key1 = NULL;
 	semanage_port_key_t *key2 = NULL;
 	int response = 42;
@@ -620,7 +649,8 @@ void test_port_exists_local(void) {
 }
 
 /* Function semanage_port_count_local */
-void test_port_count_local(void) {
+void test_port_count_local(void)
+{
 	unsigned int count = 42;
 
 	/* setup */
@@ -653,12 +683,14 @@ void test_port_count_local(void) {
 /* Function semanage_port_iterate_local */
 unsigned int counter_port_iterate_local = 0;
 
-int handler_port_iterate_local(const semanage_port_t *record, void *varg) {
+int handler_port_iterate_local(const semanage_port_t *record, void *varg)
+{
 	counter_port_iterate_local++;
 	return 0;
 }
 
-void test_port_iterate_local(void) {
+void test_port_iterate_local(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 	add_local_port(I_FIRST);
@@ -677,7 +709,8 @@ void test_port_iterate_local(void) {
 }
 
 /* Function semanage_port_list_local */
-void test_port_list_local(void) {
+void test_port_list_local(void)
+{
 	semanage_port_t **records = NULL;
 	unsigned int count = 42;
 
@@ -706,7 +739,8 @@ void test_port_list_local(void) {
 }
 
 /* Internal function semanage_port_validate_local */
-void helper_port_validate_local_noport(void) {
+void helper_port_validate_local_noport(void)
+{
 	semanage_port_key_t *key = NULL;
 	int response = 42;
 
@@ -729,7 +763,8 @@ void helper_port_validate_local_noport(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void helper_port_validate_local_oneport(void) {
+void helper_port_validate_local_oneport(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 	add_local_port(I_FIRST);
@@ -743,7 +778,8 @@ void helper_port_validate_local_oneport(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void helper_port_validate_local_twoports(void) {
+void helper_port_validate_local_twoports(void)
+{
 	semanage_port_key_t *key1 = NULL;
 	semanage_port_key_t *key2 = NULL;
 	semanage_port_t *port1 = NULL;
@@ -788,7 +824,8 @@ void helper_port_validate_local_twoports(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void helper_port_validate_local_proto(void) {
+void helper_port_validate_local_proto(void)
+{
 	semanage_port_key_t *key1 = NULL;
 	semanage_port_key_t *key2 = NULL;
 	semanage_port_key_t *key3 = NULL;
@@ -849,7 +886,8 @@ void helper_port_validate_local_proto(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_port_validate_local(void) {
+void test_port_validate_local(void)
+{
 	helper_port_validate_local_noport();
 	helper_port_validate_local_oneport();
 	helper_port_validate_local_twoports();

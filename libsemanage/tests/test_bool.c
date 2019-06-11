@@ -37,7 +37,8 @@ void test_bool_list_local(void);
 
 extern semanage_handle_t *sh;
 
-int bool_test_init(void) {
+int bool_test_init(void)
+{
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
 		return 1;
@@ -51,7 +52,8 @@ int bool_test_init(void) {
 	return 0;
 }
 
-int bool_test_cleanup(void) {
+int bool_test_cleanup(void)
+{
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
 		return 1;
@@ -60,7 +62,8 @@ int bool_test_cleanup(void) {
 	return 0;
 }
 
-int bool_add_tests(CU_pSuite suite) {
+int bool_add_tests(CU_pSuite suite)
+{
 	CU_add_test(suite, "bool_key_create", test_bool_key_create);
 	CU_add_test(suite, "bool_key_extract", test_bool_key_extract);
 	CU_add_test(suite, "bool_compare", test_bool_compare);
@@ -88,7 +91,8 @@ int bool_add_tests(CU_pSuite suite) {
 
 /* Helpers */
 
-semanage_bool_t *get_bool_nth(int index) {
+semanage_bool_t *get_bool_nth(int index)
+{
 	int result;
 	semanage_bool_t **records;
 	semanage_bool_t *boolean;
@@ -112,7 +116,8 @@ semanage_bool_t *get_bool_nth(int index) {
 	return boolean;
 }
 
-semanage_bool_t *get_bool_new(void) {
+semanage_bool_t *get_bool_new(void)
+{
 	int result;
 	semanage_bool_t *boolean;
 
@@ -123,7 +128,8 @@ semanage_bool_t *get_bool_new(void) {
 	return boolean;
 }
 
-semanage_bool_key_t *get_bool_key_nth(int index) {
+semanage_bool_key_t *get_bool_key_nth(int index)
+{
 	semanage_bool_key_t *key;
 	semanage_bool_t *boolean;
 	int result;
@@ -141,7 +147,8 @@ semanage_bool_key_t *get_bool_key_nth(int index) {
 	return key;
 }
 
-semanage_bool_key_t *get_bool_key_from_str(const char *str) {
+semanage_bool_key_t *get_bool_key_from_str(const char *str)
+{
 	semanage_bool_key_t *key;
 	int result;
 
@@ -156,7 +163,8 @@ semanage_bool_key_t *get_bool_key_from_str(const char *str) {
 	return key;
 }
 
-void add_local_bool(const char *name) {
+void add_local_bool(const char *name)
+{
 	semanage_bool_t *boolean;
 	semanage_bool_key_t *key = NULL;
 
@@ -171,7 +179,8 @@ void add_local_bool(const char *name) {
 	CU_ASSERT_FATAL(semanage_bool_modify_local(sh, key, boolean) >= 0);
 }
 
-void delete_local_bool(const char *name) {
+void delete_local_bool(const char *name)
+{
 	semanage_bool_key_t *key = NULL;
 
 	CU_ASSERT_PTR_NOT_NULL_FATAL(name);
@@ -184,7 +193,8 @@ void delete_local_bool(const char *name) {
 
 /* Function bool_key_create */
 
-void helper_bool_key_create(level_t level) {
+void helper_bool_key_create(level_t level)
+{
 	semanage_bool_key_t *key = NULL;
 
 	setup_handle(level);
@@ -204,7 +214,8 @@ void helper_bool_key_create(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_bool_key_create(void) {
+void test_bool_key_create(void)
+{
 	helper_bool_key_create(SH_CONNECT);
 	helper_bool_key_create(SH_TRANS);
 }
@@ -214,7 +225,8 @@ void test_bool_key_create(void) {
 #define SK_NEW 2
 #define SK_INDEX 3
 #define SK_KEY_NULL 4
-void helper_bool_key_extract(level_t level, int mode) {
+void helper_bool_key_extract(level_t level, int mode)
+{
 	semanage_bool_t *boolean = NULL;
 	semanage_bool_key_t *key = NULL;
 	int result;
@@ -255,7 +267,8 @@ void helper_bool_key_extract(level_t level, int mode) {
 	cleanup_handle(level);
 }
 
-void test_bool_key_extract(void) {
+void test_bool_key_extract(void)
+{
 	helper_bool_key_extract(SH_CONNECT, SK_INDEX);
 	helper_bool_key_extract(SH_TRANS, SK_INDEX);
 }
@@ -265,7 +278,8 @@ void test_bool_key_extract(void) {
 #undef SK_KEY_NULL
 
 /* Function bool_compare */
-void helper_bool_compare(level_t level, int bool_index1, int bool_index2) {
+void helper_bool_compare(level_t level, int bool_index1, int bool_index2)
+{
 	semanage_bool_t *boolean;
 	semanage_bool_key_t *key;
 	int result;
@@ -289,7 +303,8 @@ void helper_bool_compare(level_t level, int bool_index1, int bool_index2) {
 	cleanup_handle(level);
 }
 
-void test_bool_compare(void) {
+void test_bool_compare(void)
+{
 	helper_bool_compare(SH_CONNECT, I_FIRST,  I_FIRST);
 	helper_bool_compare(SH_CONNECT, I_FIRST,  I_SECOND);
 	helper_bool_compare(SH_CONNECT, I_SECOND, I_FIRST);
@@ -302,7 +317,8 @@ void test_bool_compare(void) {
 }
 
 /* Function bool_compare2 */
-void helper_bool_compare2(level_t level, int bool_index1, int bool_index2) {
+void helper_bool_compare2(level_t level, int bool_index1, int bool_index2)
+{
 	semanage_bool_t *bool1;
 	semanage_bool_t *bool2;
 	int result;
@@ -326,7 +342,8 @@ void helper_bool_compare2(level_t level, int bool_index1, int bool_index2) {
 	cleanup_handle(level);
 }
 
-void test_bool_compare2(void) {
+void test_bool_compare2(void)
+{
 	helper_bool_compare2(SH_CONNECT, I_FIRST,  I_FIRST);
 	helper_bool_compare2(SH_CONNECT, I_FIRST,  I_SECOND);
 	helper_bool_compare2(SH_CONNECT, I_SECOND, I_FIRST);
@@ -339,7 +356,8 @@ void test_bool_compare2(void) {
 }
 
 /* Function bool_get_name, bool_set_name */
-void helper_bool_get_set_name(level_t level, int bool_index, const char *name) {
+void helper_bool_get_set_name(level_t level, int bool_index, const char *name)
+{
 	semanage_bool_t *boolean;
 	const char *new_name = NULL;
 
@@ -360,7 +378,8 @@ void helper_bool_get_set_name(level_t level, int bool_index, const char *name) {
 	cleanup_handle(level);
 }
 
-void test_bool_get_set_name(void) {
+void test_bool_get_set_name(void)
+{
 	helper_bool_get_set_name(SH_CONNECT, I_FIRST, "testbool");
 	helper_bool_get_set_name(SH_CONNECT, I_FIRST, "");
 	helper_bool_get_set_name(SH_CONNECT, I_SECOND, "testbool");
@@ -373,7 +392,8 @@ void test_bool_get_set_name(void) {
 }
 
 /* Function bool_get_value, bool_set_value */
-void helper_bool_get_set_value(int bool_index, int value) {
+void helper_bool_get_set_value(int bool_index, int value)
+{
 	semanage_bool_t *boolean;
 	int new_value = 0;
 
@@ -390,7 +410,8 @@ void helper_bool_get_set_value(int bool_index, int value) {
 	semanage_bool_free(boolean);
 }
 
-void test_bool_get_set_value(void) {
+void test_bool_get_set_value(void)
+{
 	helper_bool_get_set_value(I_FIRST, 1);
 	helper_bool_get_set_value(I_FIRST, 0);
 	helper_bool_get_set_value(I_SECOND, 1);
@@ -398,7 +419,8 @@ void test_bool_get_set_value(void) {
 }
 
 /* Function bool_create */
-void helper_bool_create(level_t level) {
+void helper_bool_create(level_t level)
+{
 	semanage_bool_t *boolean;
 
 	setup_handle(level);
@@ -411,14 +433,16 @@ void helper_bool_create(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_bool_create(void) {
+void test_bool_create(void)
+{
 	helper_bool_create(SH_HANDLE);
 	helper_bool_create(SH_CONNECT);
 	helper_bool_create(SH_TRANS);
 }
 
 /* Function bool_clone */
-void helper_bool_clone(level_t level, int bool_index) {
+void helper_bool_clone(level_t level, int bool_index)
+{
 	semanage_bool_t *boolean;
 	semanage_bool_t *boolean_clone;
 	const char *str;
@@ -445,7 +469,8 @@ void helper_bool_clone(level_t level, int bool_index) {
 	cleanup_handle(level);
 }
 
-void test_bool_clone(void) {
+void test_bool_clone(void)
+{
 	helper_bool_clone(SH_CONNECT, I_FIRST);
 	helper_bool_clone(SH_CONNECT, I_SECOND);
 
@@ -454,7 +479,8 @@ void test_bool_clone(void) {
 }
 
 /* Function bool_query */
-void helper_bool_query(level_t level, const char *bool_str, int exp_result) {
+void helper_bool_query(level_t level, const char *bool_str, int exp_result)
+{
 	semanage_bool_key_t *key;
 	semanage_bool_t *response = (void *) 42;
 
@@ -475,7 +501,8 @@ void helper_bool_query(level_t level, const char *bool_str, int exp_result) {
 	cleanup_handle(level);
 }
 
-void test_bool_query(void) {
+void test_bool_query(void)
+{
 	helper_bool_query(SH_CONNECT, BOOL1_NAME,  1);
 	helper_bool_query(SH_CONNECT, BOOL2_NAME, 1);
 	helper_bool_query(SH_CONNECT, BOOL_NONEXISTENT, -1);
@@ -503,7 +530,8 @@ void helper_bool_exists(level_t level, const char * bool_str,
 	cleanup_handle(level);
 }
 
-void test_bool_exists(void) {
+void test_bool_exists(void)
+{
 	helper_bool_exists(SH_CONNECT, BOOL1_NAME,  1);
 	helper_bool_exists(SH_CONNECT, BOOL2_NAME, 1);
 	helper_bool_exists(SH_CONNECT, BOOL_NONEXISTENT, 0);
@@ -514,7 +542,8 @@ void test_bool_exists(void) {
 }
 
 /* Function bool_count */
-void test_bool_count(void) {
+void test_bool_count(void)
+{
 	unsigned int response;
 
 	/* handle */
@@ -541,19 +570,22 @@ void test_bool_count(void) {
 /* Function bool_iterate */
 unsigned int counter_bool_iterate = 0;
 
-int handler_bool_iterate(const semanage_bool_t *record, void *varg) {
+int handler_bool_iterate(const semanage_bool_t *record, void *varg)
+{
 	counter_bool_iterate++;
 	return 0;
 }
 
-void helper_bool_iterate_invalid(void) {
+void helper_bool_iterate_invalid(void)
+{
 	setup_handle(SH_HANDLE);
 	CU_ASSERT(semanage_bool_iterate(sh, &handler_bool_iterate, NULL) < 0);
 	CU_ASSERT(semanage_bool_iterate(sh, NULL, NULL) < 0);
 	cleanup_handle(SH_HANDLE);
 }
 
-void helper_bool_iterate(level_t level) {
+void helper_bool_iterate(level_t level)
+{
 	setup_handle(level);
 	counter_bool_iterate = 0;
 	CU_ASSERT(semanage_bool_iterate(sh, &handler_bool_iterate, NULL) >= 0);
@@ -561,14 +593,16 @@ void helper_bool_iterate(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_bool_iterate(void) {
+void test_bool_iterate(void)
+{
 	helper_bool_iterate_invalid();
 	helper_bool_iterate(SH_CONNECT);
 	helper_bool_iterate(SH_TRANS);
 }
 
 /* Function bool_list */
-void helper_bool_list_invalid(void) {
+void helper_bool_list_invalid(void)
+{
 	semanage_bool_t **records;
 	unsigned int count;
 
@@ -581,7 +615,8 @@ void helper_bool_list_invalid(void) {
 	cleanup_handle(SH_HANDLE);
 }
 
-void helper_bool_list(level_t level) {
+void helper_bool_list(level_t level)
+{
 	semanage_bool_t **records;
 	unsigned int count;
 
@@ -601,7 +636,8 @@ void helper_bool_list(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_bool_list(void) {
+void test_bool_list(void)
+{
 	helper_bool_list_invalid();
 	helper_bool_list(SH_CONNECT);
 	helper_bool_list(SH_TRANS);
@@ -609,7 +645,8 @@ void test_bool_list(void) {
 
 /* Function bool_modify_local, bool_del_local */
 void helper_bool_modify_del_local(level_t level, const char *name,
-				  int old_value, int exp_result) {
+				  int old_value, int exp_result)
+{
 	semanage_bool_t *boolean;
 	semanage_bool_t *boolean_local;
 	semanage_bool_key_t *key = NULL;
@@ -658,7 +695,8 @@ void helper_bool_modify_del_local(level_t level, const char *name,
 	cleanup_handle(level);
 }
 
-void test_bool_modify_del_local(void) {
+void test_bool_modify_del_local(void)
+{
 	helper_bool_modify_del_local(SH_CONNECT, BOOL1_NAME, BOOL1_VALUE, -1);
 	helper_bool_modify_del_local(SH_CONNECT, BOOL2_NAME, BOOL2_VALUE, -1);
 	helper_bool_modify_del_local(SH_TRANS, BOOL1_NAME, BOOL1_VALUE, 1);
@@ -666,7 +704,8 @@ void test_bool_modify_del_local(void) {
 }
 
 /* Function bool_query_local */
-void test_bool_query_local(void) {
+void test_bool_query_local(void)
+{
 	semanage_bool_key_t *key = NULL;
 	semanage_bool_t *response = NULL;
 
@@ -707,7 +746,8 @@ void test_bool_query_local(void) {
 }
 
 /* Function bool_exists_local */
-void test_bool_exists_local(void) {
+void test_bool_exists_local(void)
+{
 	int response = -1;
 	semanage_bool_key_t *key;
 
@@ -735,7 +775,8 @@ void test_bool_exists_local(void) {
 }
 
 /* Function bool_count_local */
-void test_bool_count_local(void) {
+void test_bool_count_local(void)
+{
 	unsigned int response;
 	unsigned int init_count;
 
@@ -778,12 +819,14 @@ void test_bool_count_local(void) {
 /* Function bool_iterate_local */
 unsigned int counter_bool_iterate_local = 0;
 
-int handler_bool_iterate_local(const semanage_bool_t *record, void *varg) {
+int handler_bool_iterate_local(const semanage_bool_t *record, void *varg)
+{
 	counter_bool_iterate_local++;
 	return 0;
 }
 
-void test_bool_iterate_local(void) {
+void test_bool_iterate_local(void)
+{
 	unsigned int init_count;
 
 	/* handle */
@@ -829,7 +872,8 @@ void test_bool_iterate_local(void) {
 }
 
 /* Functtion bool_list_local */
-void test_bool_list_local(void) {
+void test_bool_list_local(void)
+{
 	semanage_bool_t **records;
 	unsigned int count;
 	unsigned int init_count;

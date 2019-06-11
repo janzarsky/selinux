@@ -28,7 +28,8 @@ void test_ibendport_list_local(void);
 
 extern semanage_handle_t *sh;
 
-int ibendport_test_init(void) {
+int ibendport_test_init(void)
+{
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
 		return 1;
@@ -42,7 +43,8 @@ int ibendport_test_init(void) {
 	return 0;
 }
 
-int ibendport_test_cleanup(void) {
+int ibendport_test_cleanup(void)
+{
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
 		return 1;
@@ -51,7 +53,8 @@ int ibendport_test_cleanup(void) {
 	return 0;
 }
 
-int ibendport_add_tests(CU_pSuite suite) {
+int ibendport_add_tests(CU_pSuite suite)
+{
 	CU_add_test(suite, "ibendport_query", test_ibendport_query);
 	CU_add_test(suite, "ibendport_exists", test_ibendport_exists);
 	CU_add_test(suite, "ibendport_count", test_ibendport_count);
@@ -72,7 +75,8 @@ int ibendport_add_tests(CU_pSuite suite) {
 
 /* Helpers */
 
-semanage_ibendport_t *get_ibendport_nth(int index) {
+semanage_ibendport_t *get_ibendport_nth(int index)
+{
 	semanage_ibendport_t **records;
 	semanage_ibendport_t *ibendport;
 	unsigned int count;
@@ -93,7 +97,8 @@ semanage_ibendport_t *get_ibendport_nth(int index) {
 	return ibendport;
 }
 
-semanage_ibendport_key_t *get_ibendport_key_nth(int index) {
+semanage_ibendport_key_t *get_ibendport_key_nth(int index)
+{
 	semanage_ibendport_key_t *key;
 	semanage_ibendport_t *ibendport;
 	int result;
@@ -111,7 +116,8 @@ semanage_ibendport_key_t *get_ibendport_key_nth(int index) {
 	return key;
 }
 
-void add_local_ibendport(int index) {
+void add_local_ibendport(int index)
+{
 	semanage_ibendport_t *ibendport;
 	semanage_ibendport_key_t *key = NULL;
 
@@ -125,14 +131,16 @@ void add_local_ibendport(int index) {
 							ibendport) >= 0);
 }
 
-void delete_local_ibendport(int index) {
+void delete_local_ibendport(int index)
+{
 	semanage_ibendport_key_t *key = NULL;
 	key = get_ibendport_key_nth(index);
 	CU_ASSERT_FATAL(semanage_ibendport_del_local(sh, key) >= 0);
 }
 
 /* Function semanage_ibendport_query */
-void test_ibendport_query(void) {
+void test_ibendport_query(void)
+{
 	semanage_ibendport_t *ibendport = NULL;
 	semanage_ibendport_t *ibendport_exp = NULL;
 	semanage_ibendport_key_t *key = NULL;
@@ -174,7 +182,8 @@ void test_ibendport_query(void) {
 }
 
 /* Function semanage_ibendport_exists */
-void test_ibendport_exists(void) {
+void test_ibendport_exists(void)
+{
 	semanage_ibendport_key_t *key1 = NULL;
 	semanage_ibendport_key_t *key2 = NULL;
 	int response = 42;
@@ -198,7 +207,8 @@ void test_ibendport_exists(void) {
 }
 
 /* Function semanage_ibendport_count */
-void test_ibendport_count(void) {
+void test_ibendport_count(void)
+{
 	unsigned int count = 42;
 
 	/* setup */
@@ -216,27 +226,31 @@ void test_ibendport_count(void) {
 unsigned int helper_ibendport_iterate_counter = 0;
 
 int helper_ibendport_iterate(const semanage_ibendport_t *ibendport,
-			     void *fn_arg) {
+			     void *fn_arg)
+{
 	CU_ASSERT(fn_arg == (void *) 42);
 	helper_ibendport_iterate_counter++;
 	return 0;
 }
 
 int helper_ibendport_iterate_error(const semanage_ibendport_t *ibendport,
-				   void *fn_arg) {
+				   void *fn_arg)
+{
 	CU_ASSERT(fn_arg == (void *) 42);
 	helper_ibendport_iterate_counter++;
 	return -1;
 }
 
 int helper_ibendport_iterate_break(const semanage_ibendport_t *ibendport,
-				   void *fn_arg) {
+				   void *fn_arg)
+{
 	CU_ASSERT(fn_arg == (void *) 42);
 	helper_ibendport_iterate_counter++;
 	return 1;
 }
 
-void test_ibendport_iterate(void) {
+void test_ibendport_iterate(void)
+{
 	/* setup */
 	setup_handle(SH_CONNECT);
 
@@ -263,7 +277,8 @@ void test_ibendport_iterate(void) {
 }
 
 /* Function semanage_ibendport_list */
-void test_ibendport_list(void) {
+void test_ibendport_list(void)
+{
 	semanage_ibendport_t **records = NULL;
 	unsigned int count = 42;
 	char *name = NULL;
@@ -298,7 +313,8 @@ void test_ibendport_list(void) {
 /* Function semanage_ibendport_modify_local, semanage_ibendport_del_local,
  * semanage_ibendport_query_local
  */
-void test_ibendport_modify_del_query_local(void) {
+void test_ibendport_modify_del_query_local(void)
+{
 	semanage_ibendport_t *ibendport;
 	semanage_ibendport_t *ibendport_local;
 	semanage_ibendport_key_t *key = NULL;
@@ -330,7 +346,8 @@ void test_ibendport_modify_del_query_local(void) {
 }
 
 /* Function semanage_ibendport_exists_local */
-void test_ibendport_exists_local(void) {
+void test_ibendport_exists_local(void)
+{
 	semanage_ibendport_key_t *key1 = NULL;
 	semanage_ibendport_key_t *key2 = NULL;
 	int response = 42;
@@ -356,7 +373,8 @@ void test_ibendport_exists_local(void) {
 }
 
 /* Function semanage_ibendport_count_local */
-void test_ibendport_count_local(void) {
+void test_ibendport_count_local(void)
+{
 	unsigned int count = 42;
 
 	/* setup */
@@ -390,27 +408,31 @@ void test_ibendport_count_local(void) {
 unsigned int helper_ibendport_iterate_local_counter = 0;
 
 int helper_ibendport_iterate_local(const semanage_ibendport_t *ibendport,
-				   void *fn_arg) {
+				   void *fn_arg)
+{
 	CU_ASSERT(fn_arg == (void *) 42);
 	helper_ibendport_iterate_local_counter++;
 	return 0;
 }
 
 int helper_ibendport_iterate_local_error(const semanage_ibendport_t *ibendport,
-					 void *fn_arg) {
+					 void *fn_arg)
+{
 	CU_ASSERT(fn_arg == (void *) 42);
 	helper_ibendport_iterate_local_counter++;
 	return -1;
 }
 
 int helper_ibendport_iterate_local_break(const semanage_ibendport_t *ibendport,
-					 void *fn_arg) {
+					 void *fn_arg)
+{
 	CU_ASSERT(fn_arg == (void *) 42);
 	helper_ibendport_iterate_local_counter++;
 	return 1;
 }
 
-void test_ibendport_iterate_local(void) {
+void test_ibendport_iterate_local(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 	add_local_ibendport(I_FIRST);
@@ -442,7 +464,8 @@ void test_ibendport_iterate_local(void) {
 }
 
 /* Function semanage_ibendport_list_local */
-void test_ibendport_list_local(void) {
+void test_ibendport_list_local(void)
+{
 	semanage_ibendport_t **records = NULL;
 	unsigned int count = 42;
 	char *name = NULL;

@@ -16,7 +16,8 @@ void test_select_store(void);
 
 extern semanage_handle_t *sh;
 
-int handle_test_init(void) {
+int handle_test_init(void)
+{
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
 		return 1;
@@ -30,7 +31,8 @@ int handle_test_init(void) {
 	return 0;
 }
 
-int handle_test_cleanup(void) {
+int handle_test_cleanup(void)
+{
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
 		return 1;
@@ -39,7 +41,8 @@ int handle_test_cleanup(void) {
 	return 0;
 }
 
-int handle_add_tests(CU_pSuite suite) {
+int handle_add_tests(CU_pSuite suite)
+{
 	CU_add_test(suite, "test_handle_create", test_handle_create);
 	CU_add_test(suite, "test_connect", test_connect);
 	CU_add_test(suite, "test_disconnect", test_disconnect);
@@ -57,14 +60,16 @@ int handle_add_tests(CU_pSuite suite) {
 }
 
 /* Function semanage_handle_create */
-void test_handle_create(void) {
+void test_handle_create(void)
+{
 	sh = semanage_handle_create();
 	CU_ASSERT_PTR_NOT_NULL(sh);
 	semanage_handle_destroy(sh);
 }
 
 /* Function semanage_connect */
-void test_connect(void) {
+void test_connect(void)
+{
 	/* test handle created */
 	setup_handle(SH_HANDLE);
 	CU_ASSERT(semanage_connect(sh) >= 0);
@@ -84,14 +89,16 @@ void test_connect(void) {
 }
 
 /* Function semanage_disconnect */
-void test_disconnect(void) {
+void test_disconnect(void)
+{
 	setup_handle(SH_CONNECT);
 	CU_ASSERT(semanage_disconnect(sh) >= 0);
 	cleanup_handle(SH_HANDLE);
 }
 
 /* Function semanage_begin_transaction */
-void test_transaction(void) {
+void test_transaction(void)
+{
 	/* test disconnected */
 	setup_handle(SH_CONNECT);
 	helper_disconnect();
@@ -108,7 +115,8 @@ void test_transaction(void) {
 }
 
 /* Function semanage_commit */
-void test_commit(void) {
+void test_commit(void)
+{
 	/* test without transaction */
 	setup_handle(SH_CONNECT);
 	CU_ASSERT(semanage_commit(sh) < 0);
@@ -121,7 +129,8 @@ void test_commit(void) {
 }
 
 /* Function semanage_is_connected */
-void test_is_connected(void) {
+void test_is_connected(void)
+{
 	/* test disconnected */
 	setup_handle(SH_HANDLE);
 	CU_ASSERT(semanage_is_connected(sh) == 0);
@@ -138,7 +147,8 @@ void test_is_connected(void) {
 }
 
 /* Function semanage_access_check */
-void test_access_check(void) {
+void test_access_check(void)
+{
 	int result = 0;
 
 	/* test with handle */
@@ -162,7 +172,8 @@ void test_access_check(void) {
 }
 
 /* Function semanage_is_managed */
-void test_is_managed(void) {
+void test_is_managed(void)
+{
 	int result = 0;
 
 	/* test with handle */
@@ -179,7 +190,8 @@ void test_is_managed(void) {
 }
 
 /* Function semanage_mls_enabled */
-void test_mls_enabled(void) {
+void test_mls_enabled(void)
+{
 	int result = 0;
 
 	/* test with handle */
@@ -205,11 +217,13 @@ void test_mls_enabled(void) {
 int msg_set_callback_count = 0;
 
 void helper_msg_set_callback(void *varg, semanage_handle_t *handle,
-			     const char *fmt, ...) {
+			     const char *fmt, ...)
+{
 	msg_set_callback_count++;
 }
 
-void test_msg_set_callback(void) {
+void test_msg_set_callback(void)
+{
 	setup_handle(SH_CONNECT);
 
 	semanage_msg_set_callback(sh, helper_msg_set_callback, NULL);
@@ -227,7 +241,8 @@ void test_msg_set_callback(void) {
 }
 
 /* Function semanage_root, semanage_set_root */
-void helper_root(void) {
+void helper_root(void)
+{
 	const char *root = NULL;
 
 	CU_ASSERT(semanage_set_root("asdf") >= 0);
@@ -239,7 +254,8 @@ void helper_root(void) {
 	CU_ASSERT_STRING_EQUAL(root, "");
 }
 
-void test_root(void) {
+void test_root(void)
+{
 	/* test without handle */
 	setup_handle(SH_NULL);
 	helper_root();
@@ -257,7 +273,8 @@ void test_root(void) {
 
 /* Function semanage_select_store */
 void helper_select_store(const char *name, enum semanage_connect_type type,
-			 int exp_result) {
+			 int exp_result)
+{
 	setup_handle(SH_HANDLE);
 
 	/* FIXME: the storename parameter of semanage_select_store should be
@@ -280,7 +297,8 @@ void helper_select_store(const char *name, enum semanage_connect_type type,
 		cleanup_handle(SH_HANDLE);
 }
 
-void test_select_store(void) {
+void test_select_store(void)
+{
 	helper_select_store("asdf", SEMANAGE_CON_INVALID - 1, -1);
 	helper_select_store("asdf", SEMANAGE_CON_POLSERV_REMOTE + 1, -1);
 	helper_select_store("", SEMANAGE_CON_DIRECT, 0);
