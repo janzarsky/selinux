@@ -106,6 +106,7 @@ int write_file_contexts(const char *data, unsigned int data_len)
 
 	if (fwrite(data, data_len, 1, fptr) != 1) {
 		perror("fwrite");
+		fclose(fptr);
 		return -1;
 	}
 
@@ -395,6 +396,7 @@ void test_fcontext_get_set_expr(void)
 	CU_ASSERT(semanage_fcontext_set_expr(sh, fcontext, expr_exp) >= 0);
 	expr = semanage_fcontext_get_expr(fcontext);
 	CU_ASSERT_PTR_NOT_NULL(expr);
+	assert(expr);
 	CU_ASSERT_STRING_EQUAL(expr, expr_exp);
 
 	/* cleanup */
@@ -572,7 +574,6 @@ void helper_fcontext_query(level_t level, const char *fcontext_expr,
 {
 	semanage_fcontext_key_t *key;
 	semanage_fcontext_t *resp = (void *) 42;
-	const char *expr;
 	int res;
 
 	/* setup */
@@ -584,7 +585,7 @@ void helper_fcontext_query(level_t level, const char *fcontext_expr,
 
 	if (exp_res >= 0) {
 		CU_ASSERT(res >= 0);
-		expr = semanage_fcontext_get_expr(resp);
+		const char *expr = semanage_fcontext_get_expr(resp);
 		CU_ASSERT_STRING_EQUAL(expr, fcontext_expr);
 	} else {
 		CU_ASSERT(res < 0);

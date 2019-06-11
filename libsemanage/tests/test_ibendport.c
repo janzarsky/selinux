@@ -182,6 +182,7 @@ void test_ibendport_query(void)
 	CU_ASSERT(semanage_ibendport_get_ibdev_name(sh, ibendport_exp,
 						    &name_exp) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(name_exp);
+	assert(name);
 	CU_ASSERT_STRING_EQUAL(name, name_exp);
 
 	CU_ASSERT(semanage_ibendport_get_port(ibendport) ==
@@ -310,6 +311,7 @@ void test_ibendport_list(void)
 	CU_ASSERT(semanage_ibendport_list(sh, &records, &count) >= 0);
 
 	CU_ASSERT_PTR_NOT_NULL_FATAL(records);
+	assert(records);
 	CU_ASSERT(count == IBENDPORT_COUNT);
 
 	for (unsigned int i = 0; i < count; i++) {
@@ -499,6 +501,7 @@ void test_ibendport_list_local(void)
 	/* test */
 	CU_ASSERT(semanage_ibendport_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(records);
+	assert(records);
 	CU_ASSERT(count == 3);
 
 	for (unsigned int i = 0; i < count; i++) {

@@ -86,6 +86,7 @@ int write_test_policy(unsigned char *data, unsigned int data_len) {
 
 	if (fwrite(data, data_len, 1, fptr) != 1) {
 		perror("fwrite");
+		fclose(fptr);
 		return -1;
 	}
 
@@ -139,6 +140,7 @@ int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 
 	if (fwrite(data, data_len, 1, fptr) != 1) {
 		perror("fwrite");
+		fclose(fptr);
 		return -1;
 	}
 
@@ -154,6 +156,7 @@ int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 
 	if (fwrite("cil", sizeof("cil"), 1, fptr) != 1) {
 		perror("fwrite");
+		fclose(fptr);
 		return -1;
 	}
 
@@ -282,6 +285,7 @@ int context_compare(semanage_context_t *con, const char *str) {
 
 	CU_ASSERT(semanage_context_to_string(sh, con, &con_str) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(con_str);
+	assert(con_str);
 
 	rc = strcmp(con_str, str);
 

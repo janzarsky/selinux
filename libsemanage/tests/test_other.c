@@ -78,6 +78,7 @@ void test_semanage_context(void)
 
 	CU_ASSERT(semanage_context_to_string(sh, con, &str) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(str);
+	assert(str);
 	CU_ASSERT_STRING_EQUAL(str, "user_u:role_r:type_t:s0");
 
 	CU_ASSERT(semanage_context_from_string(sh, "my_u:my_r:my_t:s0",

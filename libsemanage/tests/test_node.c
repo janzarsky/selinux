@@ -301,6 +301,7 @@ void test_node_get_set_addr(void)
 					 "192.168.0.1") == 0);
 	CU_ASSERT(semanage_node_get_addr(sh, node, &addr) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(addr);
+	assert(addr);
 	CU_ASSERT_STRING_EQUAL(addr, "192.168.0.1");
 
 	/* cleanup */
@@ -327,6 +328,7 @@ void test_node_get_set_addr_bytes(void)
 	CU_ASSERT(semanage_node_get_addr_bytes(sh, node, &addr2,
 					       &addr2_size) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(addr2);
+	assert(addr2);
 
 	for (size_t i = 0; i < addr2_size; i++)
 		CU_ASSERT(addr1[i] == addr2[i]);
@@ -351,6 +353,7 @@ void test_node_get_set_mask(void)
 					 "255.255.255.0") == 0);
 	CU_ASSERT(semanage_node_get_mask(sh, node, &mask) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(mask);
+	assert(mask);
 	CU_ASSERT_STRING_EQUAL(mask, "255.255.255.0");
 
 	/* cleanup */
@@ -377,6 +380,7 @@ void test_node_get_set_mask_bytes(void)
 	CU_ASSERT(semanage_node_get_mask_bytes(sh, node, &mask2,
 					       &mask2_size) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(mask2);
+	assert(mask2);
 
 	for (size_t i = 0; i < mask2_size; i++)
 		CU_ASSERT(mask1[i] == mask2[i]);
@@ -490,10 +494,12 @@ void test_node_clone(void)
 
 	CU_ASSERT(semanage_node_get_addr(sh, node_clone, &addr2) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(addr2);
+	assert(addr2);
 	CU_ASSERT_STRING_EQUAL(addr1, addr2);
 
 	CU_ASSERT(semanage_node_get_mask(sh, node_clone, &mask2) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(mask2);
+	assert(mask2);
 	CU_ASSERT_STRING_EQUAL(mask1, mask2);
 
 	CU_ASSERT(semanage_node_get_proto(node_clone) == SEMANAGE_PROTO_IP4);
