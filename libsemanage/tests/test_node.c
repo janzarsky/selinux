@@ -124,10 +124,9 @@ semanage_node_t *get_node_nth(int index)
 
 	node = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_node_free(records[i]);
-	}
 
 	return node;
 }
@@ -309,9 +308,8 @@ void test_node_get_set_addr_bytes(void)
 					       &addr2_size) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(addr2);
 
-	for (size_t i = 0; i < addr2_size; i++) {
+	for (size_t i = 0; i < addr2_size; i++)
 		CU_ASSERT(addr1[i] == addr2[i]);
-	}
 
 	/* cleanup */
 	semanage_node_free(node);
@@ -360,9 +358,8 @@ void test_node_get_set_mask_bytes(void)
 					       &mask2_size) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(mask2);
 
-	for (size_t i = 0; i < mask2_size; i++) {
+	for (size_t i = 0; i < mask2_size; i++)
 		CU_ASSERT(mask1[i] == mask2[i]);
-	}
 
 	/* cleanup */
 	semanage_node_free(node);
@@ -609,13 +606,11 @@ void test_node_list(void)
 	CU_ASSERT(semanage_node_list(sh, &records, &count) >= 0);
 	CU_ASSERT(count == NODE_COUNT);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_node_free(records[i]);
-	}
 
 	/* cleanup */
 	cleanup_handle(SH_CONNECT);
@@ -772,14 +767,12 @@ void test_node_list_local(void)
 	CU_ASSERT(semanage_node_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT(count == 3);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_node_free(records[i]);
-	}
 
 	delete_local_node(I_FIRST);
 	delete_local_node(I_SECOND);

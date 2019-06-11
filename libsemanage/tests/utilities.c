@@ -176,7 +176,7 @@ int destroy_test_store() {
 	if (!ftsp)
 		return -1;
 
-	while ((curr = fts_read(ftsp))) {
+	while ((curr = fts_read(ftsp)))
 		switch (curr->fts_info) {
 		case FTS_DP:
 		case FTS_F:
@@ -188,7 +188,6 @@ int destroy_test_store() {
 		default:
 			break;
 		}
-	}
 
 	fts_close(ftsp);
 

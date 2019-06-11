@@ -108,10 +108,9 @@ semanage_bool_t *get_bool_nth(int index)
 
 	boolean = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_bool_free(records[i]);
-	}
 
 	return boolean;
 }
@@ -293,8 +292,7 @@ void helper_bool_compare(level_t level, int bool_index1, int bool_index2)
 
 	if (bool_index1 == bool_index2) {
 		CU_ASSERT(result == 0);
-	}
-	else {
+	} else {
 		CU_ASSERT(result != 0);
 	}
 
@@ -332,8 +330,7 @@ void helper_bool_compare2(level_t level, int bool_index1, int bool_index2)
 
 	if (bool_index1 == bool_index2) {
 		CU_ASSERT(result == 0);
-	}
-	else {
+	} else {
 		CU_ASSERT(result != 0);
 	}
 
@@ -493,8 +490,7 @@ void helper_bool_query(level_t level, const char *bool_str, int exp_result)
 	if (exp_result >= 0) {
 		const char *name = semanage_bool_get_name(response);
 		CU_ASSERT_STRING_EQUAL(name, bool_str);
-	}
-	else {
+	} else {
 		CU_ASSERT_PTR_NULL(response);
 	}
 
@@ -625,13 +621,11 @@ void helper_bool_list(level_t level)
 	CU_ASSERT(semanage_bool_list(sh, &records, &count) >= 0);
 	CU_ASSERT(count == BOOL_COUNT);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_bool_free(records[i]);
-	}
 
 	cleanup_handle(level);
 }
@@ -670,8 +664,7 @@ void helper_bool_modify_del_local(level_t level, const char *name,
 
 	if (exp_result < 0) {
 		CU_ASSERT(result < 0);
-	}
-	else {
+	} else {
 		CU_ASSERT(result >= 0);
 
 		/* write changes to file */

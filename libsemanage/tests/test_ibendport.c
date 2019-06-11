@@ -89,10 +89,9 @@ semanage_ibendport_t *get_ibendport_nth(int index)
 
 	ibendport = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_ibendport_free(records[i]);
-	}
 
 	return ibendport;
 }
@@ -303,9 +302,9 @@ void test_ibendport_list(void)
 	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_ibendport_free(records[i]);
-	}
+
 	free(records);
 	cleanup_handle(SH_CONNECT);
 }
@@ -492,9 +491,9 @@ void test_ibendport_list_local(void)
 	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_ibendport_free(records[i]);
-	}
+
 	free(records);
 	delete_local_ibendport(I_FIRST);
 	delete_local_ibendport(I_SECOND);

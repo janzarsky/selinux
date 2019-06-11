@@ -286,8 +286,7 @@ void helper_select_store(const char *name, enum semanage_connect_type type,
 
 	if (exp_result < 0) {
 		CU_ASSERT(result < 0);
-	}
-	else {
+	} else {
 		CU_ASSERT(result >= 0);
 	}
 

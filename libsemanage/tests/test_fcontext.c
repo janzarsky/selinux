@@ -189,10 +189,9 @@ semanage_fcontext_t *get_fcontext_nth(int index)
 
 	fcontext = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_fcontext_free(records[i]);
-	}
 
 	return fcontext;
 }
@@ -441,8 +440,7 @@ void helper_fcontext_get_set_con(level_t level, int fcontext_index,
 	if (con_str != NULL) {
 		CU_ASSERT(semanage_context_from_string(sh, con_str, &con) >= 0);
 		CU_ASSERT_PTR_NOT_NULL(con);
-	}
-	else {
+	} else {
 		con = NULL;
 	}
 
@@ -452,8 +450,7 @@ void helper_fcontext_get_set_con(level_t level, int fcontext_index,
 
 	if (con_str != NULL) {
 		CU_ASSERT_CONTEXT_EQUAL(con, new_con);
-	}
-	else {
+	} else {
 		CU_ASSERT_PTR_NULL(new_con);
 	}
 
@@ -569,8 +566,7 @@ void helper_fcontext_query(level_t level, const char *fcontext_expr,
 		CU_ASSERT(result >= 0);
 		expr = semanage_fcontext_get_expr(response);
 		CU_ASSERT_STRING_EQUAL(expr, fcontext_expr);
-	}
-	else {
+	} else {
 		CU_ASSERT(result < 0);
 		CU_ASSERT(response == (void *) 42);
 	}
@@ -729,13 +725,11 @@ void helper_fcontext_list(level_t level)
 	CU_ASSERT(semanage_fcontext_list(sh, &records, &count) >= 0);
 	CU_ASSERT(count == FCONTEXTS_COUNT);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_fcontext_free(records[i]);
-	}
 
 	/* cleanup */
 	cleanup_handle(level);
@@ -767,8 +761,7 @@ void helper_fcontext_modify_del_local(level_t level, int fcontext_index,
 	if (con_str != NULL) {
 		CU_ASSERT(semanage_context_from_string(sh, con_str, &con) >= 0);
 		CU_ASSERT_PTR_NOT_NULL(con);
-	}
-	else {
+	} else {
 		con = NULL;
 	}
 
@@ -777,10 +770,7 @@ void helper_fcontext_modify_del_local(level_t level, int fcontext_index,
 	/* test */
 	result = semanage_fcontext_modify_local(sh, key, fcontext);
 
-	if (exp_result < 0) {
-		CU_ASSERT(result < 0);
-	}
-	else {
+	if (exp_result >= 0) {
 		CU_ASSERT(result >= 0);
 
 		if (level == SH_TRANS) {
@@ -795,6 +785,8 @@ void helper_fcontext_modify_del_local(level_t level, int fcontext_index,
 		CU_ASSERT(semanage_fcontext_del_local(sh, key) >= 0);
 		CU_ASSERT(semanage_fcontext_query_local(sh, key,
 					                &fcontext_local) < 0);
+	} else {
+		CU_ASSERT(result < 0);
 	}
 
 	/* cleanup */

@@ -115,10 +115,9 @@ semanage_iface_t *get_iface_nth(int index)
 
 	iface = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_iface_free(records[i]);
-	}
 
 	return iface;
 }
@@ -488,13 +487,11 @@ void test_iface_list(void)
 	CU_ASSERT(semanage_iface_list(sh, &records, &count) >= 0);
 	CU_ASSERT(count == IFACE_COUNT);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_iface_free(records[i]);
-	}
 
 	/* cleanup */
 	cleanup_handle(SH_CONNECT);
@@ -635,14 +632,12 @@ void test_iface_list_local(void)
 	CU_ASSERT(semanage_iface_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT(count == 3);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_iface_free(records[i]);
-	}
 
 	delete_local_iface(I_FIRST);
 	delete_local_iface(I_SECOND);

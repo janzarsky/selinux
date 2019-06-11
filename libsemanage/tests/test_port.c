@@ -122,10 +122,9 @@ semanage_port_t *get_port_nth(int index)
 
 	port = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_port_free(records[i]);
-	}
 
 	return port;
 }
@@ -192,8 +191,7 @@ void helper_port_compare(int index1, int index2)
 
 	if (index1 == index2) {
 		CU_ASSERT(result == 0);
-	}
-	else {
+	} else {
 		CU_ASSERT(result != 0);
 	}
 
@@ -229,8 +227,7 @@ void helper_port_compare2(int index1, int index2)
 
 	if (index1 == index2) {
 		CU_ASSERT(result == 0);
-	}
-	else {
+	} else {
 		CU_ASSERT(result != 0);
 	}
 
@@ -543,14 +540,13 @@ void test_port_list(void)
 	CU_ASSERT(semanage_port_list(sh, &records, &count) >= 0);
 	CU_ASSERT(count == PORT_COUNT);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_port_free(records[i]);
-	}
+
 	cleanup_handle(SH_CONNECT);
 }
 
@@ -724,14 +720,13 @@ void test_port_list_local(void)
 	CU_ASSERT(semanage_port_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT(count == 3);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_port_free(records[i]);
-	}
+
 	delete_local_port(I_FIRST);
 	delete_local_port(I_SECOND);
 	delete_local_port(I_THIRD);

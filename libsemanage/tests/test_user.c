@@ -106,10 +106,9 @@ semanage_user_t *get_user_nth(int index)
 
 	user = records[index];
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		if (i != (unsigned int) index)
 			semanage_user_free(records[i]);
-	}
 
 	return user;
 }
@@ -520,15 +519,13 @@ void test_user_list(void)
 	CU_ASSERT(count == USER_COUNT);
 
 	/* TODO: check real values */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
-
-	for (unsigned int i = 0; i < count; i++) {
-		semanage_user_free(records[i]);
-	}
 
 	/* cleanup */
+	for (unsigned int i = 0; i < count; i++)
+		semanage_user_free(records[i]);
+
 	cleanup_handle(SH_CONNECT);
 }
 
@@ -659,14 +656,13 @@ void test_user_list_local(void)
 	CU_ASSERT(semanage_user_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT(count == 3);
 
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		CU_ASSERT_PTR_NOT_NULL(records[i]);
-	}
 
 	/* cleanup */
-	for (unsigned int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++)
 		semanage_user_free(records[i]);
-	}
+
 	delete_local_user(I_FIRST);
 	delete_local_user(I_SECOND);
 	delete_local_user(I_THIRD);
