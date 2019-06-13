@@ -43,19 +43,19 @@ const char BZIP_TEXT[] = {
 	0x48, 0x5a, 0xe6, 0xdc, 0x83, 0x78, 0x08, 0x02, 0xa7, 0xc5, 0xdc, 0x91,
 	0x4e, 0x14, 0x24, 0x10, 0xd8, 0xa1, 0x8d, 0x40 };
 
-#define BZIP_INVALID_FILE "test_invalid_bzip_module"
+#define BZIP_INVALID_FILE "test-modules/test_invalid_bzip_module"
 #define BZIP_INVALID_TEXT BZIP_TEXT
 
 #define HLL_NAME "test_hll_module"
 #define HLL_LANG_EXT "pp"
-#define HLL_FILE HLL_NAME "." HLL_LANG_EXT
+#define HLL_FILE "test-modules/" HLL_NAME "." HLL_LANG_EXT
 #define HLL_TEXT "module " HLL_NAME " 1.0;\nrequire {\nrole object_r;\n" \
 				 "}\nbool " HLL_NAME " true;\n"
 char *HLL_DATA = NULL;
 size_t HLL_DATA_LEN = 0;
 
 #define INVALID_NAME "test_invalid_module"
-#define INVALID_FILE INVALID_NAME
+#define INVALID_FILE "test-modules/" INVALID_NAME
 #define INVALID_TEXT "(boolean " INVALID_NAME " true)"
 
 #define PRIORITY_NAME "test_cil_module"
@@ -78,42 +78,7 @@ int module_test_init(void) {
 		return -1;
 	}
 
-	/* bzipped cil module with invalid file extension */
-	/*
-	FILE *bzip_invalid_file = fopen(BZIP_INVALID_FILE, "w");
-
-	if (bzip_invalid_file == NULL)
-		return -1;
-
-	if (fwrite(&BZIP_INVALID_TEXT, sizeof(char), sizeof(BZIP_INVALID_TEXT),
-			   bzip_invalid_file) != sizeof(BZIP_INVALID_TEXT)) {
-	fclose(bzip_invalid_file);
-		return -1;
-	}
-
-	fclose(bzip_invalid_file);
-	*/
-
 	/* hll module */
-	/*
-	FILE *te_file = fopen(HLL_NAME ".te", "w");
-
-	if (te_file == NULL)
-		return -1;
-
-	if (fprintf(te_file, HLL_TEXT) != strlen(HLL_TEXT)) {
-	fclose(te_file);
-		return -1;
-	}
-
-	fclose(te_file);
-
-	if (system("checkmodule -M -m -o " HLL_NAME ".mod " HLL_NAME ".te") != 0)
-		return -1;
-
-	if (system("semodule_package -m " HLL_NAME ".mod -o " HLL_FILE) != 0)
-		return -1;
-
 	FILE *pp_file = fopen(HLL_FILE, "r");
 	
 	if (pp_file == NULL)
@@ -136,55 +101,17 @@ int module_test_init(void) {
 	}
 
 	fclose(pp_file);
-	*/
-
-	/* CIL module with invalid lang ext */
-	/*
-	FILE *invalid_lang_ext_file = fopen(INVALID_FILE, "w");
-
-	if (invalid_lang_ext_file == NULL)
-		return -1;
-
-	if (fprintf(invalid_lang_ext_file, INVALID_TEXT) != strlen(INVALID_TEXT)) {
-	fclose(invalid_lang_ext_file);
-		return -1;
-	}
-
-	fclose(invalid_lang_ext_file);
-	*/
 
 	return 0;
 }
 
 int module_test_cleanup(void) {
-	int status = 0;
-
-	/*
-	if (unlink(BZIP_INVALID_FILE) < 0)
-		status = 1;
-
-	if (unlink(HLL_FILE) < 0)
-		status = 1;
-
-	if (unlink(HLL_NAME ".mod") < 0)
-		status = 1;
-
-	if (unlink(HLL_NAME ".te") < 0)
-		status = 1;
-
-	if (unlink(INVALID_FILE) < 0)
-		status = 1;
-
-	if (destroy_test_store() < 0)
-		status = 1;
-	*/
-
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
-		status = 1;
+		return 1;
 	}
 
-	return status;
+	return 0;
 }
 
 int module_add_tests(CU_pSuite suite) {
@@ -193,41 +120,36 @@ int module_add_tests(CU_pSuite suite) {
 	CU_add_test(suite, "module_install_info", test_module_install_info);
 	CU_add_test(suite, "module_remove", test_module_remove);
 	CU_add_test(suite, "module_remove_key", test_module_remove_key);
-
 	CU_add_test(suite, "module_extract", test_module_extract);
-	/*
 	CU_add_test(suite, "module_list_all", test_module_list_all);
-
 	CU_add_test(suite, "module_list", test_module_list);
-
 	CU_add_test(suite, "module_get_name", test_module_get_name);
 	CU_add_test(suite, "module_get_module_info",
-				test_module_get_module_info);
-
+		    test_module_get_module_info);
 	CU_add_test(suite, "module_info_create", test_module_info_create);
 	CU_add_test(suite, "module_info_get_set_priority",
-				test_module_info_get_set_priority);
+		    test_module_info_get_set_priority);
 	CU_add_test(suite, "module_info_get_set_name",
-				test_module_info_get_set_name);
+		    test_module_info_get_set_name);
 	CU_add_test(suite, "module_info_get_set_lang_ext",
-				test_module_info_get_set_lang_ext);
+		    test_module_info_get_set_lang_ext);
 	CU_add_test(suite, "module_info_get_set_enabled",
-				test_module_info_get_set_enabled);
-
+		    test_module_info_get_set_enabled);
 	CU_add_test(suite, "module_key_create", test_module_key_create);
-	CU_add_test(suite, "module_key_get_set_name", test_module_key_get_set_name);
+	CU_add_test(suite, "module_key_get_set_name",
+		    test_module_key_get_set_name);
 	CU_add_test(suite, "module_key_get_set_priority",
-				test_module_key_get_set_priority);
-
-	CU_add_test(suite, "module_get_set_enabled", test_module_get_set_enabled);
-	*/
+		    test_module_key_get_set_priority);
+	CU_add_test(suite, "module_get_set_enabled",
+		    test_module_get_set_enabled);
 
 	return 0;
 }
 
 /* Helpers */
 
-semanage_module_info_t *get_module_info_nth(int index, semanage_module_info_t **modinfo_free) {
+semanage_module_info_t *get_module_info_nth(int index,
+					semanage_module_info_t **modinfo_free) {
 	int result;
 	semanage_module_info_t *records = NULL;
 	semanage_module_info_t *modinfo;
@@ -370,7 +292,7 @@ void helper_module_install_hll(void) {
 void test_module_install(void) {
 	helper_module_install_invalid();
 	helper_module_install_cil();
-	//helper_module_install_hll();
+	helper_module_install_hll();
 }
 
 /* Function semanage_module_install_file */
@@ -767,17 +689,13 @@ void test_module_list_all(void) {
 
 /* Function semanage_module_list, semanage_module_list_nth, */
 /* semanage_info_datum_destroy, semanage_info_destroy */
-
 void helper_module_list_invalid(void) {
 	semanage_module_info_t *records;
 	int count = -1;
 
 	setup_handle(SH_CONNECT);
-
 	CU_ASSERT(semanage_disconnect(sh) >= 0);
-
 	CU_ASSERT(semanage_module_list(sh, &records, &count) < 0);
-
 	cleanup_handle(SH_HANDLE);
 }
 

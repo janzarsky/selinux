@@ -59,10 +59,13 @@ int create_test_store() {
 		return -1;
 
 	fptr = fopen("test-policy/etc/selinux/semanage.conf", "w+");
-
 	if (!fptr)
 		return -1;
+	fclose(fptr);
 
+	fptr = fopen("test-policy/store/active/file_contexts", "w+");
+	if (!fptr)
+		return -1;
 	fclose(fptr);
 
 	enable_test_store();

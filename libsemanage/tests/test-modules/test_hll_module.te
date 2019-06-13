@@ -1,0 +1,5 @@
+module test_hll_module 1.0;
+require {
+role object_r;
+}
+bool test_hll_module true;
