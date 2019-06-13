@@ -207,6 +207,7 @@ void helper_handle_create(void) {
 		semanage_set_store_root(sh, "");
 		semanage_select_store(sh, (char *) "store",
 				      SEMANAGE_CON_DIRECT);
+		semanage_set_check_contexts(sh, 0);
 	}
 }
 
