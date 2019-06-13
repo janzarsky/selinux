@@ -199,7 +199,7 @@ void helper_handle_create(void) {
 	sh = semanage_handle_create();
 	CU_ASSERT_PTR_NOT_NULL(sh);
 
-	semanage_msg_set_callback(sh, test_msg_handler, NULL);
+	//semanage_msg_set_callback(sh, test_msg_handler, NULL);
 
 	if (test_store_enabled) {
 		semanage_set_create_store(sh, 1);
