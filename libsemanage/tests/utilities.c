@@ -22,6 +22,7 @@
  *  by our unit tests.
  */
 
+#include <unistd.h>
 #include "utilities.h"
 
 int test_store_enabled = 0;
@@ -123,32 +124,26 @@ int write_test_policy_from_file(const char *filename) {
 	return write_test_policy(buf, len);
 }
 
-int write_test_policy_src(unsigned char *data, unsigned int data_len) {
+int write_test_policy_src(const char *filename) {
 	if (mkdir("test-policy/store/active/modules/100", 0700) < 0)
 		return -1;
 
 	if (mkdir("test-policy/store/active/modules/100/base", 0700) < 0)
 		return -1;
 
-	FILE *fptr = fopen("test-policy/store/active/modules/100/base/cil",
-			   "w+");
+	char prefix[] = "../../../../../../";
+	char *path = malloc(sizeof(prefix) + strlen(filename) + 1);
+	strncpy(path, prefix, sizeof(prefix) + strlen(filename));
+	strncat(path, filename, strlen(filename));
 
-	if (!fptr) {
-		perror("fopen");
+	if (symlink(path, "test-policy/store/active/modules/100/base/cil") < 0) {
+		free(path);
 		return -1;
 	}
+	free(path);
 
-	if (fwrite(data, data_len, 1, fptr) != 1) {
-		perror("fwrite");
-		fclose(fptr);
-		return -1;
-	}
-
-	fclose(fptr);
-
-	fptr = fopen("test-policy/store/active/modules/100/base/lang_ext",
+	FILE *fptr = fopen("test-policy/store/active/modules/100/base/lang_ext",
 		     "w+");
-
 	if (!fptr) {
 		perror("fopen");
 		return -1;
@@ -199,7 +194,7 @@ int destroy_test_store() {
 
 void helper_handle_create(void) {
 	if (test_store_enabled)
-		semanage_set_root("test-policy");
+		semanage_set_root("./test-policy/");
 
 	sh = semanage_handle_create();
 	CU_ASSERT_PTR_NOT_NULL(sh);

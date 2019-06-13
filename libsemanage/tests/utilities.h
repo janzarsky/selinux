@@ -64,7 +64,7 @@ void helper_commit(void);
 
 int create_test_store(void);
 int write_test_policy_from_file(const char *filename);
-int write_test_policy_src(unsigned char *data, unsigned int data_len);
+int write_test_policy_src(const char *filename);
 int destroy_test_store(void);
 void enable_test_store(void);
 void disable_test_store(void);
