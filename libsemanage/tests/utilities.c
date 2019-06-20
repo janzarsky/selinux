@@ -58,24 +58,24 @@ int create_test_store() {
 	if (mkdir("test-policy/etc/selinux", 0700) < 0)
 		return -1;
 
-	if (mkdir("test-policy/etc/selinux/store", 0700) < 0)
-		return -1;
-
-	if (mkdir("test-policy/etc/selinux/store/contexts", 0700) < 0)
-		return -1;
-
-	if (mkdir("test-policy/etc/selinux/store/contexts/files", 0700) < 0)
-		return -1;
-
 	fptr = fopen("test-policy/etc/selinux/semanage.conf", "w+");
-	if (!fptr)
+	if (!fptr) {
+		perror("fopen");
 		return -1;
-	fclose(fptr);
+	}
 
-	fptr = fopen("test-policy/etc/selinux/store/contexts/files/file_contexts",
-		     "w+");
-	if (!fptr)
+	const char *data = "compiler-directory=../../policycoreutils/hll/pp\n"
+		"[sefcontext_compile]\n"
+		"path=../../libselinux/utils/sefcontext_compile\n"
+		"args=-r $@\n"
+		"[end]\n";
+
+	if (fwrite(data, strlen(data), 1, fptr) != 1) {
+		perror("fwrite");
+		fclose(fptr);
 		return -1;
+	}
+
 	fclose(fptr);
 
 	enable_test_store();
