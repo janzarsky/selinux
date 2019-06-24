@@ -1,5 +1,49 @@
+/*
+ * Authors: Jan Zarsky <jzarsky@redhat.com>
+ *
+ * Copyright (C) 2019 Red Hat, Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
 #include "utilities.h"
 #include "test_module.h"
+
+#define CIL_NAME "test_cil_module"
+#define CIL_LANG_EXT "cil"
+#define CIL_FILE "test-modules/" CIL_NAME "." CIL_LANG_EXT
+#define CIL_SOURCE "(boolean " CIL_NAME " true)\n"
+
+#define BZIP_NAME "test_bzip_module"
+#define BZIP_LANG_EXT "cil"
+#define BZIP_FILE "test-modules/" BZIP_NAME "." BZIP_LANG_EXT
+#define BZIP_SOURCE "(boolean my_bzip_module true)\n"
+
+#define BZIP_INV_FILE "test-modules/test_invalid_bzip_module"
+
+#define HLL_NAME "test_hll_module"
+#define HLL_LANG_EXT "pp"
+#define HLL_FILE "test-modules/" HLL_NAME "." HLL_LANG_EXT
+char *HLL_DATA = NULL;
+size_t HLL_DATA_LEN = 0;
+
+#define CIL_INV_NAME "test_invalid_module"
+#define CIL_INV_FILE "test-modules/" CIL_INV_NAME
+
+#define CIL_PRIO_NAME "test_cil_module"
+#define CIL_PRIO_FILE "test-modules/priority/" CIL_PRIO_NAME ".cil"
 
 /* modules.h */
 void test_module_list(void);
@@ -37,30 +81,6 @@ void test_module_key_get_set_priority(void);
 void test_module_get_set_enabled(void);
 
 extern semanage_handle_t *sh;
-
-#define CIL_NAME "test_cil_module"
-#define CIL_LANG_EXT "cil"
-#define CIL_FILE "test-modules/" CIL_NAME "." CIL_LANG_EXT
-#define CIL_SOURCE "(boolean " CIL_NAME " true)\n"
-
-#define BZIP_NAME "test_bzip_module"
-#define BZIP_LANG_EXT "cil"
-#define BZIP_FILE "test-modules/" BZIP_NAME "." BZIP_LANG_EXT
-#define BZIP_SOURCE "(boolean my_bzip_module true)\n"
-
-#define BZIP_INV_FILE "test-modules/test_invalid_bzip_module"
-
-#define HLL_NAME "test_hll_module"
-#define HLL_LANG_EXT "pp"
-#define HLL_FILE "test-modules/" HLL_NAME "." HLL_LANG_EXT
-char *HLL_DATA = NULL;
-size_t HLL_DATA_LEN = 0;
-
-#define CIL_INV_NAME "test_invalid_module"
-#define CIL_INV_FILE "test-modules/" CIL_INV_NAME
-
-#define CIL_PRIO_NAME "test_cil_module"
-#define CIL_PRIO_FILE "test-modules/priority/" CIL_PRIO_NAME ".cil"
 
 int read_hll_module(void) {
 	FILE *pp_file = fopen(HLL_FILE, "r");
@@ -686,24 +706,25 @@ void helper_module_list_all(level_t level) {
 	semanage_module_info_t *records;
 	int count = -1;
 
+	/* setup */
 	setup_handle(level);
 
+	/* test */
 	CU_ASSERT(semanage_module_list_all(sh, &records, &count) >= 0);
 
 	/* TODO: check real count */
 	CU_ASSERT(count > 0);
 
 	for (int i = 0; i < count; i++) {
-		semanage_module_info_t *info = semanage_module_list_nth(records, i);
-
+		semanage_module_info_t *info = semanage_module_list_nth(records,
+									i);
 		/* TODO: check real names */
 		CU_ASSERT_STRING_NOT_EQUAL(semanage_module_get_name(info), "");
-
 		semanage_module_info_destroy(sh, info);
 	}
 
+	/* cleanup */
 	free(records);
-
 	cleanup_handle(level);
 }
 
@@ -730,8 +751,10 @@ void helper_module_list(level_t level) {
 	semanage_module_info_t *records;
 	int count = -1;
 
+	/* setup */
 	setup_handle(level);
 
+	/* test */
 	CU_ASSERT(semanage_module_list(sh, &records, &count) >= 0);
 
 	/* TODO: check real count */
@@ -739,15 +762,13 @@ void helper_module_list(level_t level) {
 
 	for (int i = 0; i < count; i++) {
 		semanage_module_info_t *info = semanage_module_list_nth(records, i);
-
 		/* TODO: check real names */
 		CU_ASSERT_STRING_NOT_EQUAL(semanage_module_get_name(info), "");
-
 		semanage_module_info_destroy(sh, info);
 	}
 
+	/* cleanup */
 	free(records);
-
 	cleanup_handle(level);
 }
 
@@ -896,13 +917,12 @@ void test_module_info_get_set_priority(void) {
 
 	/* setup */
 	setup_handle(SH_CONNECT);
-
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
 	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo, 123) >= 0);
-
-	CU_ASSERT(semanage_module_info_get_priority(sh, modinfo, &priority) >= 0);
+	CU_ASSERT(semanage_module_info_get_priority(sh, modinfo, &priority)
+		  >= 0);
 	CU_ASSERT(priority == 123);
 
 	/* cleanup */
@@ -917,7 +937,6 @@ void test_module_info_get_set_name_invalid(void) {
 
 	/* setup */
 	setup_handle(SH_CONNECT);
-
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
@@ -925,10 +944,9 @@ void test_module_info_get_set_name_invalid(void) {
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "4asdf") < 0); 
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf%") < 0); 
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf.") < 0); 
-
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "a") >= 0); 
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo,
-											"asdf_asdf-1234.asdf.asdf") >= 0); 
+					      "asdf_asdf-1234.asdf.asdf") >= 0); 
 
 	/* cleanup */
 	CU_ASSERT(semanage_module_info_destroy(sh, modinfo) >= 0);
