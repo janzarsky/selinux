@@ -67,7 +67,7 @@ static bool do_tests(int interactive, int verbose)
 	if (CUE_SUCCESS != CU_initialize_registry())
 		return CU_get_error();
 
-	//DECLARE_SUITE(semanage_store);
+	DECLARE_SUITE(semanage_store);
 	DECLARE_SUITE(semanage_utilities);
 	DECLARE_SUITE(handle);
 	DECLARE_SUITE(bool);
