@@ -1,2 +1,3 @@
 libsemanage-tests
 *.policy
+*.cil.bz2
