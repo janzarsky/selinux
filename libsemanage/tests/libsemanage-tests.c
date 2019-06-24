@@ -30,6 +30,7 @@
 #include "test_port.h"
 #include "test_user.h"
 #include "test_module.h"
+#include "test_seuser.h"
 #include "test_other.h"
 
 #include <CUnit/Basic.h>
@@ -78,6 +79,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(port);
 	DECLARE_SUITE(user);
 	DECLARE_SUITE(module);
+	DECLARE_SUITE(seuser);
 	DECLARE_SUITE(other);
 
 	if (verbose)
