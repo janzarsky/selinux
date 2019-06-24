@@ -82,7 +82,8 @@ void test_module_get_set_enabled(void);
 
 extern semanage_handle_t *sh;
 
-int read_hll_module(void) {
+int read_hll_module(void)
+{
 	FILE *pp_file = fopen(HLL_FILE, "r");
 	if (pp_file == NULL)
 		return -1;
@@ -106,7 +107,8 @@ int read_hll_module(void) {
 	return 0;
 }
 
-int module_test_init(void) {
+int module_test_init(void)
+{
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
 		return 1;
@@ -130,7 +132,8 @@ int module_test_init(void) {
 	return 0;
 }
 
-int module_test_cleanup(void) {
+int module_test_cleanup(void)
+{
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
 		return 1;
@@ -139,7 +142,8 @@ int module_test_cleanup(void) {
 	return 0;
 }
 
-int module_add_tests(CU_pSuite suite) {
+int module_add_tests(CU_pSuite suite)
+{
 	CU_add_test(suite, "module_install (invalid)",
 		    test_module_install_invalid);
 	CU_add_test(suite, "module_install (cil)", test_module_install_cil);
@@ -201,7 +205,8 @@ int module_add_tests(CU_pSuite suite) {
 /* Helpers */
 
 semanage_module_info_t *get_module_info_nth(int index,
-					semanage_module_info_t **modinfo_free) {
+					semanage_module_info_t **modinfo_free)
+{
 	int result;
 	semanage_module_info_t *records = NULL;
 	semanage_module_info_t *modinfo;
@@ -232,7 +237,8 @@ semanage_module_info_t *get_module_info_nth(int index,
 	return modinfo;
 }
 
-semanage_module_key_t *get_module_key_nth(int index) {
+semanage_module_key_t *get_module_key_nth(int index)
+{
 	semanage_module_key_t *modkey = NULL;
 	semanage_module_info_t *modinfo = NULL;
 	semanage_module_info_t *modinfo_free = NULL;
@@ -254,7 +260,8 @@ semanage_module_key_t *get_module_key_nth(int index) {
 	return modkey;
 }
 
-int module_exists(const char *name) {
+int module_exists(const char *name)
+{
 	semanage_module_info_t *modinfo = NULL;
 	int num_modules = 0;
 	int ret = 0;
@@ -280,7 +287,8 @@ int module_exists(const char *name) {
 }
 
 /* Function semanage_module_install */
-void test_module_install_invalid(void) {
+void test_module_install_invalid(void)
+{
 	/* not in transaction */
 	setup_handle(SH_CONNECT);
 	CU_ASSERT(semanage_module_install(sh, (char *) CIL_SOURCE,
@@ -304,7 +312,8 @@ void test_module_install_invalid(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_cil(void) {
+void test_module_install_cil(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -321,7 +330,8 @@ void test_module_install_cil(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_hll(void) {
+void test_module_install_hll(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -339,7 +349,8 @@ void test_module_install_hll(void) {
 }
 
 /* Function semanage_module_install_file */
-void test_module_install_file_invalid(void) {
+void test_module_install_file_invalid(void)
+{
 	/* disconnected */
 	setup_handle(SH_CONNECT);
 	helper_disconnect();
@@ -366,7 +377,8 @@ void test_module_install_file_invalid(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_file_cil(void) {
+void test_module_install_file_cil(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -381,7 +393,8 @@ void test_module_install_file_cil(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_file_bzip(void) {
+void test_module_install_file_bzip(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -396,7 +409,8 @@ void test_module_install_file_bzip(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_file_hll(void) {
+void test_module_install_file_hll(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 	CU_ASSERT(semanage_module_install_file(sh, HLL_FILE) >= 0);
@@ -411,7 +425,8 @@ void test_module_install_file_hll(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_file_overridden(void) {
+void test_module_install_file_overridden(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -438,7 +453,8 @@ void test_module_install_file_overridden(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_file_override(void) {
+void test_module_install_file_override(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -460,7 +476,8 @@ void test_module_install_file_override(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_install_file_conflict(void) {
+void test_module_install_file_conflict(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 
@@ -478,7 +495,8 @@ void test_module_install_file_conflict(void) {
 }
 
 /* Function semanage_module_install_info */
-void test_module_install_info(void) {
+void test_module_install_info(void)
+{
 	semanage_module_info_t *modinfo = NULL;
 
 	/* setup */
@@ -512,7 +530,8 @@ void test_module_install_info(void) {
 }
 
 /* Function semanage_module_remove */
-void test_module_remove(void) {
+void test_module_remove(void)
+{
 	/* setup */
 	setup_handle(SH_TRANS);
 	CU_ASSERT(semanage_module_install_file(sh, CIL_FILE) >= 0);
@@ -531,7 +550,8 @@ void test_module_remove(void) {
 }
 
 /* Function semanage_module_remove_key */
-void test_module_remove_key(void) {
+void test_module_remove_key(void)
+{
 	semanage_module_key_t *modkey = NULL;
 
 	/* setup */
@@ -559,7 +579,8 @@ void test_module_remove_key(void) {
 }
 
 /* Function semanage_module_extract */
-void test_module_extract_invalid(void) {
+void test_module_extract_invalid(void)
+{
 	semanage_module_key_t *modkey = NULL;
 	semanage_module_info_t *modinfo = NULL;
 	void *mapped_data = NULL;
@@ -587,7 +608,8 @@ void test_module_extract_invalid(void) {
 	cleanup_handle(SH_TRANS);
 }
 
-void test_module_extract_cil(void) {
+void test_module_extract_cil(void)
+{
 	semanage_module_key_t *modkey = NULL;
 	semanage_module_info_t *modinfo = NULL;
 	void *mapped_data = NULL;
@@ -637,7 +659,8 @@ void test_module_extract_cil(void) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_module_extract_bzip(void) {
+void test_module_extract_bzip(void)
+{
 	semanage_module_key_t *modkey = NULL;
 	semanage_module_info_t *modinfo = NULL;
 	void *mapped_data = NULL;
@@ -690,7 +713,8 @@ void test_module_extract_bzip(void) {
 /* Function semanage_module_list_all, semanage_module_list_nth,
  * semanage_info_destroy
  */
-void helper_module_list_all_invalid(void) {
+void helper_module_list_all_invalid(void)
+{
 	semanage_module_info_t *records;
 	int count = -1;
 
@@ -702,7 +726,8 @@ void helper_module_list_all_invalid(void) {
 	cleanup_handle(SH_HANDLE);
 }
 
-void helper_module_list_all(level_t level) {
+void helper_module_list_all(level_t level)
+{
 	semanage_module_info_t *records;
 	int count = -1;
 
@@ -728,7 +753,8 @@ void helper_module_list_all(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_module_list_all(void) {
+void test_module_list_all(void)
+{
 	helper_module_list_all_invalid();
 	helper_module_list_all(SH_CONNECT);
 	helper_module_list_all(SH_TRANS);
@@ -737,7 +763,8 @@ void test_module_list_all(void) {
 /* Function semanage_module_list, semanage_module_list_nth,
  * semanage_info_datum_destroy, semanage_info_destroy
  */
-void helper_module_list_invalid(void) {
+void helper_module_list_invalid(void)
+{
 	semanage_module_info_t *records;
 	int count = -1;
 
@@ -747,7 +774,8 @@ void helper_module_list_invalid(void) {
 	cleanup_handle(SH_HANDLE);
 }
 
-void helper_module_list(level_t level) {
+void helper_module_list(level_t level)
+{
 	semanage_module_info_t *records;
 	int count = -1;
 
@@ -772,14 +800,16 @@ void helper_module_list(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_module_list(void) {
+void test_module_list(void)
+{
 	helper_module_list_invalid();
 	helper_module_list(SH_CONNECT);
 	helper_module_list(SH_TRANS);
 }
 
 /* Function semanage_module_get_name */
-void test_module_get_name(void) {
+void test_module_get_name(void)
+{
 	const char *name = NULL;
 	semanage_module_info_t *modinfo = NULL;
 
@@ -800,7 +830,8 @@ void test_module_get_name(void) {
 }
 
 /* Function semanage_get_module_info */
-void test_module_get_module_info(void) {
+void test_module_get_module_info(void)
+{
 	semanage_module_key_t *modkey = NULL;
 	semanage_module_info_t *modinfo = NULL;
 	const char *name = NULL;
@@ -847,7 +878,8 @@ void test_module_get_module_info(void) {
 }
 
 /* Function semanage_module_get_name, semanage_module_info_destroy */
-void helper_module_info_create(level_t level) {
+void helper_module_info_create(level_t level)
+{
 	semanage_module_info_t *modinfo;
 	uint16_t priority = 42;
 	const char *name = "asdf";
@@ -880,7 +912,8 @@ void helper_module_info_create(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_module_info_create(void) {
+void test_module_info_create(void)
+{
 	helper_module_info_create(SH_CONNECT);
 	helper_module_info_create(SH_TRANS);
 }
@@ -888,7 +921,8 @@ void test_module_info_create(void) {
 /* Function semanage_module_info_get_priority,
  * semanage_module_info_set_priority
  */
-void test_module_info_get_set_priority_invalid(void) {
+void test_module_info_get_set_priority_invalid(void)
+{
 	semanage_module_info_t *modinfo = NULL;
 
 	/* setup */
@@ -911,7 +945,8 @@ void test_module_info_get_set_priority_invalid(void) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_module_info_get_set_priority(void) {
+void test_module_info_get_set_priority(void)
+{
 	uint16_t priority = 42;
 	semanage_module_info_t *modinfo = NULL;
 
@@ -932,7 +967,8 @@ void test_module_info_get_set_priority(void) {
 }
 
 /* Function semanage_module_info_get_name, semanage_module_info_set_name */
-void test_module_info_get_set_name_invalid(void) {
+void test_module_info_get_set_name_invalid(void)
+{
 	semanage_module_info_t *modinfo = NULL;
 
 	/* setup */
@@ -954,7 +990,8 @@ void test_module_info_get_set_name_invalid(void) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_module_info_get_set_name(void) {
+void test_module_info_get_set_name(void)
+{
 	const char *name = NULL;
 	semanage_module_info_t *modinfo = NULL;
 
@@ -976,7 +1013,8 @@ void test_module_info_get_set_name(void) {
 /* Function semanage_module_info_get_lang_ext,
  * semanage_module_info_set_lang_ext
  */
-void test_module_info_get_set_lang_ext_invalid(void) {
+void test_module_info_get_set_lang_ext_invalid(void)
+{
 	semanage_module_info_t *modinfo = NULL;
 
 	/* setup */
@@ -1001,7 +1039,8 @@ void test_module_info_get_set_lang_ext_invalid(void) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_module_info_get_set_lang_ext(void) {
+void test_module_info_get_set_lang_ext(void)
+{
 	const char *lang_ext = NULL;
 	semanage_module_info_t *modinfo = NULL;
 
@@ -1024,7 +1063,8 @@ void test_module_info_get_set_lang_ext(void) {
 /* Function semanage_module_info_get_enabled,
  * semanage_module_info_set_enabled
  */
-void test_module_info_get_set_enabled_invalid(void) {
+void test_module_info_get_set_enabled_invalid(void)
+{
 	semanage_module_info_t *modinfo = NULL;
 
 	/* setup */
@@ -1046,7 +1086,8 @@ void test_module_info_get_set_enabled_invalid(void) {
 	cleanup_handle(SH_CONNECT);
 }
 
-void test_module_info_get_set_enabled(void) {
+void test_module_info_get_set_enabled(void)
+{
 	int enabled;
 	semanage_module_info_t *modinfo = NULL;
 
@@ -1074,7 +1115,8 @@ void test_module_info_get_set_enabled(void) {
 }
 
 /* Function semanage_module_key_create, semanage_module_key_destroy */
-void helper_module_key_create(level_t level) {
+void helper_module_key_create(level_t level)
+{
 	semanage_module_key_t *modkey = NULL;
 	const char *name = NULL;
 	uint16_t priority = 42;
@@ -1097,13 +1139,15 @@ void helper_module_key_create(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_module_key_create(void) {
+void test_module_key_create(void)
+{
 	helper_module_key_create(SH_CONNECT);
 	helper_module_key_create(SH_TRANS);
 }
 
 /* Function semanage_module_key_get_name, semanage_module_key_set_name */
-void helper_module_key_get_set_name_invalid(level_t level) {
+void helper_module_key_get_set_name_invalid(level_t level)
+{
 	semanage_module_key_t *modkey = NULL;
 
 	/* setup */
@@ -1125,7 +1169,8 @@ void helper_module_key_get_set_name_invalid(level_t level) {
 	cleanup_handle(level);
 }
 
-void helper_module_key_get_set_name(level_t level) {
+void helper_module_key_get_set_name(level_t level)
+{
 	semanage_module_key_t *modkey;
 	const char *name = NULL;
 
@@ -1147,7 +1192,8 @@ void helper_module_key_get_set_name(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_module_key_get_set_name(void) {
+void test_module_key_get_set_name(void)
+{
 	helper_module_key_get_set_name_invalid(SH_CONNECT);
 	helper_module_key_get_set_name(SH_CONNECT);
 	helper_module_key_get_set_name(SH_CONNECT);
@@ -1159,7 +1205,8 @@ void test_module_key_get_set_name(void) {
 /* Function semanage_module_key_get_priority,
  * semanage_module_key_set_priority
  */
-void helper_module_key_get_set_priority_invalid(level_t level) {
+void helper_module_key_get_set_priority_invalid(level_t level)
+{
 	semanage_module_key_t *modkey = NULL;
 
 	/* setup */
@@ -1182,7 +1229,8 @@ void helper_module_key_get_set_priority_invalid(level_t level) {
 	cleanup_handle(level);
 }
 
-void helper_module_key_get_set_priority(level_t level) {
+void helper_module_key_get_set_priority(level_t level)
+{
 	semanage_module_key_t *modkey;
 	uint16_t priority = 42;
 
@@ -1201,7 +1249,8 @@ void helper_module_key_get_set_priority(level_t level) {
 	cleanup_handle(level);
 }
 
-void test_module_key_get_set_priority(void) {
+void test_module_key_get_set_priority(void)
+{
 	helper_module_key_get_set_priority_invalid(SH_CONNECT);
 	helper_module_key_get_set_priority(SH_CONNECT);
 	helper_module_key_get_set_priority(SH_CONNECT);
@@ -1211,7 +1260,8 @@ void test_module_key_get_set_priority(void) {
 }
 
 /* Function semanage_module_get_enabled, semanage_module_set_enabled */
-void helper_module_get_set_enabled(level_t level, int index) {
+void helper_module_get_set_enabled(level_t level, int index)
+{
 	semanage_module_key_t *modkey = NULL;
 	int enabled_old = 42;
 	int enabled_new = 42;
@@ -1234,7 +1284,8 @@ void helper_module_get_set_enabled(level_t level, int index) {
 	cleanup_handle(level);
 }
 
-void test_module_get_set_enabled(void) {
+void test_module_get_set_enabled(void)
+{
 	helper_module_get_set_enabled(SH_CONNECT, I_FIRST);
 	helper_module_get_set_enabled(SH_TRANS, I_FIRST);
 }
