@@ -19,7 +19,7 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.policy: %.cil
-	../../secilc/secilc $*.cil -o $*.policy -f /dev/null
+	secilc $*.cil -o $*.policy -f /dev/null
 
 test_module.cil.bz2: test_module.cil
 	bzip2 -c test_module.cil >test_module.cil.bz2
