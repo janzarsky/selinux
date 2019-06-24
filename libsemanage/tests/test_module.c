@@ -940,13 +940,13 @@ void test_module_info_get_set_name_invalid(void) {
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "") < 0); 
-	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "4asdf") < 0); 
-	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf%") < 0); 
-	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf.") < 0); 
-	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "a") >= 0); 
+	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "") < 0);
+	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "4asdf") < 0);
+	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf%") < 0);
+	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf.") < 0);
+	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "a") >= 0);
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo,
-					      "asdf_asdf-1234.asdf.asdf") >= 0); 
+					      "asdf_asdf-1234.asdf.asdf") >= 0);
 
 	/* cleanup */
 	CU_ASSERT(semanage_module_info_destroy(sh, modinfo) >= 0);
@@ -964,7 +964,7 @@ void test_module_info_get_set_name(void) {
 
 	/* test */
 	CU_ASSERT(semanage_module_info_set_name(sh, modinfo, "asdf") >= 0);
-	CU_ASSERT(semanage_module_info_get_name(sh, modinfo, &name) >= 0); 
+	CU_ASSERT(semanage_module_info_get_name(sh, modinfo, &name) >= 0);
 	CU_ASSERT_STRING_EQUAL(name, "asdf");
 
 	/* cleanup */
@@ -984,16 +984,16 @@ void test_module_info_get_set_lang_ext_invalid(void) {
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "") < 0); 
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "_asdf") < 0); 
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "a#asdf") < 0); 
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "as#asdf") < 0); 
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "asdf#") < 0); 
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "a") >= 0); 
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "") < 0);
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "_asdf") < 0);
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "a#asdf") < 0);
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "as#asdf") < 0);
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "asdf#") < 0);
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "a") >= 0);
 	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo,
-						    "asdf-1234_ASDF") >= 0); 
+						    "asdf-1234_ASDF") >= 0);
 	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo,
-						    "1234_asdf-ASDF") >= 0); 
+						    "1234_asdf-ASDF") >= 0);
 
 	/* cleanup */
 	CU_ASSERT(semanage_module_info_destroy(sh, modinfo) >= 0);
@@ -1010,9 +1010,9 @@ void test_module_info_get_set_lang_ext(void) {
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "asdf") >= 0); 
+	CU_ASSERT(semanage_module_info_set_lang_ext(sh, modinfo, "asdf") >= 0);
 	CU_ASSERT(semanage_module_info_get_lang_ext(sh, modinfo,
-						    &lang_ext) >= 0); 
+						    &lang_ext) >= 0);
 	CU_ASSERT_STRING_EQUAL(lang_ext, "asdf");
 
 	/* cleanup */
@@ -1032,13 +1032,13 @@ void test_module_info_get_set_enabled_invalid(void) {
 	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -123) < 0); 
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -2) < 0); 
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -1) >= 0); 
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 0) >= 0); 
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 1) >= 0); 
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 2) < 0); 
-	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 123) < 0); 
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -123) < 0);
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -2) < 0);
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -1) >= 0);
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 0) >= 0);
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 1) >= 0);
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 2) < 0);
+	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 123) < 0);
 
 	/* cleanup */
 	CU_ASSERT(semanage_module_info_destroy(sh, modinfo) >= 0);
@@ -1056,15 +1056,15 @@ void test_module_info_get_set_enabled(void) {
 
 	/* test */
 	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 0) >= 0);
-	CU_ASSERT(semanage_module_info_get_enabled(sh, modinfo, &enabled) >= 0); 
+	CU_ASSERT(semanage_module_info_get_enabled(sh, modinfo, &enabled) >= 0);
 	CU_ASSERT(enabled == 0);
 
 	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, 1) >= 0);
-	CU_ASSERT(semanage_module_info_get_enabled(sh, modinfo, &enabled) >= 0); 
+	CU_ASSERT(semanage_module_info_get_enabled(sh, modinfo, &enabled) >= 0);
 	CU_ASSERT(enabled == 1);
 
 	CU_ASSERT(semanage_module_info_set_enabled(sh, modinfo, -1) >= 0);
-	CU_ASSERT(semanage_module_info_get_enabled(sh, modinfo, &enabled) >= 0); 
+	CU_ASSERT(semanage_module_info_get_enabled(sh, modinfo, &enabled) >= 0);
 	CU_ASSERT(enabled == -1);
 
 	/* cleanup */
@@ -1111,13 +1111,13 @@ void helper_module_key_get_set_name_invalid(level_t level) {
 	CU_ASSERT(semanage_module_key_create(sh, &modkey) >= 0);
 
 	/* test */
-	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "") < 0); 
-	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "4asdf") < 0); 
-	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "asdf%") < 0); 
-	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "asdf.") < 0); 
-	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "a") >= 0); 
+	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "") < 0);
+	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "4asdf") < 0);
+	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "asdf%") < 0);
+	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "asdf.") < 0);
+	CU_ASSERT(semanage_module_key_set_name(sh, modkey, "a") >= 0);
 	CU_ASSERT(semanage_module_key_set_name(sh, modkey,
-					      "asdf_asdf-1234.asdf.asdf") >= 0); 
+					      "asdf_asdf-1234.asdf.asdf") >= 0);
 
 	/* cleanup */
 	CU_ASSERT(semanage_module_key_destroy(sh, modkey) >= 0);
