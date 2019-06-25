@@ -68,18 +68,18 @@ int seuser_test_init(void)
 {
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
-		return 1;
+		goto err;
 	}
 
 	if (write_test_policy_from_file("test_user.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
-		return 1;
+		goto err;
 	}
 
 	FILE *fptr = fopen("test-policy/store/active/seusers", "w+");
 	if (!fptr) {
 		perror("fopen");
-		return -1;
+		goto err;
 	}
 	
 	const char *data = "__default__:first_u:s0-s0:c0.c1023\n"
@@ -88,12 +88,15 @@ int seuser_test_init(void)
 	if (fwrite(data, strlen(data), 1, fptr) != 1) {
 		perror("fwrite");
 		fclose(fptr);
-		return -1;
+		goto err;
 	}
 
 	fclose(fptr);
-
 	return 0;
+
+err:
+	destroy_test_store();
+	return 1;
 }
 
 int seuser_test_cleanup(void)

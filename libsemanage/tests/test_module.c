@@ -111,25 +111,29 @@ int module_test_init(void)
 {
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
-		return 1;
+		goto err;
 	}
 
 	if (write_test_policy_from_file("test_module.policy") < 0) {
 		fprintf(stderr, "Could not write test policy\n");
-		return 1;
+		goto err;
 	}
 
 	if (write_test_policy_src("test_module.cil.bz2") < 0) {
 		fprintf(stderr, "Could not write test policy source\n");
-		return 1;
+		goto err;
 	}
 
 	if (read_hll_module() < 0) {
 		fprintf(stderr, "Could not read " HLL_FILE "\n");
-		return 1;
+		goto err;
 	}
 
 	return 0;
+
+err:
+	destroy_test_store();
+	return 1;
 }
 
 int module_test_cleanup(void)
