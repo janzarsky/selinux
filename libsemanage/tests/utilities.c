@@ -77,7 +77,7 @@ int create_test_store() {
 		return -1;
 	}
 	snprintf(data, 4096,
-		 "compiler-directory=%s/usr/libexec/selinux/hll/pp\n"
+		 "compiler-directory=%s/usr/libexec/selinux/hll\n"
 		 "[sefcontext_compile]\n"
 		 "path=%s/usr/sbin/sefcontext_compile\n"
 		 "args=-r $@\n"
