@@ -68,8 +68,6 @@ static bool do_tests(int interactive, int verbose)
 	if (CUE_SUCCESS != CU_initialize_registry())
 		return CU_get_error();
 
-	//DECLARE_SUITE(semanage_store);
-	DECLARE_SUITE(semanage_utilities);
 	DECLARE_SUITE(handle);
 	DECLARE_SUITE(bool);
 	DECLARE_SUITE(fcontext);
@@ -81,6 +79,8 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(module);
 	DECLARE_SUITE(seuser);
 	DECLARE_SUITE(other);
+	DECLARE_SUITE(semanage_utilities);
+	DECLARE_SUITE(semanage_store);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
