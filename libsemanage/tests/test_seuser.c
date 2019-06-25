@@ -276,8 +276,8 @@ void test_seuser_key_create(void)
 #define SK_KEY_NULL 4
 void helper_seuser_key_extract(level_t level, int mode)
 {
-	semanage_seuser_t *seuser;
-	semanage_seuser_key_t *key;
+	semanage_seuser_t *seuser = NULL;
+	semanage_seuser_key_t *key = NULL;
 	int result;
 
 	/* setup */
