@@ -64,18 +64,34 @@ int create_test_store() {
 		return -1;
 	}
 
-	const char *data = "compiler-directory=../../policycoreutils/hll/pp\n"
-		"[sefcontext_compile]\n"
-		"path=../../libselinux/utils/sefcontext_compile\n"
-		"args=-r $@\n"
-		"[end]\n";
-
-	if (fwrite(data, strlen(data), 1, fptr) != 1) {
-		perror("fwrite");
+	char *destdir = getenv("DESTDIR");
+	if (!destdir) {
+		fprintf(stderr, "DESTDIR is not set!\n");
 		fclose(fptr);
 		return -1;
 	}
 
+	char *data = (char *) malloc(4096);
+	if (!data) {
+		fclose(fptr);
+		return -1;
+	}
+	snprintf(data, 4096,
+		 "compiler-directory=%s/usr/libexec/selinux/hll/pp\n"
+		 "[sefcontext_compile]\n"
+		 "path=%s/usr/sbin/sefcontext_compile\n"
+		 "args=-r $@\n"
+		 "[end]\n",
+		 destdir, destdir);
+
+	if (fwrite(data, strlen(data), 1, fptr) != 1) {
+		perror("fwrite");
+		free(data);
+		fclose(fptr);
+		return -1;
+	}
+
+	free(data);
 	fclose(fptr);
 
 	enable_test_store();
